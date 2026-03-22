@@ -59,7 +59,13 @@ export default function CustomSelect({
             : "hover:ring-1 hover:ring-[#FF5733]/30"
         }`}
       >
-        <span className={!selected && placeholder ? "text-[#1A1A1A]/30 dark:text-white/20" : ""}>
+        <span
+          className={
+            !selected && placeholder
+              ? "text-[#1A1A1A]/30 dark:text-white/20"
+              : ""
+          }
+        >
           {selected?.label ?? placeholder ?? "Select..."}
         </span>
         <ChevronDown
@@ -71,7 +77,7 @@ export default function CustomSelect({
 
       {open && (
         <div className="absolute z-50 mt-1.5 w-full min-w-[140px] rounded-xl bg-white dark:bg-[#1C1C1E] border border-black/5 dark:border-white/10 shadow-lg shadow-black/10 dark:shadow-black/30 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150">
-          <div className="py-1 max-h-52 overflow-y-auto">
+          <div className="py-1 max-h-52 overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black/10 dark:[&::-webkit-scrollbar-thumb]:bg-white/10 hover:[&::-webkit-scrollbar-thumb]:bg-black/20 dark:hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
             {options.map((option) => (
               <button
                 key={option.value}

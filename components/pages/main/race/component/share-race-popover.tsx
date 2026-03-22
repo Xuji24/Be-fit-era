@@ -6,7 +6,7 @@ import { toast } from "sonner";
 
 interface Props {
   url: string;
-  title: string;
+  title?: string;
 }
 
 const socialPlatforms = [
@@ -58,7 +58,7 @@ const socialPlatforms = [
   },
 ];
 
-export default function ShareRacePopover({ url, title }: Props) {
+export default function ShareRacePopover({ url }: Props) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -66,7 +66,10 @@ export default function ShareRacePopover({ url, title }: Props) {
   // Close on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(e.target as Node)
+      ) {
         setOpen(false);
       }
     };
@@ -84,7 +87,11 @@ export default function ShareRacePopover({ url, title }: Props) {
   const handleShare = (platform: (typeof socialPlatforms)[0]) => {
     const shareUrl = platform.getUrl(url);
     if (shareUrl) {
-      window.open(shareUrl, "_blank", "noopener,noreferrer,width=600,height=400");
+      window.open(
+        shareUrl,
+        "_blank",
+        "noopener,noreferrer,width=600,height=400",
+      );
     } else {
       // Platforms that don't support direct sharing — copy link
       handleCopyLink();

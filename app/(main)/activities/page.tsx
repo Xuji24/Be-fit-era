@@ -147,11 +147,12 @@ export default async function Activities() {
   });
 
   // Determine which data to use (DB or static fallback)
-  const hasDbData = dbJoinedRaces.length > 0 || dbActivityLog.length > 0;
-  const joinedRaces = hasDbData ? dbJoinedRaces : joinedRacesData;
-  const activityLog = hasDbData ? dbActivityLog : activityLogData;
-  const completedRaces = hasDbData ? dbCompletedRaces : completedRacesData;
-  const weeklyData = hasDbData ? dbWeeklyData : staticWeeklyData;
+  // Fix: If the user is authenticated, we should strictly use their DB data
+  // so they don't accidentally interact with mock data IDs like 'race-1'.
+  const joinedRaces = dbJoinedRaces;
+  const activityLog = dbActivityLog;
+  const completedRaces = dbCompletedRaces;
+  const weeklyData = dbWeeklyData;
 
   // Compute quick stats
   const activeRaces = joinedRaces.filter((r) => r.status === "in-progress");

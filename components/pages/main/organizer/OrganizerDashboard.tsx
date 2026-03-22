@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import CreateRaceModal from "./component/create-race-modal";
 import EditRaceDesignsModal from "./component/edit-race-designs-modal";
+import EditRaceModal from "./component/edit-race-modal";
 
 export interface OrganizerRace {
   id: string;
@@ -40,10 +41,12 @@ export default function OrganizerDashboard({ races: initialRaces }: Props) {
   const [races, setRaces] = useState(initialRaces);
   const [createOpen, setCreateOpen] = useState(false);
   const [editingRace, setEditingRace] = useState<OrganizerRace | null>(null);
+  const [editingRaceDetail, setEditingRaceDetail] =
+    useState<OrganizerRace | null>(null);
 
   const totalRegistrations = races.reduce(
     (sum, r) => sum + r.registrationCount,
-    0
+    0,
   );
 
   const handleRaceCreated = (newRace: OrganizerRace) => {
@@ -51,11 +54,16 @@ export default function OrganizerDashboard({ races: initialRaces }: Props) {
     setCreateOpen(false);
   };
 
-  const handleDesignsUpdated = (raceId: string, updates: { tshirtDesignUrl?: string | null; medalDesignUrl?: string | null; certificateDesignUrl?: string | null }) => {
+  const handleDesignsUpdated = (
+    raceId: string,
+    updates: {
+      tshirtDesignUrl?: string | null;
+      medalDesignUrl?: string | null;
+      certificateDesignUrl?: string | null;
+    },
+  ) => {
     setRaces((prev) =>
-      prev.map((r) =>
-        r.id === raceId ? { ...r, ...updates } : r
-      )
+      prev.map((r) => (r.id === raceId ? { ...r, ...updates } : r)),
     );
     setEditingRace(null);
   };
@@ -78,11 +86,11 @@ export default function OrganizerDashboard({ races: initialRaces }: Props) {
                 </span>
               </div>
               <h1 className="font-raleway text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
-                Race{" "}
-                <span className="text-[#FFB800]">Management</span>
+                Race <span className="text-[#FFB800]">Management</span>
               </h1>
               <p className="mt-3 text-white/50 text-sm md:text-base max-w-lg">
-                Create and manage your virtual races. Track registrations and monitor your events.
+                Create and manage your virtual races. Track registrations and
+                monitor your events.
               </p>
             </div>
 
@@ -133,7 +141,8 @@ export default function OrganizerDashboard({ races: initialRaces }: Props) {
               No Races Yet
             </h3>
             <p className="text-sm text-[#1A1A1A]/50 dark:text-white/40 font-merriweather-sans mb-6 max-w-sm mx-auto">
-              Create your first virtual race and start accepting registrations from runners.
+              Create your first virtual race and start accepting registrations
+              from runners.
             </p>
             <button
               onClick={() => setCreateOpen(true)}
@@ -185,7 +194,11 @@ export default function OrganizerDashboard({ races: initialRaces }: Props) {
                         {race.eventDate
                           ? new Date(race.eventDate).toLocaleDateString(
                               "en-US",
-                              { month: "short", day: "numeric", year: "numeric" }
+                              {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              },
                             )
                           : "Date TBD"}
                       </span>
@@ -206,17 +219,32 @@ export default function OrganizerDashboard({ races: initialRaces }: Props) {
                   <div className="mt-4 pt-3 border-t border-black/5 dark:border-white/5">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <Shirt className={`w-3.5 h-3.5 ${race.tshirtDesignUrl ? "text-emerald-500" : "text-[#1A1A1A]/20 dark:text-white/20"}`} />
-                        <Medal className={`w-3.5 h-3.5 ${race.medalDesignUrl ? "text-emerald-500" : "text-[#1A1A1A]/20 dark:text-white/20"}`} />
-                        <Award className={`w-3.5 h-3.5 ${race.certificateDesignUrl ? "text-emerald-500" : "text-[#1A1A1A]/20 dark:text-white/20"}`} />
+                        <Shirt
+                          className={`w-3.5 h-3.5 ${race.tshirtDesignUrl ? "text-emerald-500" : "text-[#1A1A1A]/20 dark:text-white/20"}`}
+                        />
+                        <Medal
+                          className={`w-3.5 h-3.5 ${race.medalDesignUrl ? "text-emerald-500" : "text-[#1A1A1A]/20 dark:text-white/20"}`}
+                        />
+                        <Award
+                          className={`w-3.5 h-3.5 ${race.certificateDesignUrl ? "text-emerald-500" : "text-[#1A1A1A]/20 dark:text-white/20"}`}
+                        />
                       </div>
-                      <button
-                        onClick={() => setEditingRace(race)}
-                        className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#FF5733] hover:text-[#E84E2E] transition-colors cursor-pointer"
-                      >
-                        <Pencil className="w-3 h-3" />
-                        Designs
-                      </button>
+                      <div className="flex items-center gap-3">
+                        <button
+                          onClick={() => setEditingRaceDetail(race)}
+                          className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#FFB800] hover:text-[#E6A600] transition-colors cursor-pointer"
+                        >
+                          <Pencil className="w-3 h-3" />
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => setEditingRace(race)}
+                          className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#FF5733] hover:text-[#E84E2E] transition-colors cursor-pointer"
+                        >
+                          <Pencil className="w-3 h-3" />
+                          Designs
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -241,6 +269,21 @@ export default function OrganizerDashboard({ races: initialRaces }: Props) {
           onUpdated={handleDesignsUpdated}
         />
       )}
+
+      {/* Edit Race Details Modal */}
+      <EditRaceModal
+        open={!!editingRaceDetail}
+        onClose={() => setEditingRaceDetail(null)}
+        raceToEdit={editingRaceDetail!}
+        onUpdated={(updatedRace) => {
+          setRaces((prev) =>
+            prev.map((r) =>
+              r.id === updatedRace.id ? { ...r, ...updatedRace } : r,
+            ),
+          );
+          setEditingRaceDetail(null);
+        }}
+      />
     </div>
   );
 }

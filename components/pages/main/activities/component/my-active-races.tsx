@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import type { JoinedRace } from "@/data/activities-data";
 
 const statusStyles: Record<
@@ -36,9 +37,9 @@ const MyActiveRaces = ({ races, onLogDistance }: Props) => {
         <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 p-10 text-center">
           <p className="text-sm text-[#1A1A1A]/50 dark:text-white/40">
             You haven&apos;t joined any races yet. Head to the{" "}
-            <a href="/race" className="text-[#FF5733] hover:underline">
+            <Link href="/race" className="text-[#FF5733] hover:underline">
               Races
-            </a>{" "}
+            </Link>{" "}
             page to register!
           </p>
         </div>

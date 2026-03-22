@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 type ActionResult = {
   success: boolean;
@@ -11,21 +12,36 @@ type ActionResult = {
 
 async function getClientIp(): Promise<string> {
   const h = await headers();
-  return h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? h.get("x-real-ip") ?? "unknown";
+  return (
+    h.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    h.get("x-real-ip") ??
+    "unknown"
+  );
 }
 
-const VALID_SUBJECTS = ["general", "race-info", "partnership", "technical", "other"] as const;
+const VALID_SUBJECTS = [
+  "general",
+  "race-info",
+  "partnership",
+  "technical",
+  "other",
+] as const;
 
 /**
  * Submit a contact form to the contact_submissions table.
  * Rate limited to 3 submissions per 15 minutes per IP.
  */
-export async function submitContactForm(formData: FormData): Promise<ActionResult> {
+export async function submitContactForm(
+  formData: FormData,
+): Promise<ActionResult> {
   const ip = await getClientIp();
   const { allowed, retryAfterMs } = checkRateLimit(`contact:${ip}`, 3);
   if (!allowed) {
     const mins = Math.ceil(retryAfterMs / 60000);
-    return { success: false, error: `Too many submissions. Try again in ${mins} min.` };
+    return {
+      success: false,
+      error: `Too many submissions. Try again in ${mins} min.`,
+    };
   }
 
   const name = (formData.get("name") as string)?.trim();
@@ -37,7 +53,7 @@ export async function submitContactForm(formData: FormData): Promise<ActionResul
     return { success: false, error: "All fields are required." };
   }
 
-  if (!VALID_SUBJECTS.includes(subject as typeof VALID_SUBJECTS[number])) {
+  if (!VALID_SUBJECTS.includes(subject as (typeof VALID_SUBJECTS)[number])) {
     return { success: false, error: "Invalid subject." };
   }
 
@@ -56,7 +72,10 @@ export async function submitContactForm(formData: FormData): Promise<ActionResul
   });
 
   if (error) {
-    return { success: false, error: "Failed to send message. Please try again." };
+    return {
+      success: false,
+      error: "Failed to send message. Please try again.",
+    };
   }
 
   return { success: true };
@@ -66,7 +85,8 @@ export async function submitContactForm(formData: FormData): Promise<ActionResul
 // Race Registration
 // ============================================================
 
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const VALID_SHIRT_SIZES = ["S", "M", "L", "XL", "2XL"] as const;
 const VALID_PAYMENT_METHODS = ["gcash", "card", "bank"] as const;
 
@@ -79,18 +99,28 @@ interface RegistrationInput {
   paymentMethod: string;
 }
 
-export async function registerForRace(input: RegistrationInput): Promise<ActionResult> {
+export async function registerForRace(
+  input: RegistrationInput,
+): Promise<ActionResult> {
   const ip = await getClientIp();
   const { allowed, retryAfterMs } = checkRateLimit(`race-reg:${ip}`, 5);
   if (!allowed) {
     const mins = Math.ceil(retryAfterMs / 60000);
-    return { success: false, error: `Too many attempts. Try again in ${mins} min.` };
+    return {
+      success: false,
+      error: `Too many attempts. Try again in ${mins} min.`,
+    };
   }
 
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) {
-    return { success: false, error: "You must be logged in to register for a race." };
+    return {
+      success: false,
+      error: "You must be logged in to register for a race.",
+    };
   }
 
   // Validate inputs
@@ -106,10 +136,18 @@ export async function registerForRace(input: RegistrationInput): Promise<ActionR
   if (!/^[0-9+\-\s()]{7,15}$/.test(input.phone.trim())) {
     return { success: false, error: "Invalid phone number." };
   }
-  if (!VALID_SHIRT_SIZES.includes(input.shirtSize as typeof VALID_SHIRT_SIZES[number])) {
+  if (
+    !VALID_SHIRT_SIZES.includes(
+      input.shirtSize as (typeof VALID_SHIRT_SIZES)[number],
+    )
+  ) {
     return { success: false, error: "Invalid shirt size." };
   }
-  if (!VALID_PAYMENT_METHODS.includes(input.paymentMethod as typeof VALID_PAYMENT_METHODS[number])) {
+  if (
+    !VALID_PAYMENT_METHODS.includes(
+      input.paymentMethod as (typeof VALID_PAYMENT_METHODS)[number],
+    )
+  ) {
     return { success: false, error: "Invalid payment method." };
   }
 
@@ -136,24 +174,32 @@ export async function registerForRace(input: RegistrationInput): Promise<ActionR
     .maybeSingle();
 
   if (existing) {
-    return { success: false, error: "You are already registered for this race." };
+    return {
+      success: false,
+      error: "You are already registered for this race.",
+    };
   }
 
   // Insert registration
-  const { error: insertError } = await supabase.from("race_registrations").insert({
-    user_id: user.id,
-    race_id: input.raceId,
-    full_name: input.fullName.trim(),
-    email: input.email.trim(),
-    phone: input.phone.trim(),
-    shirt_size: input.shirtSize,
-    payment_method: input.paymentMethod,
-    status: "upcoming",
-  });
+  const { error: insertError } = await supabase
+    .from("race_registrations")
+    .insert({
+      user_id: user.id,
+      race_id: input.raceId,
+      full_name: input.fullName.trim(),
+      email: input.email.trim(),
+      phone: input.phone.trim(),
+      shirt_size: input.shirtSize,
+      payment_method: input.paymentMethod,
+      status: "upcoming",
+    });
 
   if (insertError) {
     if (insertError.code === "23505") {
-      return { success: false, error: "You are already registered for this race." };
+      return {
+        success: false,
+        error: "You are already registered for this race.",
+      };
     }
     return { success: false, error: "Registration failed. Please try again." };
   }
@@ -161,9 +207,13 @@ export async function registerForRace(input: RegistrationInput): Promise<ActionR
   return { success: true };
 }
 
-export async function checkRaceRegistration(raceId: string): Promise<{ registered: boolean }> {
+export async function checkRaceRegistration(
+  raceId: string,
+): Promise<{ registered: boolean }> {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return { registered: false };
 
   const { data } = await supabase
@@ -187,33 +237,50 @@ interface OrganizerApplicationInput {
 }
 
 export async function submitOrganizerApplication(
-  input: OrganizerApplicationInput
+  input: OrganizerApplicationInput,
 ): Promise<ActionResult> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { success: false, error: "You must be logged in to apply." };
+  if (!user)
+    return { success: false, error: "You must be logged in to apply." };
 
   const ip = await getClientIp();
-  const allowed = checkRateLimit(`organizer-apply:${user.id}`, 3, 60 * 60 * 1000);
+  const allowed = checkRateLimit(
+    `organizer-apply:${user.id}`,
+    3,
+    60 * 60 * 1000,
+  );
   if (!allowed)
-    return { success: false, error: "Too many applications. Please try again later." };
+    return {
+      success: false,
+      error: "Too many applications. Please try again later.",
+    };
 
   // Validate inputs
   const orgName = input.organizationName?.trim();
   if (!orgName || orgName.length < 2 || orgName.length > 200)
-    return { success: false, error: "Please provide a valid organization name." };
+    return {
+      success: false,
+      error: "Please provide a valid organization name.",
+    };
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!input.contactEmail || !emailRegex.test(input.contactEmail))
     return { success: false, error: "Please provide a valid contact email." };
 
   if (input.documentUrls.length === 0)
-    return { success: false, error: "Please upload at least one proof document." };
+    return {
+      success: false,
+      error: "Please upload at least one proof document.",
+    };
 
   if (input.documentUrls.length > 5)
-    return { success: false, error: "You can upload a maximum of 5 documents." };
+    return {
+      success: false,
+      error: "You can upload a maximum of 5 documents.",
+    };
 
   // Check if user already has a pending application
   const { data: existing } = await supabase
@@ -224,7 +291,10 @@ export async function submitOrganizerApplication(
     .maybeSingle();
 
   if (existing)
-    return { success: false, error: "You already have a pending application under review." };
+    return {
+      success: false,
+      error: "You already have a pending application under review.",
+    };
 
   // Check if user is already an organizer
   const { data: profile } = await supabase
@@ -234,7 +304,10 @@ export async function submitOrganizerApplication(
     .single();
 
   if (profile?.role === "organizer" || profile?.role === "admin")
-    return { success: false, error: "Your account already has organizer privileges." };
+    return {
+      success: false,
+      error: "Your account already has organizer privileges.",
+    };
 
   const { error } = await supabase.from("organizer_applications").insert({
     user_id: user.id,
@@ -246,7 +319,10 @@ export async function submitOrganizerApplication(
   });
 
   if (error)
-    return { success: false, error: "Unable to submit your application. Please try again." };
+    return {
+      success: false,
+      error: "Unable to submit your application. Please try again.",
+    };
 
   return { success: true };
 }
@@ -295,7 +371,7 @@ export async function getUserRole(): Promise<string> {
 
 /* ── Create Race (Organizer Only) ── */
 
-interface CreateRaceInput {
+export interface CreateRaceInput {
   title: string;
   category: string;
   targetDistance: number;
@@ -312,7 +388,7 @@ interface CreateRaceInput {
 type CreateRaceResult = ActionResult & { raceId?: string };
 
 export async function createRace(
-  input: CreateRaceInput
+  input: CreateRaceInput,
 ): Promise<CreateRaceResult> {
   const supabase = await createClient();
   const {
@@ -329,24 +405,40 @@ export async function createRace(
     .single();
 
   if (profile?.role !== "organizer" && profile?.role !== "admin")
-    return { success: false, error: "You do not have permission to create races." };
+    return {
+      success: false,
+      error: "You do not have permission to create races.",
+    };
 
   const ip = await getClientIp();
   const allowed = checkRateLimit(`create-race:${user.id}`, 10, 60 * 60 * 1000);
   if (!allowed)
-    return { success: false, error: "Too many requests. Please try again later." };
+    return {
+      success: false,
+      error: "Too many requests. Please try again later.",
+    };
 
   // Validate inputs
   const title = input.title?.trim();
   if (!title || title.length < 3 || title.length > 200)
-    return { success: false, error: "Please provide a valid race title (3–200 characters)." };
+    return {
+      success: false,
+      error: "Please provide a valid race title (3–200 characters).",
+    };
 
   const validCategories = ["5K", "10K", "Half Marathon", "Marathon", "Ultra"];
   if (!validCategories.includes(input.category))
     return { success: false, error: "Please select a valid category." };
 
-  if (!input.targetDistance || input.targetDistance <= 0 || input.targetDistance > 1000)
-    return { success: false, error: "Please provide a valid distance (0.1–1000 km)." };
+  if (
+    !input.targetDistance ||
+    input.targetDistance <= 0 ||
+    input.targetDistance > 1000
+  )
+    return {
+      success: false,
+      error: "Please provide a valid distance (0.1–1000 km).",
+    };
 
   if (!input.eventDate)
     return { success: false, error: "Please provide an event date." };
@@ -368,8 +460,7 @@ export async function createRace(
     insertData.registration_deadline = input.registrationDeadline;
   if (input.tshirtDesignUrl)
     insertData.tshirt_design_url = input.tshirtDesignUrl;
-  if (input.medalDesignUrl)
-    insertData.medal_design_url = input.medalDesignUrl;
+  if (input.medalDesignUrl) insertData.medal_design_url = input.medalDesignUrl;
   if (input.certificateDesignUrl)
     insertData.certificate_design_url = input.certificateDesignUrl;
 
@@ -380,9 +471,132 @@ export async function createRace(
     .single();
 
   if (error)
-    return { success: false, error: "Unable to create race. Please try again." };
+    return {
+      success: false,
+      error: "Unable to create race. Please try again.",
+    };
+
+  revalidatePath("/organizer");
+  revalidatePath("/race");
 
   return { success: true, raceId: data.id };
+}
+
+/* ── Update Race (Organizer/Admin) ── */
+
+export interface UpdateRaceInput extends Partial<CreateRaceInput> {
+  raceId: string;
+}
+
+export async function updateRace(
+  input: UpdateRaceInput,
+): Promise<ActionResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user)
+    return { success: false, error: "You must be logged in to update a race." };
+
+  // Verify organizer role
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.role !== "organizer" && profile?.role !== "admin")
+    return {
+      success: false,
+      error: "You do not have permission to update races.",
+    };
+
+  const ip = await getClientIp();
+  const allowed = checkRateLimit(`update-race:${user.id}`, 20, 60 * 60 * 1000);
+  if (!allowed)
+    return {
+      success: false,
+      error: "Too many requests. Please try again later.",
+    };
+
+  // Verify the race belongs to this organizer (or user is admin)
+  const { data: race, error: raceError } = await supabase
+    .from("races")
+    .select("organizer")
+    .eq("id", input.raceId)
+    .single();
+
+  if (raceError || !race) return { success: false, error: "Race not found." };
+
+  if (race.organizer !== user.id && profile?.role !== "admin")
+    return { success: false, error: "You can only update your own races." };
+
+  const updateData: Record<string, unknown> = {};
+
+  if (input.title !== undefined) {
+    const title = input.title?.trim();
+    if (!title || title.length < 3 || title.length > 200)
+      return {
+        success: false,
+        error: "Please provide a valid race title (3–200 characters).",
+      };
+    updateData.title = title;
+  }
+
+  if (input.category !== undefined) {
+    const validCategories = ["5K", "10K", "Half Marathon", "Marathon", "Ultra"];
+    if (!validCategories.includes(input.category))
+      return { success: false, error: "Please select a valid category." };
+    updateData.category = input.category;
+  }
+
+  if (input.targetDistance !== undefined) {
+    if (input.targetDistance <= 0 || input.targetDistance > 1000)
+      return {
+        success: false,
+        error: "Please provide a valid distance (0.1–1000 km).",
+      };
+    updateData.target_distance_km = input.targetDistance;
+  }
+
+  if (input.eventDate !== undefined) {
+    if (!input.eventDate)
+      return { success: false, error: "Please provide an event date." };
+    updateData.event_date = input.eventDate;
+  }
+
+  if (input.location !== undefined) updateData.location = input.location;
+  if (input.description !== undefined)
+    updateData.description = input.description;
+  if (input.maxParticipants !== undefined)
+    updateData.max_participants = input.maxParticipants;
+  if (input.registrationDeadline !== undefined)
+    updateData.registration_deadline = input.registrationDeadline;
+  if (input.tshirtDesignUrl !== undefined)
+    updateData.tshirt_design_url = input.tshirtDesignUrl;
+  if (input.medalDesignUrl !== undefined)
+    updateData.medal_design_url = input.medalDesignUrl;
+  if (input.certificateDesignUrl !== undefined)
+    updateData.certificate_design_url = input.certificateDesignUrl;
+
+  if (Object.keys(updateData).length === 0)
+    return { success: false, error: "No changes to save." };
+
+  const { error } = await supabase
+    .from("races")
+    .update(updateData)
+    .eq("id", input.raceId);
+
+  if (error)
+    return {
+      success: false,
+      error: "Unable to update race. Please try again.",
+    };
+
+  revalidatePath("/organizer");
+  revalidatePath(`/race/${input.raceId}`);
+
+  return { success: true };
 }
 
 /* ── Update Race Designs (Organizer Only) ── */
@@ -448,3 +662,4 @@ export async function updateRaceDesigns(
 
   return { success: true };
 }
+

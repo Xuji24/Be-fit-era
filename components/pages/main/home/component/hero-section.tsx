@@ -23,13 +23,6 @@ export default function HeroSection({ isLoggedIn }: { isLoggedIn: boolean }) {
       {/* Content */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-10 lg:px-16 py-20 sm:py-24">
         <div className="max-w-2xl">
-          {/* Accent tag */}
-          <div className="inline-flex items-center gap-2 bg-[#FF5733]/15 backdrop-blur-sm border border-[#FF5733]/30 rounded-full px-4 py-1.5 mb-6 sm:mb-8">
-            <span className="w-2 h-2 rounded-full bg-[#FF5733] animate-pulse" />
-            <span className="font-raleway font-bold text-[#FF5733] text-xs tracking-[0.15em] uppercase">
-              Event Running App
-            </span>
-          </div>
 
           <h1 className="font-raleway font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[1.05] mb-5 sm:mb-6">
             Run Your Race.{" "}

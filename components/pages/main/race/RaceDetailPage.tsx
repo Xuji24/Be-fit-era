@@ -21,16 +21,21 @@ import { Button } from "@/components/shadcn/button";
 import JoinRaceModal from "./component/join-race-modal";
 import ShareRacePopover from "./component/share-race-popover";
 import { checkRaceRegistration } from "@/app/(main)/actions";
+import { RewardPreviewCarousel } from "@/components/ui/reward-preview-carousel";
+import { useRouter } from "next/navigation";
 
 interface Props {
   race: RaceEvent;
   initialRegistered?: boolean;
+  isLoggedIn?: boolean;
 }
 
 export default function RaceDetailPage({
   race,
   initialRegistered = false,
+  isLoggedIn = false,
 }: Props) {
+  const router = useRouter();
   const [joinOpen, setJoinOpen] = useState(false);
   const [isRegistered, setIsRegistered] = useState(initialRegistered);
   const spotsLeft = race.maxParticipants - race.participants;
@@ -188,16 +193,16 @@ export default function RaceDetailPage({
                 Finisher&apos;s Medal
               </h2>
               <div className="flex flex-col sm:flex-row gap-5">
-                {/* Medal Preview */}
-                <div className="shrink-0 w-full sm:w-44 bg-white dark:bg-[#2A2A2E] rounded-xl border border-[#FFB800]/15 dark:border-[#FFB800]/25 overflow-hidden p-3">
-                  <Image
-                    src="/icons/medal-template.svg"
-                    alt="Medal Template"
-                    width={400}
-                    height={400}
-                    className="w-full h-auto"
-                  />
-                </div>
+                {/* Medal Preview Carousel */}
+                <RewardPreviewCarousel
+                  images={[
+                    "/3D_Medal_Model_1.png",
+                    "/3D_Medal_Model_2.png",
+                    "/3D_Medal_Model_3.png",
+                  ]}
+                  altPrefix="Finisher's Medal"
+                  theme="orange"
+                />
                 <div className="flex-1">
                   <h3 className="font-raleway font-bold text-base text-foreground mb-1.5">
                     {race.rewards.medal.name}
@@ -216,15 +221,16 @@ export default function RaceDetailPage({
                 Event T-Shirt
               </h2>
               <div className="flex flex-col sm:flex-row gap-5">
-                <div className="shrink-0 w-full sm:w-44 bg-white dark:bg-[#2A2A2E] rounded-xl border border-emerald-500/15 dark:border-emerald-500/25 overflow-hidden p-3">
-                  <Image
-                    src="/icons/tshirt-template.svg"
-                    alt="T-Shirt Template"
-                    width={400}
-                    height={400}
-                    className="w-full h-auto"
-                  />
-                </div>
+                {/* Shirt Preview Carousel */}
+                <RewardPreviewCarousel
+                  images={[
+                    "/3D_Shirt_Model_1.png",
+                    "/3D_Shirt_Model_2.png",
+                    "/3D_Shirt_Model_3.png",
+                  ]}
+                  altPrefix="Event T-Shirt"
+                  theme="emerald"
+                />
                 <div className="flex-1">
                   <h3 className="font-raleway font-bold text-base text-foreground mb-1.5">
                     Official Race T-Shirt
@@ -307,7 +313,13 @@ export default function RaceDetailPage({
 
                 {/* Join Button */}
                 <Button
-                  onClick={() => setJoinOpen(true)}
+                  onClick={() => {
+                    if (!isLoggedIn) {
+                      router.push("/login");
+                      return;
+                    }
+                    setJoinOpen(true);
+                  }}
                   disabled={!canRegister}
                   className={`w-full py-4 rounded-xl font-raleway font-bold text-base transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 ${
                     isRegistered

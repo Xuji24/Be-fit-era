@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { racesData } from "@/data/races-data";
 import RaceDetailPage from "@/components/pages/main/race/RaceDetailPage";
 import { checkRaceRegistration } from "@/app/(main)/actions";
+import { createClient } from "@/lib/supabase/server";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -17,7 +18,18 @@ export default async function RaceDetail({ params }: Props) {
 
   if (!race) notFound();
 
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   const { registered } = await checkRaceRegistration(race.dbId);
 
-  return <RaceDetailPage race={race} initialRegistered={registered} />;
+  return (
+    <RaceDetailPage
+      race={race}
+      initialRegistered={registered}
+      isLoggedIn={!!user}
+    />
+  );
 }

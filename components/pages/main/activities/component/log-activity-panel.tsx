@@ -67,9 +67,12 @@ const LogActivityPanel = ({
   const [fetchError, setFetchError] = useState<string | null>(null);
 
   // Sync preselected race when parent changes it
-  if (preselectedRaceId && preselectedRaceId !== raceId && open) {
-    setRaceId(preselectedRaceId);
-  }
+  useEffect(() => {
+    if (preselectedRaceId && preselectedRaceId !== raceId && open) {
+      setRaceId(preselectedRaceId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [preselectedRaceId, open]);
 
   /** Fetch Strava activities from our API (with optional date filtering) */
   const fetchStravaActivities = useCallback(async () => {
@@ -78,11 +81,11 @@ const LogActivityPanel = ({
       // Build URL with optional date-range filters based on the selected race
       const url = new URL("/api/strava/activities", window.location.origin);
 
-      // If a race is selected, filter activities up to the race date
+      // If a race is selected, filter activities from the race date onward
       const selectedRace = inProgressRaces.find((r) => r.id === raceId);
       if (selectedRace?.date) {
-        // Only fetch activities before the race event date (inclusive)
-        url.searchParams.set("before", selectedRace.date);
+        // Only fetch activities on or after the race event date
+        url.searchParams.set("after", selectedRace.date);
       }
 
       const res = await fetch(url.toString());
@@ -189,7 +192,7 @@ const LogActivityPanel = ({
       />
 
       {/* Panel */}
-      <div className="relative w-full max-w-lg bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-lg bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-2xl flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="p-5 border-b border-black/5 dark:border-white/5">
           <div className="flex items-center justify-between">
@@ -314,7 +317,7 @@ const LogActivityPanel = ({
               </div>
             ) : (
               <>
-                <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                <div className="space-y-2 max-h-72 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black/10 dark:[&::-webkit-scrollbar-thumb]:bg-white/10 hover:[&::-webkit-scrollbar-thumb]:bg-black/20 dark:hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
                   {activities.map((activity) => (
                     <button
                       key={activity.id}

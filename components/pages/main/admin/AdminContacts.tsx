@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Mail, Trash2, Eye, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
-import type { AdminContact } from "@/app/(admin)/admin/actions";
-import { updateContactStatus, deleteContact } from "@/app/(admin)/admin/actions";
+import type { AdminContact } from "@/app/actions/admin-actions";
+import { updateContactStatus, deleteContact } from "@/app/actions/admin-actions";
 import CustomSelect from "@/components/ui/custom-select";
 
 interface Props {

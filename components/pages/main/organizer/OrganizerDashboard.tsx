@@ -271,19 +271,21 @@ export default function OrganizerDashboard({ races: initialRaces }: Props) {
       )}
 
       {/* Edit Race Details Modal */}
-      <EditRaceModal
-        open={!!editingRaceDetail}
-        onClose={() => setEditingRaceDetail(null)}
-        raceToEdit={editingRaceDetail!}
-        onUpdated={(updatedRace) => {
-          setRaces((prev) =>
-            prev.map((r) =>
-              r.id === updatedRace.id ? { ...r, ...updatedRace } : r,
-            ),
-          );
-          setEditingRaceDetail(null);
-        }}
-      />
+      {editingRaceDetail && (
+        <EditRaceModal
+          open={!!editingRaceDetail}
+          onClose={() => setEditingRaceDetail(null)}
+          raceToEdit={editingRaceDetail!}
+          onUpdated={(updatedRace) => {
+            setRaces((prev) =>
+              prev.map((r) =>
+                r.id === updatedRace.id ? { ...r, ...updatedRace } : r,
+              ),
+            );
+            setEditingRaceDetail(null);
+          }}
+        />
+      )}
     </div>
   );
 }

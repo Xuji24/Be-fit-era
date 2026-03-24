@@ -1,0 +1,12 @@
+
+> be-fit-era@0.1.0 lint
+> eslint
+
+
+D:\Kuting\VScode Projects\Projects\project-1\be-fit-era\app\(main)\actions.ts
+  249:9  warning  'ip' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  413:9  warning  'ip' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  514:9  warning  'ip' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+✖ 3 problems (0 errors, 3 warnings)
+

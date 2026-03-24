@@ -64,10 +64,18 @@ utils/            # Type definitions, constants, and miscellaneous utilities
   - Fixed API data fetching bounds (switched chronological `before` param to `after`) to instantly show newer runs and restrict logging historical runs prior to the virtual race start date.
   - Stripped out placeholder "mock data" from authenticated user states in `activities/page.tsx`, directly fixing arbitrary UUID database rejection errors upon distance import.
 - **UI Enhancements:** Restructured overflowing modal layouts to prevent dynamic dropdown clipping and introduced sleek, dark-mode compatible custom webkit scrollbars.
+- **Settings Layout Refactoring:** Reorganized the settings page forms (`SettingsPage.tsx` and `organizer-application.tsx`) into a uniform grid structure for consistent layout sizes across all inputs.
 - **Workspace Cleanup:** Pruned obsolete compilation logs, linting dumps, and experimental assets (e.g. `box.test`) from the project root.
 
 ## 6. Next Steps & Todo
-- [ ] Refactor remaining large components (if any) to abide by our new 500-line modularization rules.
-- [ ] Implement notification services (automated emails for race successful registration, completion, etc. via Resend or text messaging).
-- [ ] Expand Administrative Dashboard (implement better analytical charts and dispute handling logs).
-- [ ] Implement secure Payment collection pipeline logic depending on the user's chosen method (e.g., GCash, Card, internal point system). 
+- [ ] **Facebook Messenger Integration:** Connect and test race sharing functionality once the Fitra team's Facebook App ID is acquired. Update `share-race-popover.tsx` with the generated ID.
+- [ ] **Automated Race Timeframes:** Set up cron jobs or edge functions to automatically switch active races to "completed" status when their end dates pass.
+- [ ] **Anti-Cheat & Dispute Resolution:** Develop admin tooling to handle user disputes or flag suspicious manual activity logs vs. imported API logs (Strava).
+- [ ] **GPX/Map Visualizations:** Implement interactive route maps mapping uploaded or synced Strava GPX files on individual activity pages.
+- [ ] **Performance & Pagination:** Optimize database queries for Global Leaderboards and implement infinite scrolling pagination to handle high participant volumes natively.
+- [ ] **Race Cancellations & Refunds:** Formulate policy procedures and associated backend flows allowing organizers to manage race cancellations properly via connected payment gateways.
+- [ ] **Finalize Post-launch QA:** Conduct end-to-end user acceptance testing across authentication, application, organization dashboard, and registration pathways.
+- [x] Refactor remaining large components (if any) to abide by our new 500-line modularization rules.
+- [x] Formulated API endpoints/PoC for notification services (Resend) (automated emails for race successful registration, completion, etc. via Resend or text messaging).
+- [x] Expanded Administrative Dashboard with Recharts metrics (implement better analytical charts and dispute handling logs).
+- [x] Developed PoC Stripe implementation endpoint logic depending on the user's chosen method (e.g., GCash, Card, internal point system). 

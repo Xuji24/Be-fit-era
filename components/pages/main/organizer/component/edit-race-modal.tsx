@@ -4,7 +4,7 @@ import { useState, useTransition, useRef } from "react";
 import { X, Loader2, Trophy, Upload, Trash2, Shirt, Medal, Award } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
-import { updateRace } from "@/app/(main)/actions";
+import { updateRace } from "@/app/actions/organizer-actions";
 import type { OrganizerRace } from "../OrganizerDashboard";
 import CustomSelect from "@/components/ui/custom-select";
 import Image from "next/image";
@@ -24,51 +24,74 @@ type ExtendedRace = OrganizerRace & {
   registrationDeadline?: string;
 };
 
-export default function EditRaceModal({ open, onClose, raceToEdit, onUpdated }: Props) {
+export default function EditRaceModal({
+  open,
+  onClose,
+  raceToEdit,
+  onUpdated,
+}: Props) {
   const [isPending, startTransition] = useTransition();
 
   const extendedRace = raceToEdit as ExtendedRace;
 
-  const [title, setTitle] = useState(extendedRace.title || "");
-  const [category, setCategory] = useState<string>(extendedRace.category || "5K");
-  const [targetDistance, setTargetDistance] = useState(extendedRace.targetDistance?.toString() || "");
-  const [eventDate, setEventDate] = useState(extendedRace.eventDate || "");
-  
-  const [location, setLocation] = useState(extendedRace.location || "");
-  const [description, setDescription] = useState(extendedRace.description || "");
-  const [maxParticipants, setMaxParticipants] = useState(extendedRace.maxParticipants?.toString() || "");
-  const [registrationDeadline, setRegistrationDeadline] = useState(extendedRace.registrationDeadline || "");
+  const [title, setTitle] = useState(extendedRace?.title || "");
+  const [category, setCategory] = useState<string>(
+    extendedRace?.category || "5K",
+  );
+  const [targetDistance, setTargetDistance] = useState(
+    extendedRace?.targetDistance?.toString() || "",
+  );
+  const [eventDate, setEventDate] = useState(extendedRace?.eventDate || "");
+
+  const [location, setLocation] = useState(extendedRace?.location || "");
+  const [description, setDescription] = useState(
+    extendedRace?.description || "",
+  );
+  const [maxParticipants, setMaxParticipants] = useState(
+    extendedRace?.maxParticipants?.toString() || "",
+  );
+  const [registrationDeadline, setRegistrationDeadline] = useState(
+    extendedRace?.registrationDeadline || "",
+  );
 
   // Design upload states
   type DesignKey = "tshirt" | "medal" | "certificate";
-  const [designFiles, setDesignFiles] = useState<Record<DesignKey, File | null>>({
-    tshirt: null, medal: null, certificate: null,
+  const [designFiles, setDesignFiles] = useState<
+    Record<DesignKey, File | null>
+  >({
+    tshirt: null,
+    medal: null,
+    certificate: null,
   });
-  const [designPreviews, setDesignPreviews] = useState<Record<DesignKey, string | null>>({
-    tshirt: extendedRace.tshirtDesignUrl ?? null,
-    medal: extendedRace.medalDesignUrl ?? null,
-    certificate: extendedRace.certificateDesignUrl ?? null,
+  const [designPreviews, setDesignPreviews] = useState<
+    Record<DesignKey, string | null>
+  >({
+    tshirt: extendedRace?.tshirtDesignUrl ?? null,
+    medal: extendedRace?.medalDesignUrl ?? null,
+    certificate: extendedRace?.certificateDesignUrl ?? null,
   });
   const designRefs = useRef<Record<DesignKey, HTMLInputElement | null>>({
-    tshirt: null, medal: null, certificate: null,
+    tshirt: null,
+    medal: null,
+    certificate: null,
   });
 
-  const [prevRaceId, setPrevRaceId] = useState(extendedRace.id);
+  const [prevRaceId, setPrevRaceId] = useState(extendedRace?.id);
 
-  if (extendedRace.id !== prevRaceId) {
-    setPrevRaceId(extendedRace.id);
-    setTitle(extendedRace.title || "");
-    setCategory(extendedRace.category || "5K");
-    setTargetDistance(extendedRace.targetDistance?.toString() || "");
-    setEventDate(extendedRace.eventDate || "");
-    setLocation(extendedRace.location || "");
-    setDescription(extendedRace.description || "");
-    setMaxParticipants(extendedRace.maxParticipants?.toString() || "");
-    setRegistrationDeadline(extendedRace.registrationDeadline || "");
+  if (extendedRace?.id !== prevRaceId) {
+    setPrevRaceId(extendedRace?.id);
+    setTitle(extendedRace?.title || "");
+    setCategory(extendedRace?.category || "5K");
+    setTargetDistance(extendedRace?.targetDistance?.toString() || "");
+    setEventDate(extendedRace?.eventDate || "");
+    setLocation(extendedRace?.location || "");
+    setDescription(extendedRace?.description || "");
+    setMaxParticipants(extendedRace?.maxParticipants?.toString() || "");
+    setRegistrationDeadline(extendedRace?.registrationDeadline || "");
     setDesignPreviews({
-      tshirt: extendedRace.tshirtDesignUrl ?? null,
-      medal: extendedRace.medalDesignUrl ?? null,
-      certificate: extendedRace.certificateDesignUrl ?? null,
+      tshirt: extendedRace?.tshirtDesignUrl ?? null,
+      medal: extendedRace?.medalDesignUrl ?? null,
+      certificate: extendedRace?.certificateDesignUrl ?? null,
     });
     setDesignFiles({ tshirt: null, medal: null, certificate: null });
   }
@@ -93,7 +116,10 @@ export default function EditRaceModal({ open, onClose, raceToEdit, onUpdated }: 
     setDesignFiles((prev) => ({ ...prev, [key]: file }));
     const reader = new FileReader();
     reader.onload = (e) => {
-      setDesignPreviews((prev) => ({ ...prev, [key]: e.target?.result as string }));
+      setDesignPreviews((prev) => ({
+        ...prev,
+        [key]: e.target?.result as string,
+      }));
     };
     reader.readAsDataURL(file);
   };
@@ -121,32 +147,63 @@ export default function EditRaceModal({ open, onClose, raceToEdit, onUpdated }: 
     startTransition(async () => {
       // Upload design files if any
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         toast.error("You must be logged in.");
         return;
       }
 
-      let tshirtDesignUrl: string | undefined = raceToEdit.tshirtDesignUrl ?? undefined;
-      let medalDesignUrl: string | undefined = raceToEdit.medalDesignUrl ?? undefined;
-      let certificateDesignUrl: string | undefined = raceToEdit.certificateDesignUrl ?? undefined;
+      let tshirtDesignUrl: string | undefined =
+        raceToEdit.tshirtDesignUrl ?? undefined;
+      let medalDesignUrl: string | undefined =
+        raceToEdit.medalDesignUrl ?? undefined;
+      let certificateDesignUrl: string | undefined =
+        raceToEdit.certificateDesignUrl ?? undefined;
 
       const raceId = raceToEdit.id;
 
-      const uploadMap: { key: DesignKey; storagePath: string; setter: (url: string) => void; existingUrl: string | null }[] = [
-        { key: "tshirt", storagePath: "tshirt", setter: (url) => { tshirtDesignUrl = url; }, existingUrl: raceToEdit.tshirtDesignUrl },
-        { key: "medal", storagePath: "medal", setter: (url) => { medalDesignUrl = url; }, existingUrl: raceToEdit.medalDesignUrl },
-        { key: "certificate", storagePath: "certificate", setter: (url) => { certificateDesignUrl = url; }, existingUrl: raceToEdit.certificateDesignUrl },
+      const uploadMap: {
+        key: DesignKey;
+        storagePath: string;
+        setter: (url: string) => void;
+        existingUrl: string | null;
+      }[] = [
+        {
+          key: "tshirt",
+          storagePath: "tshirt",
+          setter: (url) => {
+            tshirtDesignUrl = url;
+          },
+          existingUrl: raceToEdit.tshirtDesignUrl,
+        },
+        {
+          key: "medal",
+          storagePath: "medal",
+          setter: (url) => {
+            medalDesignUrl = url;
+          },
+          existingUrl: raceToEdit.medalDesignUrl,
+        },
+        {
+          key: "certificate",
+          storagePath: "certificate",
+          setter: (url) => {
+            certificateDesignUrl = url;
+          },
+          existingUrl: raceToEdit.certificateDesignUrl,
+        },
       ];
 
       for (const { key, storagePath, setter, existingUrl } of uploadMap) {
         const file = designFiles[key];
-        
+
         // Handle removal case
         if (designPreviews[key] === null && existingUrl) {
           setter("");
         }
-        
+
         if (file) {
           const ext = file.name.split(".").pop() ?? "png";
           const filePath = `${user.id}/${raceId}/${storagePath}_${Date.now()}.${ext}`;
@@ -155,17 +212,22 @@ export default function EditRaceModal({ open, onClose, raceToEdit, onUpdated }: 
             .upload(filePath, file, { upsert: true });
 
           if (uploadError) {
-            toast.error(`Failed to upload ${DESIGN_CONFIGS.find((d) => d.key === key)?.label}. Please try again.`);
+            toast.error(
+              `Failed to upload ${DESIGN_CONFIGS.find((d) => d.key === key)?.label}. Please try again.`,
+            );
             return;
           }
 
-          const { data: urlData } = supabase.storage.from("race-designs").getPublicUrl(filePath);
+          const { data: urlData } = supabase.storage
+            .from("race-designs")
+            .getPublicUrl(filePath);
           setter(urlData.publicUrl);
         }
       }
 
-      const payload: Parameters<typeof updateRace>[0] = { raceId,
-        
+      const payload: Parameters<typeof updateRace>[0] = {
+        raceId,
+
         title: title.trim(),
         category,
         targetDistance: Number(targetDistance),
@@ -176,9 +238,15 @@ export default function EditRaceModal({ open, onClose, raceToEdit, onUpdated }: 
         registrationDeadline: registrationDeadline || undefined,
       };
 
-      if (tshirtDesignUrl !== undefined) payload.tshirtDesignUrl = tshirtDesignUrl === "" ? undefined : tshirtDesignUrl;
-      if (medalDesignUrl !== undefined) payload.medalDesignUrl = medalDesignUrl === "" ? undefined : medalDesignUrl;
-      if (certificateDesignUrl !== undefined) payload.certificateDesignUrl = certificateDesignUrl === "" ? undefined : certificateDesignUrl;
+      if (tshirtDesignUrl !== undefined)
+        payload.tshirtDesignUrl =
+          tshirtDesignUrl === "" ? undefined : tshirtDesignUrl;
+      if (medalDesignUrl !== undefined)
+        payload.medalDesignUrl =
+          medalDesignUrl === "" ? undefined : medalDesignUrl;
+      if (certificateDesignUrl !== undefined)
+        payload.certificateDesignUrl =
+          certificateDesignUrl === "" ? undefined : certificateDesignUrl;
 
       const result = await updateRace(payload);
 
@@ -195,11 +263,20 @@ export default function EditRaceModal({ open, onClose, raceToEdit, onUpdated }: 
         targetDistance: Number(targetDistance),
         eventDate,
         maxParticipants: maxParticipants ? Number(maxParticipants) : null,
-        tshirtDesignUrl: payload.tshirtDesignUrl !== undefined ? payload.tshirtDesignUrl : raceToEdit.tshirtDesignUrl,
-        medalDesignUrl: payload.medalDesignUrl !== undefined ? payload.medalDesignUrl : raceToEdit.medalDesignUrl,
-        certificateDesignUrl: payload.certificateDesignUrl !== undefined ? payload.certificateDesignUrl : raceToEdit.certificateDesignUrl,
+        tshirtDesignUrl:
+          payload.tshirtDesignUrl !== undefined
+            ? payload.tshirtDesignUrl
+            : raceToEdit.tshirtDesignUrl,
+        medalDesignUrl:
+          payload.medalDesignUrl !== undefined
+            ? payload.medalDesignUrl
+            : raceToEdit.medalDesignUrl,
+        certificateDesignUrl:
+          payload.certificateDesignUrl !== undefined
+            ? payload.certificateDesignUrl
+            : raceToEdit.certificateDesignUrl,
       };
-      
+
       onUpdated(updatedRace);
     });
   };
@@ -396,10 +473,14 @@ export default function EditRaceModal({ open, onClose, raceToEdit, onUpdated }: 
                     </button>
                   )}
                   <input
-                    ref={(el) => { designRefs.current[key] = el; }}
+                    ref={(el) => {
+                      designRefs.current[key] = el;
+                    }}
                     type="file"
                     accept=".png,.jpg,.jpeg,.webp,.svg"
-                    onChange={(e) => handleDesignSelect(key, e.target.files?.[0] ?? null)}
+                    onChange={(e) =>
+                      handleDesignSelect(key, e.target.files?.[0] ?? null)
+                    }
                     className="hidden"
                   />
                 </div>

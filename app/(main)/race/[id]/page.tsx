@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { racesData } from "@/data/races-data";
 import RaceDetailPage from "@/components/pages/main/race/RaceDetailPage";
-import { checkRaceRegistration } from "@/app/(main)/actions";
+import { checkRaceRegistration } from "@/app/actions/main-actions";
 import { createClient } from "@/lib/supabase/server";
 
 interface Props {

@@ -7,7 +7,7 @@ import { Button } from "@/components/shadcn/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
-import { signUp, signInWithGoogle } from "@/app/(auth)/actions";
+import { signUp, signInWithGoogle } from "@/app/actions/auth-actions";
 import { validatePasswordStrength } from "@/lib/validators";
 
 const signupErrors: Record<string, string> = {

@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { FileCheck, Check, X, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
-import type { AdminApplication } from "@/app/(admin)/admin/actions";
-import { approveApplication, rejectApplication } from "@/app/(admin)/admin/actions";
+import type { AdminApplication } from "@/app/actions/admin-actions";
+import { approveApplication, rejectApplication } from "@/app/actions/admin-actions";
 import CustomSelect from "@/components/ui/custom-select";
 
 interface Props {

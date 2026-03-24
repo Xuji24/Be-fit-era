@@ -5,14 +5,16 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { validatePasswordStrength } from "@/lib/validators";
 import { toast } from "sonner";
-import { changePassword } from "@/app/(auth)/actions";
+import { changePassword } from "@/app/actions/auth-actions";
 
 const settingsErrors: Record<string, string> = {
   "New password should be different from the old password.":
     "Please choose a different password.",
   "Must be at least 8 characters": "Password must be at least 8 characters.",
-  "Must include an uppercase letter": "Password must include an uppercase letter.",
-  "Must include a lowercase letter": "Password must include a lowercase letter.",
+  "Must include an uppercase letter":
+    "Password must include an uppercase letter.",
+  "Must include a lowercase letter":
+    "Password must include a lowercase letter.",
   "Must include a number": "Password must include a number.",
   "Must include a symbol": "Password must include a symbol.",
 };
@@ -154,7 +156,7 @@ export default function SettingsPage() {
                   <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                     Current Password
                   </label>
-                  <div className="relative max-w-md">
+                  <div className="relative">
                     <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
                     <input
                       type={showCurrent ? "text" : "password"}

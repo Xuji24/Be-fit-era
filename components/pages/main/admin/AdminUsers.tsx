@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Shield, ShieldCheck, User } from "lucide-react";
 import { toast } from "sonner";
-import type { AdminUser } from "@/app/(admin)/admin/actions";
-import { updateUserRole } from "@/app/(admin)/admin/actions";
+import type { AdminUser } from "@/app/actions/admin-actions";
+import { updateUserRole } from "@/app/actions/admin-actions";
 import CustomSelect from "@/components/ui/custom-select";
 
 interface Props {

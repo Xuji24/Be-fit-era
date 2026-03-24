@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ClipboardList } from "lucide-react";
-import type { AdminRegistration } from "@/app/(admin)/admin/actions";
+import type { AdminRegistration } from "@/app/actions/admin-actions";
 import CustomSelect from "@/components/ui/custom-select";
 
 interface Props {

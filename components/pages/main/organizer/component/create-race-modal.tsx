@@ -4,7 +4,7 @@ import { useState, useTransition, useRef } from "react";
 import { X, Loader2, Trophy, Upload, Trash2, Shirt, Medal, Award } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
-import { createRace } from "@/app/(main)/actions";
+import { createRace } from "@/app/actions/organizer-actions";
 import type { OrganizerRace } from "../OrganizerDashboard";
 import CustomSelect from "@/components/ui/custom-select";
 import Image from "next/image";

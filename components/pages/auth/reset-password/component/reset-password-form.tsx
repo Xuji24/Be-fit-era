@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/shadcn/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { resetPassword } from "@/app/(auth)/actions";
+import { resetPassword } from "@/app/actions/auth-actions";
 import { validatePasswordStrength } from "@/lib/validators";
 
 const resetErrors: Record<string, string> = {

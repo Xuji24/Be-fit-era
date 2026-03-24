@@ -5,7 +5,7 @@ import { X, User, Mail, Phone, Shirt, CreditCard, Loader2 } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import { RaceEvent } from "@/utils/types/race-types";
 import { toast } from "sonner";
-import { registerForRace } from "@/app/(main)/actions";
+import { registerForRace } from "@/app/actions/main-actions";
 
 interface Props {
   race: RaceEvent;

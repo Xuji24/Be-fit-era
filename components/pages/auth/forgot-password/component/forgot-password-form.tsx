@@ -6,7 +6,7 @@ import { Button } from "@/components/shadcn/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
-import { forgotPassword } from "@/app/(auth)/actions";
+import { forgotPassword } from "@/app/actions/auth-actions";
 import LoginInput from "@/components/pages/auth/login/component/login-input";
 
 const forgotErrors: Record<string, string> = {

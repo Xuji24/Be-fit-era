@@ -20,7 +20,7 @@ import {
 import { Button } from "@/components/shadcn/button";
 import JoinRaceModal from "./component/join-race-modal";
 import ShareRacePopover from "./component/share-race-popover";
-import { checkRaceRegistration } from "@/app/(main)/actions";
+import { checkRaceRegistration } from "@/app/actions/main-actions";
 import { RewardPreviewCarousel } from "@/components/ui/reward-preview-carousel";
 import { useRouter } from "next/navigation";
 

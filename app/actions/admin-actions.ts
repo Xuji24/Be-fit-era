@@ -59,19 +59,38 @@ export interface AdminStats {
   totalContacts: number;
   pendingApplications: number;
   totalSponsors: number;
+  registrationsPerMonth: { month: string; count: number }[];
 }
 
 export async function getAdminStats(): Promise<AdminStats> {
   const { supabase } = await requireAdmin();
 
-  const [users, races, registrations, contacts, applications, sponsors] = await Promise.all([
-    supabase.from("profiles").select("id", { count: "exact", head: true }),
-    supabase.from("races").select("id", { count: "exact", head: true }),
-    supabase.from("race_registrations").select("id", { count: "exact", head: true }),
-    supabase.from("contact_submissions").select("id", { count: "exact", head: true }),
-    supabase.from("organizer_applications").select("id", { count: "exact", head: true }).eq("status", "pending"),
-    supabase.from("sponsors").select("id", { count: "exact", head: true }),
-  ]);
+  const [users, races, registrations, contacts, applications, sponsors] =
+    await Promise.all([
+      supabase.from("profiles").select("id", { count: "exact", head: true }),
+      supabase.from("races").select("id", { count: "exact", head: true }),
+      supabase
+        .from("race_registrations")
+        .select("id", { count: "exact", head: true }),
+      supabase
+        .from("contact_submissions")
+        .select("id", { count: "exact", head: true }),
+      supabase
+        .from("organizer_applications")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "pending"),
+      supabase.from("sponsors").select("id", { count: "exact", head: true }),
+    ]);
+
+  // Mock data for registrations per month
+  const registrationsPerMonth = [
+    { month: "Jan", count: 120 },
+    { month: "Feb", count: 150 },
+    { month: "Mar", count: 180 },
+    { month: "Apr", count: 220 },
+    { month: "May", count: 250 },
+    { month: "Jun", count: 300 },
+  ];
 
   return {
     totalUsers: users.count ?? 0,
@@ -80,6 +99,7 @@ export async function getAdminStats(): Promise<AdminStats> {
     totalContacts: contacts.count ?? 0,
     pendingApplications: applications.count ?? 0,
     totalSponsors: sponsors.count ?? 0,
+    registrationsPerMonth,
   };
 }
 

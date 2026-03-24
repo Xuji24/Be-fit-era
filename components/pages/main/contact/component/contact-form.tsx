@@ -5,7 +5,7 @@ import { Button } from "@/components/shadcn/button";
 import { Send } from "lucide-react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { submitContactForm } from "@/app/(main)/actions";
+import { submitContactForm } from "@/app/actions/main-actions";
 import CustomSelect from "@/components/ui/custom-select";
 
 interface ContactFormData {

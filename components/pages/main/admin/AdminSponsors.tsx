@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Plus, Trash2, ToggleLeft, ToggleRight, Handshake } from "lucide-react";
 import { toast } from "sonner";
-import type { AdminSponsor } from "@/app/(admin)/admin/actions";
-import { createSponsor, updateSponsor, deleteSponsor } from "@/app/(admin)/admin/actions";
+import type { AdminSponsor } from "@/app/actions/admin-actions";
+import { createSponsor, updateSponsor, deleteSponsor } from "@/app/actions/admin-actions";
 
 interface Props {
   sponsors: AdminSponsor[];

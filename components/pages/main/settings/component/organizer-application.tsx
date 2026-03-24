@@ -6,7 +6,7 @@ import {
   submitOrganizerApplication,
   getOrganizerApplicationStatus,
   getUserRole,
-} from "@/app/(main)/actions";
+} from "@/app/actions/main-actions";
 import { toast } from "sonner";
 import {
   Building2,
@@ -65,7 +65,9 @@ export default function OrganizerApplication() {
 
     for (const file of selected) {
       if (!ACCEPTED_TYPES.includes(file.type)) {
-        toast.error(`"${file.name}" is not a supported file type. Use PDF, JPG, PNG, or WebP.`);
+        toast.error(
+          `"${file.name}" is not a supported file type. Use PDF, JPG, PNG, or WebP.`,
+        );
         continue;
       }
       if (file.size > MAX_FILE_SIZE) {
@@ -188,9 +190,13 @@ export default function OrganizerApplication() {
         <div className="p-6 sm:p-8">
           <p className="text-sm text-[#1A1A1A]/60 dark:text-white/40 font-merriweather-sans">
             You can create and manage races from the{" "}
-            <a href="/organizer" className="text-[#FF5733] hover:underline font-medium">
+            <a
+              href="/organizer"
+              className="text-[#FF5733] hover:underline font-medium"
+            >
               Organizer Dashboard
-            </a>.
+            </a>
+            .
           </p>
         </div>
       </div>
@@ -218,7 +224,9 @@ export default function OrganizerApplication() {
         </div>
         <div className="p-6 sm:p-8">
           <p className="text-sm text-[#1A1A1A]/60 dark:text-white/40 font-merriweather-sans">
-            Your application is currently being reviewed by our team. We&apos;ll notify you once a decision has been made. This usually takes 1–3 business days.
+            Your application is currently being reviewed by our team. We&apos;ll
+            notify you once a decision has been made. This usually takes 1–3
+            business days.
           </p>
         </div>
       </div>
@@ -247,163 +255,170 @@ export default function OrganizerApplication() {
         </div>
       </div>
 
-      <div className="p-6 sm:p-8 space-y-5">
-        {/* Rejection notice */}
-        {showRejection && (
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800/30">
-            <XCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm font-medium text-red-700 dark:text-red-400">
-                Your previous application was not approved.
-              </p>
-              {rejectionReason && (
-                <p className="text-xs text-red-600/70 dark:text-red-400/70 mt-1">
-                  Reason: {rejectionReason}
+      <div className="p-6 sm:p-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Rejection notice */}
+          {showRejection && (
+            <div className="md:col-span-2 flex items-start gap-3 p-4 rounded-xl bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800/30">
+              <XCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-red-700 dark:text-red-400">
+                  Your previous application was not approved.
                 </p>
-              )}
-              <p className="text-xs text-red-600/70 dark:text-red-400/70 mt-1">
-                You can submit a new application below.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Organization Name */}
-        <div>
-          <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
-            Organization Name *
-          </label>
-          <div className="relative">
-            <Building2 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
-            <input
-              type="text"
-              value={orgName}
-              onChange={(e) => setOrgName(e.target.value)}
-              placeholder="e.g. Manila Runners Club"
-              maxLength={200}
-              className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
-            />
-          </div>
-        </div>
-
-        {/* Contact Email */}
-        <div>
-          <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
-            Contact Email *
-          </label>
-          <div className="relative">
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
-            <input
-              type="email"
-              value={contactEmail}
-              onChange={(e) => setContactEmail(e.target.value)}
-              placeholder="org@example.com"
-              className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
-            />
-          </div>
-        </div>
-
-        {/* Contact Phone */}
-        <div>
-          <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
-            Contact Phone
-          </label>
-          <div className="relative">
-            <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
-            <input
-              type="tel"
-              value={contactPhone}
-              onChange={(e) => setContactPhone(e.target.value)}
-              placeholder="+63 912 345 6789"
-              className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
-            />
-          </div>
-        </div>
-
-        {/* Description */}
-        <div>
-          <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
-            What races do you plan to host?
-          </label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Describe the type of races you'd like to organize..."
-            rows={3}
-            maxLength={1000}
-            className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans resize-none"
-          />
-        </div>
-
-        {/* Document Upload */}
-        <div>
-          <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
-            Proof Documents * <span className="normal-case tracking-normal font-normal">(Business permit, DTI, SEC, etc.)</span>
-          </label>
-
-          {/* File list */}
-          {files.length > 0 && (
-            <div className="space-y-2 mb-3">
-              {files.map((file, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E]"
-                >
-                  <FileText className="w-4 h-4 text-[#FF5733] shrink-0" />
-                  <span className="text-sm text-[#1A1A1A] dark:text-white truncate flex-1 font-merriweather-sans">
-                    {file.name}
-                  </span>
-                  <span className="text-[10px] text-[#1A1A1A]/40 dark:text-white/30 shrink-0">
-                    {(file.size / 1024 / 1024).toFixed(1)} MB
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => removeFile(idx)}
-                    className="text-[#1A1A1A]/30 dark:text-white/30 hover:text-red-500 transition-colors cursor-pointer"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              ))}
+                {rejectionReason && (
+                  <p className="text-xs text-red-600/70 dark:text-red-400/70 mt-1">
+                    Reason: {rejectionReason}
+                  </p>
+                )}
+                <p className="text-xs text-red-600/70 dark:text-red-400/70 mt-1">
+                  You can submit a new application below.
+                </p>
+              </div>
             </div>
           )}
 
-          {/* Upload button */}
-          {files.length < MAX_FILES && (
-            <label className="flex items-center justify-center gap-2 p-4 rounded-xl border-2 border-dashed border-[#1A1A1A]/10 dark:border-white/10 hover:border-[#FF5733]/30 dark:hover:border-[#FF5733]/30 transition-colors cursor-pointer">
-              <Upload className="w-4 h-4 text-[#1A1A1A]/40 dark:text-white/30" />
-              <span className="text-sm text-[#1A1A1A]/50 dark:text-white/40 font-merriweather-sans">
-                Click to upload (PDF, JPG, PNG — max 5 MB each)
-              </span>
-              <input
-                type="file"
-                accept=".pdf,.jpg,.jpeg,.png,.webp"
-                multiple
-                onChange={handleFileChange}
-                className="hidden"
-              />
+          {/* Organization Name */}
+          <div className="md:col-span-2">
+            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+              Organization Name *
             </label>
-          )}
-        </div>
+            <div className="relative">
+              <Building2 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
+              <input
+                type="text"
+                value={orgName}
+                onChange={(e) => setOrgName(e.target.value)}
+                placeholder="e.g. Manila Runners Club"
+                maxLength={200}
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+              />
+            </div>
+          </div>
 
-        {/* Submit */}
-        <button
-          onClick={handleSubmit}
-          disabled={isPending || uploading}
-          className="w-full py-3 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] disabled:opacity-50 text-white text-sm font-semibold font-raleway transition-colors cursor-pointer flex items-center justify-center gap-2"
-        >
-          {isPending || uploading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              {uploading ? "Uploading documents..." : "Submitting..."}
-            </>
-          ) : (
-            <>
-              <Building2 className="w-4 h-4" />
-              Submit Application
-            </>
-          )}
-        </button>
+          {/* Contact Email */}
+          <div>
+            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+              Contact Email *
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
+              <input
+                type="email"
+                value={contactEmail}
+                onChange={(e) => setContactEmail(e.target.value)}
+                placeholder="org@example.com"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+              />
+            </div>
+          </div>
+
+          {/* Contact Phone */}
+          <div>
+            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+              Contact Phone
+            </label>
+            <div className="relative">
+              <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
+              <input
+                type="tel"
+                value={contactPhone}
+                onChange={(e) => setContactPhone(e.target.value)}
+                placeholder="+63 912 345 6789"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+              />
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="md:col-span-2">
+            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+              What races do you plan to host?
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Describe the type of races you'd like to organize..."
+              rows={3}
+              maxLength={1000}
+              className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans resize-none"
+            />
+          </div>
+
+          {/* Document Upload */}
+          <div className="md:col-span-2">
+            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+              Proof Documents *{" "}
+              <span className="normal-case tracking-normal font-normal">
+                (Business permit, DTI, SEC, etc.)
+              </span>
+            </label>
+
+            {/* File list */}
+            {files.length > 0 && (
+              <div className="space-y-2 mb-3">
+                {files.map((file, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center gap-3 p-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E]"
+                  >
+                    <FileText className="w-4 h-4 text-[#FF5733] shrink-0" />
+                    <span className="text-sm text-[#1A1A1A] dark:text-white truncate flex-1 font-merriweather-sans">
+                      {file.name}
+                    </span>
+                    <span className="text-[10px] text-[#1A1A1A]/40 dark:text-white/30 shrink-0">
+                      {(file.size / 1024 / 1024).toFixed(1)} MB
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeFile(idx)}
+                      className="text-[#1A1A1A]/30 dark:text-white/30 hover:text-red-500 transition-colors cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Upload button */}
+            {files.length < MAX_FILES && (
+              <label className="flex items-center justify-center gap-2 p-4 rounded-xl border-2 border-dashed border-[#1A1A1A]/10 dark:border-white/10 hover:border-[#FF5733]/30 dark:hover:border-[#FF5733]/30 transition-colors cursor-pointer">
+                <Upload className="w-4 h-4 text-[#1A1A1A]/40 dark:text-white/30" />
+                <span className="text-sm text-[#1A1A1A]/50 dark:text-white/40 font-merriweather-sans">
+                  Click to upload (PDF, JPG, PNG — max 5 MB each)
+                </span>
+                <input
+                  type="file"
+                  accept=".pdf,.jpg,.jpeg,.png,.webp"
+                  multiple
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+              </label>
+            )}
+          </div>
+
+          {/* Submit */}
+          <div className="md:col-span-2 pt-2">
+            <button
+              onClick={handleSubmit}
+              disabled={isPending || uploading}
+              className="w-full sm:w-auto px-8 py-3 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] disabled:opacity-50 text-white text-sm font-semibold font-raleway transition-colors cursor-pointer flex items-center justify-center gap-2"
+            >
+              {isPending || uploading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  {uploading ? "Uploading documents..." : "Submitting..."}
+                </>
+              ) : (
+                <>
+                  <Building2 className="w-4 h-4" />
+                  Submit Application
+                </>
+              )}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

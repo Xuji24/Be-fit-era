@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { ToggleLeft, ToggleRight, Trash2, MapPin, Calendar, Users } from "lucide-react";
 import { toast } from "sonner";
-import type { AdminRace } from "@/app/(admin)/admin/actions";
-import { toggleRaceRegistration, deleteRace } from "@/app/(admin)/admin/actions";
+import type { AdminRace } from "@/app/actions/admin-actions";
+import { toggleRaceRegistration, deleteRace } from "@/app/actions/admin-actions";
 
 interface Props {
   races: AdminRace[];

@@ -32,7 +32,7 @@ const socialPlatforms = [
       </svg>
     ),
     getUrl: (url: string) =>
-      `https://www.facebook.com/dialog/send?link=${encodeURIComponent(url)}&app_id=0&redirect_uri=${encodeURIComponent(url)}`,
+      null,
   },
   {
     id: "instagram",

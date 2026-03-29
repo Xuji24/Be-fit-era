@@ -18,6 +18,8 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
+import RaceRecentActivities from "./component/RaceRecentActivities";
+import GpxMap from "@/components/ui/gpx-map";
 import JoinRaceModal from "./component/join-race-modal";
 import ShareRacePopover from "./component/share-race-popover";
 import { checkRaceRegistration } from "@/app/actions/main-actions";
@@ -153,10 +155,17 @@ export default function RaceDetailPage({
                 <Trophy size={18} className="text-[#FF5733]" />
                 About This Race
               </h2>
-              <p className="font-merriweather-sans text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                {race.fullDescription}
-              </p>
-            </div>
+              
+              {/* Optional MAP section */}
+              {race.gpxUrl && (
+                <div className="mt-8">
+                  <h2 className="font-raleway font-bold text-lg text-foreground mb-3 flex items-center gap-2">
+                    <MapPin size={18} className="text-[#FF5733]" />
+                    Race Route
+                  </h2>
+                  <GpxMap gpxUrl={race.gpxUrl} />
+                </div>
+              )}
 
             {/* E-Certificate */}
             <div className="bg-linear-to-br from-[#FFF8F5] to-[#FFF1EB] dark:from-[#1C1C1E] dark:to-[#221A16] rounded-2xl p-6 border border-[#FF5733]/10 dark:border-[#FF5733]/20">
@@ -270,6 +279,10 @@ export default function RaceDetailPage({
                 </ul>
               </div>
             )}
+          </div>
+
+          <div className="mt-8">
+            <RaceRecentActivities raceDbId={race.dbId} />
           </div>
 
           {/* Sidebar — Right 1/3 */}
@@ -402,3 +415,5 @@ export default function RaceDetailPage({
     </div>
   );
 }
+
+

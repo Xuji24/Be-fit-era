@@ -10,6 +10,7 @@ import {
   Mail,
   FileCheck,
   Handshake,
+  AlertTriangle,
 } from "lucide-react";
 
 const navItems = [
@@ -17,6 +18,7 @@ const navItems = [
   { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/races", label: "Races", icon: Trophy },
   { href: "/admin/registrations", label: "Registrations", icon: ClipboardList },
+  { href: "/admin/disputes", label: "Disputes", icon: AlertTriangle },
   { href: "/admin/contacts", label: "Contacts", icon: Mail },
   { href: "/admin/applications", label: "Applications", icon: FileCheck },
   { href: "/admin/sponsors", label: "Sponsors", icon: Handshake },

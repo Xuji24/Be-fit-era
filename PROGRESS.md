@@ -54,6 +54,16 @@ utils/            # Type definitions, constants, and miscellaneous utilities
 - **RLS Policies:** Row Level Security strict controls making sure organizers can only edit their races, and users can only view/edit their own private profiles, keeping multitenancy logic safe.
 
 ## 5. Recent Actions Completed
+- **GPX Route Map Implementations:**
+  - Built GpxMapInner using Leaflet & OpenStreetMap.
+  - Implemented client-safe Next.js dynamic imports to bypass SSR DOM errors with Leaflet.
+  - Automated GPX parsing from strings/URLs directly into map coordinates (xml2js) and integrated it into the Race Pages.
+- **Automated DB Operations:** Utilized PostgreSQL pg_cron extension to implement automated checking and transitioning of Race Statuses without server-side compute!
+- **Anti-Cheat Ecosystem:**
+  - Created new Supabase migration adding is_flagged tracking on all runs.
+  - Built a dynamic "Live Feed" (RaceRecentActivities.tsx) on Race Details that allows normal runners to report mathematically impossible activities.
+  - Created a robust /admin/disputes Admin Dashboard allowing resolution or rejection of flagged runs.
+- **Architectural Documentation Formed:** Generated VOCABULARY.md and FEATURES.md summarizing the technical stack, codebase paradigms, and architectural feature list for clearer developer onboarding. 
 - Implemented `updateRace` server action logic targeting Organizer dashboard allowing updates correctly scoped to race ownership.
 - Cache invalidation rules applied properly via `revalidatePath` mapping.
 - Added comprehensive initial New User Guide.
@@ -68,10 +78,11 @@ utils/            # Type definitions, constants, and miscellaneous utilities
 - **Workspace Cleanup:** Pruned obsolete compilation logs, linting dumps, and experimental assets (e.g. `box.test`) from the project root.
 
 ## 6. Next Steps & Todo
+- [ ] **Community Feed Page:** Build a social page where users can post pictures and run achievements (create, like, share, edit, delete).
 - [ ] **Facebook Messenger Integration:** Connect and test race sharing functionality once the Fitra team's Facebook App ID is acquired. Update `share-race-popover.tsx` with the generated ID.
-- [ ] **Automated Race Timeframes:** Set up cron jobs or edge functions to automatically switch active races to "completed" status when their end dates pass.
-- [ ] **Anti-Cheat & Dispute Resolution:** Develop admin tooling to handle user disputes or flag suspicious manual activity logs vs. imported API logs (Strava).
-- [ ] **GPX/Map Visualizations:** Implement interactive route maps mapping uploaded or synced Strava GPX files on individual activity pages.
+- [x] **Automated Race Timeframes:** Set up cron jobs or edge functions to automatically switch active races to "completed" status when their end dates pass.
+- [x] **Anti-Cheat & Dispute Resolution:** Develop admin tooling to handle user disputes or flag suspicious manual activity logs vs. imported API logs (Strava).
+- [x] **GPX/Map Visualizations:** Built Next.js `dynamic` mapping components using `react-leaflet`, properly parsed GPX files, and implemented interactive race route tracing on `RaceDetailPage.tsx`.
 - [ ] **Performance & Pagination:** Optimize database queries for Global Leaderboards and implement infinite scrolling pagination to handle high participant volumes natively.
 - [ ] **Race Cancellations & Refunds:** Formulate policy procedures and associated backend flows allowing organizers to manage race cancellations properly via connected payment gateways.
 - [ ] **Finalize Post-launch QA:** Conduct end-to-end user acceptance testing across authentication, application, organization dashboard, and registration pathways.
@@ -79,3 +90,7 @@ utils/            # Type definitions, constants, and miscellaneous utilities
 - [x] Formulated API endpoints/PoC for notification services (Resend) (automated emails for race successful registration, completion, etc. via Resend or text messaging).
 - [x] Expanded Administrative Dashboard with Recharts metrics (implement better analytical charts and dispute handling logs).
 - [x] Developed PoC Stripe implementation endpoint logic depending on the user's chosen method (e.g., GCash, Card, internal point system). 
+
+
+
+

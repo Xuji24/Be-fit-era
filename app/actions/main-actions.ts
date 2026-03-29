@@ -381,3 +381,19 @@ export async function getUserRole(): Promise<string> {
 }
 
 
+
+export async function getRecentActivitiesForRace(raceDbId: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('activity_entries').select('id, user_id, distance_km, activity_type, activity_date, created_at, source, user:profiles!activity_entries_user_id_fkey(full_name, avatar_url), registration:race_registrations!inner(race_id)').eq('registration.race_id', raceDbId).order('created_at', { ascending: false }).limit(20);
+  if (error) return { success: false, error: error.message };
+  return { success: true, data: data.map((d: any) => ({...d, runner_name: d.user?.[0]?.full_name || 'Anonymous', avatar: d.user?.[0]?.avatar_url})) };
+}
+
+export async function flagActivity(activityId: string, reason: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: 'Unauthorized' };
+  const { error } = await supabase.from('activity_entries').update({ is_flagged: true, flag_reason: reason, reported_by: user.id }).eq('id', activityId);
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}

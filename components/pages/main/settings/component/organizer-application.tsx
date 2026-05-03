@@ -43,6 +43,23 @@ export default function OrganizerApplication() {
   const [contactEmail, setContactEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [description, setDescription] = useState("");
+
+  const formatPhoneNumber = (raw: string): string => {
+    const digits = raw.replace(/[^0-9+]/g, "");
+    if (digits.startsWith("+63")) {
+      const nums = digits.slice(3);
+      const parts = [
+        "+63",
+        nums.slice(0, 3),
+        nums.slice(3, 6),
+        nums.slice(6, 10),
+      ];
+      return parts.filter(Boolean).join(" ").trim();
+    }
+    const nums = digits.replace(/^\+/, "");
+    const parts = [nums.slice(0, 4), nums.slice(4, 7), nums.slice(7, 11)];
+    return parts.filter(Boolean).join(" ").trim();
+  };
   const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
 
@@ -322,8 +339,15 @@ export default function OrganizerApplication() {
               <input
                 type="tel"
                 value={contactPhone}
-                onChange={(e) => setContactPhone(e.target.value)}
-                placeholder="+63 912 345 6789"
+                onChange={(e) =>
+                  setContactPhone(
+                    formatPhoneNumber(
+                      e.target.value.replace(/[^0-9+\-\s()]/g, ""),
+                    ),
+                  )
+                }
+                maxLength={16}
+                placeholder="0917 123 4567"
                 className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
               />
             </div>

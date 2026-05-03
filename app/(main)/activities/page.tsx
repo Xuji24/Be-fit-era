@@ -49,7 +49,8 @@ export default async function Activities() {
       "id, activity_type, distance_km, activity_date, notes, registration_id, race_registrations(races(title))",
     )
     .eq("user_id", user.id)
-    .order("activity_date", { ascending: false });
+    .order("activity_date", { ascending: false })
+    .limit(100);
 
   // Transform registrations into JoinedRace[]
   const dbJoinedRaces: JoinedRace[] = (registrations ?? [])
@@ -67,9 +68,11 @@ export default async function Activities() {
       const targetDist = Number(race.target_distance_km);
 
       let status: JoinedRace["status"];
+      const eventStarted =
+        race.event_date && new Date(race.event_date) <= new Date();
       if (r.status === "completed" || loggedDist >= targetDist) {
         status = "completed";
-      } else if (loggedDist > 0) {
+      } else if (loggedDist > 0 || eventStarted) {
         status = "in-progress";
       } else {
         status = "upcoming";

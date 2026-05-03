@@ -1,7 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Skeleton } from "@/components/ui/card"; // fallback if you don't have skeleton we'll just use a div
 
 const GpxMapInner = dynamic(() => import("./gpx-map-inner"), {
   ssr: false,

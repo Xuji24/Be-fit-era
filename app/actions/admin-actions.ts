@@ -117,20 +117,29 @@ export interface AdminUser {
   created_at: string;
 }
 
-export async function getAdminUsers(): Promise<AdminUser[]> {
+export async function getAdminUsers(
+  page = 1,
+  limit = 50,
+): Promise<{ data: AdminUser[]; total: number }> {
   const { supabase } = await requireAdmin();
-  const { data, error } = await supabase
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  const { data, error, count } = await supabase
     .from("profiles")
-    .select("id, username, full_name, avatar_url, country, role, created_at")
-    .order("created_at", { ascending: false });
+    .select("id, username, full_name, avatar_url, country, role, created_at", {
+      count: "exact",
+    })
+    .order("created_at", { ascending: false })
+    .range(from, to);
 
   if (error) throw new Error("Failed to fetch users.");
-  return data ?? [];
+  return { data: data ?? [], total: count ?? 0 };
 }
 
 export async function updateUserRole(
   targetUserId: string,
-  newRole: string
+  newRole: string,
 ): Promise<ActionResult> {
   const { supabase, userId } = await requireAdmin();
 
@@ -183,23 +192,38 @@ export interface AdminRace {
   registration_count: number;
 }
 
-export async function getAdminRaces(): Promise<AdminRace[]> {
+export async function getAdminRaces(
+  page = 1,
+  limit = 50,
+): Promise<{ data: AdminRace[]; total: number }> {
   const { supabase } = await requireAdmin();
-  const { data: races, error } = await supabase
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  const {
+    data: races,
+    error,
+    count,
+  } = await supabase
     .from("races")
-    .select("id, title, organizer, category, target_distance_km, event_date, location, registration_open, max_participants, created_at")
-    .order("created_at", { ascending: false });
+    .select(
+      "id, title, organizer, category, target_distance_km, event_date, location, registration_open, max_participants, created_at",
+      { count: "exact" },
+    )
+    .order("created_at", { ascending: false })
+    .range(from, to);
 
   if (error) throw new Error("Failed to fetch races.");
 
-  // Get registration counts
+  // Get registration counts only for this page's races
   const raceIds = (races ?? []).map((r) => r.id);
   let regCounts: Record<string, number> = {};
 
   if (raceIds.length > 0) {
     const { data: regs } = await supabase
       .from("race_registrations")
-      .select("race_id");
+      .select("race_id")
+      .in("race_id", raceIds);
 
     if (regs) {
       regCounts = regs.reduce<Record<string, number>>((acc, r) => {
@@ -209,16 +233,19 @@ export async function getAdminRaces(): Promise<AdminRace[]> {
     }
   }
 
-  return (races ?? []).map((race) => ({
-    ...race,
-    target_distance_km: Number(race.target_distance_km),
-    registration_count: regCounts[race.id] ?? 0,
-  }));
+  return {
+    data: (races ?? []).map((race) => ({
+      ...race,
+      target_distance_km: Number(race.target_distance_km),
+      registration_count: regCounts[race.id] ?? 0,
+    })),
+    total: count ?? 0,
+  };
 }
 
 export async function toggleRaceRegistration(
   raceId: string,
-  open: boolean
+  open: boolean,
 ): Promise<ActionResult> {
   const { supabase, userId } = await requireAdmin();
   const { error } = await supabase
@@ -238,7 +265,11 @@ export async function toggleRaceRegistration(
 export async function deleteRace(raceId: string): Promise<ActionResult> {
   const { supabase, userId } = await requireAdmin();
   const { error } = await supabase.from("races").delete().eq("id", raceId);
-  if (error) return { success: false, error: "Failed to delete race. It may have registrations." };
+  if (error)
+    return {
+      success: false,
+      error: "Failed to delete race. It may have registrations.",
+    };
 
   await logAudit(supabase, userId, "delete_race", "race", raceId);
 
@@ -265,13 +296,22 @@ export interface AdminRegistration {
   user_display_name?: string;
 }
 
-export async function getAdminRegistrations(): Promise<AdminRegistration[]> {
+export async function getAdminRegistrations(
+  page = 1,
+  limit = 50,
+): Promise<{ data: AdminRegistration[]; total: number }> {
   const { supabase } = await requireAdmin();
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
 
-  const { data, error } = await supabase
+  const { data, error, count } = await supabase
     .from("race_registrations")
-    .select("id, user_id, race_id, full_name, email, phone, shirt_size, payment_method, status, logged_distance, registered_at")
-    .order("registered_at", { ascending: false });
+    .select(
+      "id, user_id, race_id, full_name, email, phone, shirt_size, payment_method, status, logged_distance, registered_at",
+      { count: "exact" },
+    )
+    .order("registered_at", { ascending: false })
+    .range(from, to);
 
   if (error) throw new Error("Failed to fetch registrations.");
 
@@ -280,19 +320,34 @@ export async function getAdminRegistrations(): Promise<AdminRegistration[]> {
   const userIds = [...new Set((data ?? []).map((r) => r.user_id))];
 
   const [racesRes, usersRes] = await Promise.all([
-    raceIds.length > 0 ? supabase.from("races").select("id, title").in("id", raceIds) : { data: [] },
-    userIds.length > 0 ? supabase.from("profiles").select("id, full_name, username").in("id", userIds) : { data: [] },
+    raceIds.length > 0
+      ? supabase.from("races").select("id, title").in("id", raceIds)
+      : { data: [] },
+    userIds.length > 0
+      ? supabase
+          .from("profiles")
+          .select("id, full_name, username")
+          .in("id", userIds)
+      : { data: [] },
   ]);
 
   const raceMap = new Map((racesRes.data ?? []).map((r) => [r.id, r.title]));
-  const userMap = new Map((usersRes.data ?? []).map((u) => [u.id, u.full_name || u.username || "Unknown"]));
+  const userMap = new Map(
+    (usersRes.data ?? []).map((u) => [
+      u.id,
+      u.full_name || u.username || "Unknown",
+    ]),
+  );
 
-  return (data ?? []).map((reg) => ({
-    ...reg,
-    logged_distance: Number(reg.logged_distance),
-    race_title: raceMap.get(reg.race_id) ?? "Unknown Race",
-    user_display_name: userMap.get(reg.user_id) ?? "Unknown User",
-  }));
+  return {
+    data: (data ?? []).map((reg) => ({
+      ...reg,
+      logged_distance: Number(reg.logged_distance),
+      race_title: raceMap.get(reg.race_id) ?? "Unknown Race",
+      user_display_name: userMap.get(reg.user_id) ?? "Unknown User",
+    })),
+    total: count ?? 0,
+  };
 }
 
 // ============================================================
@@ -309,20 +364,29 @@ export interface AdminContact {
   created_at: string;
 }
 
-export async function getAdminContacts(): Promise<AdminContact[]> {
+export async function getAdminContacts(
+  page = 1,
+  limit = 50,
+): Promise<{ data: AdminContact[]; total: number }> {
   const { supabase } = await requireAdmin();
-  const { data, error } = await supabase
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  const { data, error, count } = await supabase
     .from("contact_submissions")
-    .select("id, name, email, subject, message, status, created_at")
-    .order("created_at", { ascending: false });
+    .select("id, name, email, subject, message, status, created_at", {
+      count: "exact",
+    })
+    .order("created_at", { ascending: false })
+    .range(from, to);
 
   if (error) throw new Error("Failed to fetch contacts.");
-  return data ?? [];
+  return { data: data ?? [], total: count ?? 0 };
 }
 
 export async function updateContactStatus(
   contactId: string,
-  status: string
+  status: string,
 ): Promise<ActionResult> {
   const { supabase, userId } = await requireAdmin();
 
@@ -337,14 +401,24 @@ export async function updateContactStatus(
 
   if (error) return { success: false, error: "Failed to update status." };
 
-  await logAudit(supabase, userId, "update_contact_status", "contact", contactId, { status });
+  await logAudit(
+    supabase,
+    userId,
+    "update_contact_status",
+    "contact",
+    contactId,
+    { status },
+  );
 
   return { success: true };
 }
 
 export async function deleteContact(contactId: string): Promise<ActionResult> {
   const { supabase, userId } = await requireAdmin();
-  const { error } = await supabase.from("contact_submissions").delete().eq("id", contactId);
+  const { error } = await supabase
+    .from("contact_submissions")
+    .delete()
+    .eq("id", contactId);
   if (error) return { success: false, error: "Failed to delete contact." };
 
   await logAudit(supabase, userId, "delete_contact", "contact", contactId);
@@ -372,30 +446,51 @@ export interface AdminApplication {
   applicant_name?: string;
 }
 
-export async function getAdminApplications(): Promise<AdminApplication[]> {
+export async function getAdminApplications(
+  page = 1,
+  limit = 50,
+): Promise<{ data: AdminApplication[]; total: number }> {
   const { supabase } = await requireAdmin();
-  const { data, error } = await supabase
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  const { data, error, count } = await supabase
     .from("organizer_applications")
-    .select("id, user_id, organization_name, contact_email, contact_phone, description, document_urls, status, rejection_reason, reviewed_by, reviewed_at, created_at")
-    .order("created_at", { ascending: false });
+    .select(
+      "id, user_id, organization_name, contact_email, contact_phone, description, document_urls, status, rejection_reason, reviewed_by, reviewed_at, created_at",
+      { count: "exact" },
+    )
+    .order("created_at", { ascending: false })
+    .range(from, to);
 
   if (error) throw new Error("Failed to fetch applications.");
 
   // Enrich with user names
   const userIds = [...new Set((data ?? []).map((a) => a.user_id))];
-  const { data: users } = userIds.length > 0
-    ? await supabase.from("profiles").select("id, full_name, username").in("id", userIds)
-    : { data: [] };
+  const { data: users } =
+    userIds.length > 0
+      ? await supabase
+          .from("profiles")
+          .select("id, full_name, username")
+          .in("id", userIds)
+      : { data: [] };
 
-  const userMap = new Map((users ?? []).map((u) => [u.id, u.full_name || u.username || "Unknown"]));
+  const userMap = new Map(
+    (users ?? []).map((u) => [u.id, u.full_name || u.username || "Unknown"]),
+  );
 
-  return (data ?? []).map((app) => ({
-    ...app,
-    applicant_name: userMap.get(app.user_id) ?? "Unknown",
-  }));
+  return {
+    data: (data ?? []).map((app) => ({
+      ...app,
+      applicant_name: userMap.get(app.user_id) ?? "Unknown",
+    })),
+    total: count ?? 0,
+  };
 }
 
-export async function approveApplication(applicationId: string): Promise<ActionResult> {
+export async function approveApplication(
+  applicationId: string,
+): Promise<ActionResult> {
   const { supabase, userId } = await requireAdmin();
 
   // Get the application
@@ -405,8 +500,10 @@ export async function approveApplication(applicationId: string): Promise<ActionR
     .eq("id", applicationId)
     .single();
 
-  if (fetchError || !app) return { success: false, error: "Application not found." };
-  if (app.status !== "pending") return { success: false, error: "Application already reviewed." };
+  if (fetchError || !app)
+    return { success: false, error: "Application not found." };
+  if (app.status !== "pending")
+    return { success: false, error: "Application already reviewed." };
 
   // Update application status
   const { error: updateError } = await supabase
@@ -418,7 +515,8 @@ export async function approveApplication(applicationId: string): Promise<ActionR
     })
     .eq("id", applicationId);
 
-  if (updateError) return { success: false, error: "Failed to approve application." };
+  if (updateError)
+    return { success: false, error: "Failed to approve application." };
 
   // Promote user to organizer
   const { error: roleError } = await supabase
@@ -426,22 +524,34 @@ export async function approveApplication(applicationId: string): Promise<ActionR
     .update({ role: "organizer" })
     .eq("id", app.user_id);
 
-  if (roleError) return { success: false, error: "Approved but failed to update user role." };
+  if (roleError)
+    return {
+      success: false,
+      error: "Approved but failed to update user role.",
+    };
 
-  await logAudit(supabase, userId, "approve_application", "application", applicationId, {
-    user_id: app.user_id,
-  });
+  await logAudit(
+    supabase,
+    userId,
+    "approve_application",
+    "application",
+    applicationId,
+    {
+      user_id: app.user_id,
+    },
+  );
 
   return { success: true };
 }
 
 export async function rejectApplication(
   applicationId: string,
-  reason: string
+  reason: string,
 ): Promise<ActionResult> {
   const { supabase, userId } = await requireAdmin();
 
-  if (!reason.trim()) return { success: false, error: "Rejection reason is required." };
+  if (!reason.trim())
+    return { success: false, error: "Rejection reason is required." };
 
   const { data: app, error: fetchError } = await supabase
     .from("organizer_applications")
@@ -449,8 +559,10 @@ export async function rejectApplication(
     .eq("id", applicationId)
     .single();
 
-  if (fetchError || !app) return { success: false, error: "Application not found." };
-  if (app.status !== "pending") return { success: false, error: "Application already reviewed." };
+  if (fetchError || !app)
+    return { success: false, error: "Application not found." };
+  if (app.status !== "pending")
+    return { success: false, error: "Application already reviewed." };
 
   const { error } = await supabase
     .from("organizer_applications")
@@ -464,9 +576,16 @@ export async function rejectApplication(
 
   if (error) return { success: false, error: "Failed to reject application." };
 
-  await logAudit(supabase, userId, "reject_application", "application", applicationId, {
-    reason: reason.trim(),
-  });
+  await logAudit(
+    supabase,
+    userId,
+    "reject_application",
+    "application",
+    applicationId,
+    {
+      reason: reason.trim(),
+    },
+  );
 
   return { success: true };
 }
@@ -485,15 +604,25 @@ export interface AdminSponsor {
   created_at: string;
 }
 
-export async function getAdminSponsors(): Promise<AdminSponsor[]> {
+export async function getAdminSponsors(
+  page = 1,
+  limit = 50,
+): Promise<{ data: AdminSponsor[]; total: number }> {
   const { supabase } = await requireAdmin();
-  const { data, error } = await supabase
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  const { data, error, count } = await supabase
     .from("sponsors")
-    .select("id, name, logo_url, website_url, display_order, active, created_at")
-    .order("display_order", { ascending: true });
+    .select(
+      "id, name, logo_url, website_url, display_order, active, created_at",
+      { count: "exact" },
+    )
+    .order("display_order", { ascending: true })
+    .range(from, to);
 
   if (error) throw new Error("Failed to fetch sponsors.");
-  return data ?? [];
+  return { data: data ?? [], total: count ?? 0 };
 }
 
 export async function createSponsor(input: {

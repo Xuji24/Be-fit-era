@@ -397,3 +397,162 @@ export async function flagActivity(activityId: string, reason: string) {
   if (error) return { success: false, error: error.message };
   return { success: true };
 }
+
+/* ──────────────────────────────────────────────────────────
+   Leaderboard — paginated server action
+   ────────────────────────────────────────────────────────── */
+
+export interface LeaderboardRow {
+  rank: number;
+  user: string;
+  username: string;
+  pacing: string;
+  distance: string;
+  lastRun: string;
+}
+
+export async function getLeaderboardPage(
+  page: number = 1,
+  limit: number = 20,
+): Promise<{ data: LeaderboardRow[]; total: number }> {
+  const supabase = await createClient();
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  const { data, count, error } = await supabase
+    .from("leaderboard_entries")
+    .select(
+      "rank, total_distance_km, avg_pace, last_run_date, profiles(full_name, username)",
+      { count: "exact" },
+    )
+    .order("rank")
+    .range(from, to);
+
+  if (error) return { data: [], total: 0 };
+
+  const rows: LeaderboardRow[] = (data ?? []).map((row) => {
+    const profile = row.profiles as unknown as {
+      full_name: string;
+      username: string;
+    } | null;
+    return {
+      rank: row.rank ?? 0,
+      user: profile?.full_name ?? "Unknown",
+      username: profile?.username ? `@${profile.username}` : "@unknown",
+      pacing: row.avg_pace ?? "—",
+      distance: `${Math.round(Number(row.total_distance_km))}km`,
+      lastRun: row.last_run_date
+        ? new Date(row.last_run_date).toLocaleDateString("en-US", {
+            month: "numeric",
+            day: "numeric",
+            year: "numeric",
+          })
+        : "—",
+    };
+  });
+
+  return { data: rows, total: count ?? 0 };
+}
+
+/* ──────────────────────────────────────────────────────────
+   Race Cancellation (Organizer / Admin)
+   ────────────────────────────────────────────────────────── */
+
+export async function cancelRace(
+  raceId: string,
+  reason: string,
+): Promise<ActionResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "Unauthorized" };
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  const { data: race } = await supabase
+    .from("races")
+    .select("organizer_id, status")
+    .eq("id", raceId)
+    .single();
+
+  if (!race) return { success: false, error: "Race not found" };
+  if (race.status === "cancelled")
+    return { success: false, error: "Race is already cancelled" };
+
+  const isOrganizer = race.organizer_id === user.id;
+  const isAdmin = profile?.role === "admin";
+  if (!isOrganizer && !isAdmin)
+    return { success: false, error: "Only the organizer or admin can cancel a race" };
+
+  const { error: raceErr } = await supabase
+    .from("races")
+    .update({
+      status: "cancelled",
+      cancelled_at: new Date().toISOString(),
+      cancellation_reason: reason,
+      cancelled_by: user.id,
+    })
+    .eq("id", raceId);
+
+  if (raceErr) return { success: false, error: raceErr.message };
+
+  const { error: regErr } = await supabase
+    .from("race_registrations")
+    .update({
+      status: "cancelled",
+      cancelled_at: new Date().toISOString(),
+      cancellation_reason: `Race cancelled: ${reason}`,
+    })
+    .eq("race_id", raceId)
+    .neq("status", "cancelled");
+
+  if (regErr) return { success: false, error: regErr.message };
+
+  revalidatePath("/race");
+  revalidatePath("/organizer");
+  revalidatePath("/admin");
+  return { success: true };
+}
+
+export async function cancelRegistration(
+  registrationId: string,
+  reason: string,
+): Promise<ActionResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "Unauthorized" };
+
+  const { data: reg } = await supabase
+    .from("race_registrations")
+    .select("user_id, status")
+    .eq("id", registrationId)
+    .single();
+
+  if (!reg) return { success: false, error: "Registration not found" };
+  if (reg.user_id !== user.id)
+    return { success: false, error: "You can only cancel your own registration" };
+  if (reg.status === "cancelled")
+    return { success: false, error: "Registration is already cancelled" };
+
+  const { error } = await supabase
+    .from("race_registrations")
+    .update({
+      status: "cancelled",
+      cancelled_at: new Date().toISOString(),
+      cancellation_reason: reason,
+    })
+    .eq("id", registrationId);
+
+  if (error) return { success: false, error: error.message };
+
+  revalidatePath("/activities");
+  revalidatePath("/race");
+  return { success: true };
+}

@@ -6,9 +6,12 @@ import { toast } from "sonner";
 import type { AdminContact } from "@/app/actions/admin-actions";
 import { updateContactStatus, deleteContact } from "@/app/actions/admin-actions";
 import CustomSelect from "@/components/ui/custom-select";
+import Pagination from "@/components/ui/pagination";
 
 interface Props {
   contacts: AdminContact[];
+  total: number;
+  page: number;
 }
 
 const statusColors: Record<string, string> = {
@@ -17,7 +20,11 @@ const statusColors: Record<string, string> = {
   replied: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
 };
 
-export default function AdminContactsPage({ contacts: initialContacts }: Props) {
+export default function AdminContactsPage({
+  contacts: initialContacts,
+  total,
+  page,
+}: Props) {
   const [contacts, setContacts] = useState(initialContacts);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -38,7 +45,7 @@ export default function AdminContactsPage({ contacts: initialContacts }: Props) 
     const result = await updateContactStatus(contactId, newStatus);
     if (result.success) {
       setContacts((prev) =>
-        prev.map((c) => (c.id === contactId ? { ...c, status: newStatus } : c))
+        prev.map((c) => (c.id === contactId ? { ...c, status: newStatus } : c)),
       );
       toast.success("Status updated.");
     } else {
@@ -69,7 +76,7 @@ export default function AdminContactsPage({ contacts: initialContacts }: Props) 
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">
-          Contact Submissions ({contacts.length})
+          Contact Submissions ({total})
         </h2>
         <div className="flex gap-2">
           <input
@@ -109,13 +116,16 @@ export default function AdminContactsPage({ contacts: initialContacts }: Props) 
                     {contact.name}
                   </p>
                   <p className="text-[11px] text-[#1A1A1A]/40 dark:text-white/30 truncate">
-                    {contact.email} &middot; {subjectLabels[contact.subject] ?? contact.subject}
+                    {contact.email} &middot;{" "}
+                    {subjectLabels[contact.subject] ?? contact.subject}
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
-                <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold ${statusColors[contact.status] ?? ""}`}>
+                <span
+                  className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold ${statusColors[contact.status] ?? ""}`}
+                >
                   {contact.status}
                 </span>
                 <CustomSelect
@@ -131,7 +141,9 @@ export default function AdminContactsPage({ contacts: initialContacts }: Props) 
                 />
                 <button
                   onClick={() =>
-                    setExpanded((prev) => (prev === contact.id ? null : contact.id))
+                    setExpanded((prev) =>
+                      prev === contact.id ? null : contact.id,
+                    )
                   }
                   className="p-1.5 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 text-[#1A1A1A]/40 dark:text-white/30 cursor-pointer"
                   title="View message"
@@ -178,6 +190,7 @@ export default function AdminContactsPage({ contacts: initialContacts }: Props) 
           </div>
         )}
       </div>
+      <Pagination currentPage={page} totalPages={Math.ceil(total / 50)} />
     </div>
   );
 }

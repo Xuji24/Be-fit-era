@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { PersonStanding } from "lucide-react";
 
 export default function LoginHero() {
   return (
@@ -29,11 +28,6 @@ export default function LoginHero() {
 
       {/* Content */}
       <div className="relative z-10 px-10 lg:px-14 xl:px-20 text-center max-w-md">
-        {/* Logo mark */}
-        <div className="mx-auto mb-8 w-16 h-16 rounded-2xl bg-[#FF5733]/15 border border-[#FF5733]/30 backdrop-blur-sm flex items-center justify-center">
-          <PersonStanding className="w-8 h-8 text-[#FF5733]" />
-        </div>
-
         {/* Tagline */}
         <h2 className="font-raleway font-bold text-3xl lg:text-4xl xl:text-[2.75rem] text-white leading-tight mb-4 drop-shadow-lg">
           Bold Race
@@ -42,7 +36,8 @@ export default function LoginHero() {
           </span>
         </h2>
         <p className="font-merriweather-sans text-sm lg:text-base text-white/70 leading-relaxed drop-shadow-md">
-          Every stride brings you closer to the finish line. Track your runs, join races, and unleash your potential.
+          Every stride brings you closer to the finish line. Track your runs,
+          join races, and unleash your potential.
         </p>
 
         {/* Accent line */}

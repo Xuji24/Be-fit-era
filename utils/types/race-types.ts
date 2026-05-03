@@ -28,6 +28,7 @@ export interface RaceEvent {
   registrationOpen: boolean;
   registrationDeadline: string;
   rewards: RaceReward;
+  gpxUrl?: string;
 }
 
 export type RaceCategory = "All" | "5K" | "10K" | "Half Marathon" | "Marathon";

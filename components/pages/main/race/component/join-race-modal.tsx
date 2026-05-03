@@ -80,6 +80,23 @@ export default function JoinRaceModal({
     }
   };
 
+  const formatPhoneNumber = (raw: string): string => {
+    const digits = raw.replace(/[^0-9+]/g, "");
+    if (digits.startsWith("+63")) {
+      const nums = digits.slice(3);
+      const parts = [
+        "+63",
+        nums.slice(0, 3),
+        nums.slice(3, 6),
+        nums.slice(6, 10),
+      ];
+      return parts.filter(Boolean).join(" ").trim();
+    }
+    const nums = digits.replace(/^\+/, "");
+    const parts = [nums.slice(0, 4), nums.slice(4, 7), nums.slice(7, 11)];
+    return parts.filter(Boolean).join(" ").trim();
+  };
+
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
     if (!form.fullName.trim()) newErrors.fullName = "Full name is required";
@@ -90,8 +107,10 @@ export default function JoinRaceModal({
     }
     if (!form.phone.trim()) {
       newErrors.phone = "Phone number is required";
-    } else if (!/^[0-9+\-\s()]{7,15}$/.test(form.phone)) {
-      newErrors.phone = "Enter a valid phone number";
+    } else if (
+      !/^(09\d{9}|\+639\d{9})$/.test(form.phone.replace(/[\s\-()]/g, ""))
+    ) {
+      newErrors.phone = "Enter a valid PH phone number (09XX or +639XX)";
     }
     if (!form.shirtSize) newErrors.shirtSize = "Select a shirt size";
     if (!form.paymentMethod)
@@ -229,8 +248,16 @@ export default function JoinRaceModal({
                   <input
                     type="tel"
                     value={form.phone}
-                    onChange={(e) => handleChange("phone", e.target.value)}
-                    placeholder="09XX XXX XXXX"
+                    onChange={(e) =>
+                      handleChange(
+                        "phone",
+                        formatPhoneNumber(
+                          e.target.value.replace(/[^0-9+\-\s()]/g, ""),
+                        ),
+                      )
+                    }
+                    maxLength={16}
+                    placeholder="0917 123 4567"
                     className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-gray-400 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
                   />
                 </div>

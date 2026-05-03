@@ -5,12 +5,19 @@ import { ToggleLeft, ToggleRight, Trash2, MapPin, Calendar, Users } from "lucide
 import { toast } from "sonner";
 import type { AdminRace } from "@/app/actions/admin-actions";
 import { toggleRaceRegistration, deleteRace } from "@/app/actions/admin-actions";
+import Pagination from "@/components/ui/pagination";
 
 interface Props {
   races: AdminRace[];
+  total: number;
+  page: number;
 }
 
-export default function AdminRacesPage({ races: initialRaces }: Props) {
+export default function AdminRacesPage({
+  races: initialRaces,
+  total,
+  page,
+}: Props) {
   const [races, setRaces] = useState(initialRaces);
   const [search, setSearch] = useState("");
   const [deleting, setDeleting] = useState<string | null>(null);
@@ -20,7 +27,7 @@ export default function AdminRacesPage({ races: initialRaces }: Props) {
       !search ||
       r.title.toLowerCase().includes(search.toLowerCase()) ||
       (r.category?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
-      (r.location?.toLowerCase().includes(search.toLowerCase()) ?? false)
+      (r.location?.toLowerCase().includes(search.toLowerCase()) ?? false),
   );
 
   const handleToggle = async (raceId: string, currentOpen: boolean) => {
@@ -28,8 +35,8 @@ export default function AdminRacesPage({ races: initialRaces }: Props) {
     if (result.success) {
       setRaces((prev) =>
         prev.map((r) =>
-          r.id === raceId ? { ...r, registration_open: !currentOpen } : r
-        )
+          r.id === raceId ? { ...r, registration_open: !currentOpen } : r,
+        ),
       );
       toast.success(`Registration ${!currentOpen ? "opened" : "closed"}.`);
     } else {
@@ -38,7 +45,12 @@ export default function AdminRacesPage({ races: initialRaces }: Props) {
   };
 
   const handleDelete = async (raceId: string) => {
-    if (!confirm("Are you sure you want to delete this race? This action cannot be undone.")) return;
+    if (
+      !confirm(
+        "Are you sure you want to delete this race? This action cannot be undone.",
+      )
+    )
+      return;
     setDeleting(raceId);
     const result = await deleteRace(raceId);
     if (result.success) {
@@ -54,7 +66,7 @@ export default function AdminRacesPage({ races: initialRaces }: Props) {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">
-          Races ({races.length})
+          Races ({total})
         </h2>
         <input
           type="text"
@@ -84,7 +96,11 @@ export default function AdminRacesPage({ races: initialRaces }: Props) {
                 <button
                   onClick={() => handleToggle(race.id, race.registration_open)}
                   className="cursor-pointer"
-                  title={race.registration_open ? "Close registration" : "Open registration"}
+                  title={
+                    race.registration_open
+                      ? "Close registration"
+                      : "Open registration"
+                  }
                 >
                   {race.registration_open ? (
                     <ToggleRight className="w-6 h-6 text-emerald-500" />
@@ -106,7 +122,10 @@ export default function AdminRacesPage({ races: initialRaces }: Props) {
             <div className="space-y-1.5 text-xs text-[#1A1A1A]/60 dark:text-white/40">
               <div className="flex items-center gap-2">
                 <MapPin className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">{race.location || "No location"} &middot; {race.target_distance_km} km</span>
+                <span className="truncate">
+                  {race.location || "No location"} &middot;{" "}
+                  {race.target_distance_km} km
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <Calendar className="w-3.5 h-3.5 shrink-0" />
@@ -124,7 +143,10 @@ export default function AdminRacesPage({ races: initialRaces }: Props) {
                 <Users className="w-3.5 h-3.5 shrink-0" />
                 <span>
                   {race.registration_count}
-                  {race.max_participants ? ` / ${race.max_participants}` : ""} registered
+                  {race.max_participants
+                    ? ` / ${race.max_participants}`
+                    : ""}{" "}
+                  registered
                 </span>
               </div>
             </div>
@@ -136,6 +158,7 @@ export default function AdminRacesPage({ races: initialRaces }: Props) {
           </div>
         )}
       </div>
+      <Pagination currentPage={page} totalPages={Math.ceil(total / 50)} />
     </div>
   );
 }

@@ -155,7 +155,7 @@ export default function RaceDetailPage({
                 <Trophy size={18} className="text-[#FF5733]" />
                 About This Race
               </h2>
-              
+
               {/* Optional MAP section */}
               {race.gpxUrl && (
                 <div className="mt-8">
@@ -166,6 +166,7 @@ export default function RaceDetailPage({
                   <GpxMap gpxUrl={race.gpxUrl} />
                 </div>
               )}
+            </div>
 
             {/* E-Certificate */}
             <div className="bg-linear-to-br from-[#FFF8F5] to-[#FFF1EB] dark:from-[#1C1C1E] dark:to-[#221A16] rounded-2xl p-6 border border-[#FF5733]/10 dark:border-[#FF5733]/20">

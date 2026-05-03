@@ -39,10 +39,16 @@ export async function POST(request: NextRequest) {
   } = body;
 
   // Validate required fields
-  if (!stravaActivityId || !registrationId || !distance || !activityType || !activityDate) {
+  if (
+    !stravaActivityId ||
+    !registrationId ||
+    !distance ||
+    !activityType ||
+    !activityDate
+  ) {
     return NextResponse.json(
       { error: "Missing required fields" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -57,8 +63,37 @@ export async function POST(request: NextRequest) {
   if (regError || !registration) {
     return NextResponse.json(
       { error: "Race registration not found" },
-      { status: 404 }
+      { status: 404 },
     );
+  }
+
+  // Validate activity date is within allowed range (race start date → today)
+  const { data: race } = await supabase
+    .from("races")
+    .select("event_date")
+    .eq("id", registration.race_id)
+    .single();
+
+  if (race?.event_date) {
+    const raceStart = new Date(race.event_date);
+    raceStart.setUTCHours(0, 0, 0, 0);
+    const actDate = new Date(activityDate);
+    actDate.setUTCHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setUTCHours(23, 59, 59, 999);
+
+    if (actDate < raceStart) {
+      return NextResponse.json(
+        { error: "Activity date cannot be before the race start date" },
+        { status: 400 },
+      );
+    }
+    if (actDate > today) {
+      return NextResponse.json(
+        { error: "Activity date cannot be in the future" },
+        { status: 400 },
+      );
+    }
   }
 
   // Check if this Strava activity was already imported
@@ -72,7 +107,7 @@ export async function POST(request: NextRequest) {
   if (existing) {
     return NextResponse.json(
       { error: "This Strava activity has already been imported" },
-      { status: 409 }
+      { status: 409 },
     );
   }
 
@@ -96,7 +131,7 @@ export async function POST(request: NextRequest) {
     console.error("Failed to import Strava activity:", insertError);
     return NextResponse.json(
       { error: "Failed to import activity" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 

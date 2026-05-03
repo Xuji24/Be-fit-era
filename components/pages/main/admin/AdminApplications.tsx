@@ -6,9 +6,12 @@ import { toast } from "sonner";
 import type { AdminApplication } from "@/app/actions/admin-actions";
 import { approveApplication, rejectApplication } from "@/app/actions/admin-actions";
 import CustomSelect from "@/components/ui/custom-select";
+import Pagination from "@/components/ui/pagination";
 
 interface Props {
   applications: AdminApplication[];
+  total: number;
+  page: number;
 }
 
 const statusColors: Record<string, string> = {
@@ -17,7 +20,11 @@ const statusColors: Record<string, string> = {
   rejected: "bg-red-500/10 text-red-500",
 };
 
-export default function AdminApplicationsPage({ applications: initialApps }: Props) {
+export default function AdminApplicationsPage({
+  applications: initialApps,
+  total,
+  page,
+}: Props) {
   const [applications, setApplications] = useState(initialApps);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [rejectingId, setRejectingId] = useState<string | null>(null);
@@ -25,16 +32,21 @@ export default function AdminApplicationsPage({ applications: initialApps }: Pro
   const [processing, setProcessing] = useState<string | null>(null);
 
   const filtered = applications.filter(
-    (a) => statusFilter === "all" || a.status === statusFilter
+    (a) => statusFilter === "all" || a.status === statusFilter,
   );
 
   const handleApprove = async (appId: string) => {
-    if (!confirm("Approve this application? The user will be promoted to organizer.")) return;
+    if (
+      !confirm(
+        "Approve this application? The user will be promoted to organizer.",
+      )
+    )
+      return;
     setProcessing(appId);
     const result = await approveApplication(appId);
     if (result.success) {
       setApplications((prev) =>
-        prev.map((a) => (a.id === appId ? { ...a, status: "approved" } : a))
+        prev.map((a) => (a.id === appId ? { ...a, status: "approved" } : a)),
       );
       toast.success("Application approved. User promoted to organizer.");
     } else {
@@ -55,8 +67,8 @@ export default function AdminApplicationsPage({ applications: initialApps }: Pro
         prev.map((a) =>
           a.id === appId
             ? { ...a, status: "rejected", rejection_reason: rejectReason }
-            : a
-        )
+            : a,
+        ),
       );
       setRejectingId(null);
       setRejectReason("");
@@ -71,7 +83,7 @@ export default function AdminApplicationsPage({ applications: initialApps }: Pro
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">
-          Organizer Applications ({applications.length})
+          Organizer Applications ({total})
         </h2>
         <CustomSelect
           value={statusFilter}
@@ -98,7 +110,9 @@ export default function AdminApplicationsPage({ applications: initialApps }: Pro
                   <h3 className="font-raleway font-bold text-sm text-[#1A1A1A] dark:text-white">
                     {app.organization_name}
                   </h3>
-                  <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold ${statusColors[app.status] ?? ""}`}>
+                  <span
+                    className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold ${statusColors[app.status] ?? ""}`}
+                  >
                     {app.status}
                   </span>
                 </div>
@@ -123,7 +137,9 @@ export default function AdminApplicationsPage({ applications: initialApps }: Pro
                     Approve
                   </button>
                   <button
-                    onClick={() => setRejectingId(rejectingId === app.id ? null : app.id)}
+                    onClick={() =>
+                      setRejectingId(rejectingId === app.id ? null : app.id)
+                    }
                     disabled={processing === app.id}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-500 text-xs font-semibold transition-colors cursor-pointer disabled:opacity-50"
                   >
@@ -137,24 +153,32 @@ export default function AdminApplicationsPage({ applications: initialApps }: Pro
             {/* Details */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-[#1A1A1A]/60 dark:text-white/40">
               <div>
-                <span className="font-semibold text-[#1A1A1A]/40 dark:text-white/30">Email:</span>{" "}
+                <span className="font-semibold text-[#1A1A1A]/40 dark:text-white/30">
+                  Email:
+                </span>{" "}
                 {app.contact_email}
               </div>
               {app.contact_phone && (
                 <div>
-                  <span className="font-semibold text-[#1A1A1A]/40 dark:text-white/30">Phone:</span>{" "}
+                  <span className="font-semibold text-[#1A1A1A]/40 dark:text-white/30">
+                    Phone:
+                  </span>{" "}
                   {app.contact_phone}
                 </div>
               )}
               {app.description && (
                 <div className="col-span-full">
-                  <span className="font-semibold text-[#1A1A1A]/40 dark:text-white/30">Description:</span>{" "}
+                  <span className="font-semibold text-[#1A1A1A]/40 dark:text-white/30">
+                    Description:
+                  </span>{" "}
                   {app.description}
                 </div>
               )}
               {app.document_urls.length > 0 && (
                 <div className="col-span-full">
-                  <span className="font-semibold text-[#1A1A1A]/40 dark:text-white/30">Documents:</span>{" "}
+                  <span className="font-semibold text-[#1A1A1A]/40 dark:text-white/30">
+                    Documents:
+                  </span>{" "}
                   {app.document_urls.map((url, i) => (
                     <a
                       key={i}
@@ -171,8 +195,12 @@ export default function AdminApplicationsPage({ applications: initialApps }: Pro
               )}
               {app.rejection_reason && (
                 <div className="col-span-full">
-                  <span className="font-semibold text-red-500/60">Rejection reason:</span>{" "}
-                  <span className="text-red-500/80">{app.rejection_reason}</span>
+                  <span className="font-semibold text-red-500/60">
+                    Rejection reason:
+                  </span>{" "}
+                  <span className="text-red-500/80">
+                    {app.rejection_reason}
+                  </span>
                 </div>
               )}
             </div>
@@ -205,6 +233,7 @@ export default function AdminApplicationsPage({ applications: initialApps }: Pro
           </div>
         )}
       </div>
+      <Pagination currentPage={page} totalPages={Math.ceil(total / 50)} />
     </div>
   );
 }

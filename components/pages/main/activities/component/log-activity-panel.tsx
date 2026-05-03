@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import type { JoinedRace } from "@/data/activities-data";
 import { X, Check, Loader2, AlertCircle, ExternalLink } from "lucide-react";
 import CustomSelect from "@/components/ui/custom-select";
@@ -52,6 +53,7 @@ const LogActivityPanel = ({
   inProgressRaces,
   onClose,
 }: Props) => {
+  const router = useRouter();
   const [raceId, setRaceId] = useState(
     preselectedRaceId ?? inProgressRaces[0]?.id ?? "",
   );
@@ -87,6 +89,9 @@ const LogActivityPanel = ({
         // Only fetch activities on or after the race event date
         url.searchParams.set("after", selectedRace.date);
       }
+
+      // Only allow activities up to today
+      url.searchParams.set("before", new Date().toISOString().split("T")[0]);
 
       const res = await fetch(url.toString());
       const data = await res.json();
@@ -165,6 +170,9 @@ const LogActivityPanel = ({
             a.id === selectedActivity.id ? { ...a, imported: true } : a,
           ),
         );
+
+        // Re-fetch server data so progress bar updates immediately
+        router.refresh();
 
         setTimeout(() => {
           setSuccess(false);

@@ -75,6 +75,12 @@ export default function Navbar() {
           Leaderboard
         </Link>
         <Link
+          href="/community"
+          className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[#FF5733] transition-colors"
+        >
+          Community
+        </Link>
+        <Link
           href="/contact"
           className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[#FF5733] transition-colors"
         >
@@ -145,6 +151,12 @@ export default function Navbar() {
             className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
           >
             Leaderboard
+          </Link>
+          <Link
+            href="/community"
+            className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
+          >
+            Community
           </Link>
           <Link
             href="/contact"

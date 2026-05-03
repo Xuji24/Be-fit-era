@@ -38,7 +38,9 @@ export default async function AdminLayout({
           <div className="flex items-center gap-4">
             <Link href="/admin" className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-[#FF5733] flex items-center justify-center">
-                <span className="text-white text-sm font-bold font-raleway">F</span>
+                <span className="text-white text-sm font-bold font-raleway">
+                  F
+                </span>
               </div>
               <span className="font-raleway font-bold text-white text-sm hidden sm:block">
                 Fitra Admin
@@ -70,12 +72,6 @@ export default async function AdminLayout({
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-100 bg-[#FF5733]/5 rounded-full blur-3xl" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#FF5733]/20 bg-[#FF5733]/10 mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#FF5733] animate-pulse" />
-            <span className="text-[#FF5733] text-xs font-medium tracking-wide uppercase">
-              Admin Panel
-            </span>
-          </div>
           <h1 className="font-raleway text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight">
             Admin <span className="text-[#FF5733]">Dashboard</span>
           </h1>

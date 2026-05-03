@@ -26,7 +26,7 @@ export interface AdminDispute {
   runner_name: string;
   distance_km: number;
   activity_type: string;
-  flag_reason: string;
+  flag_reason?: string;
   created_at: string;
   race_title: string;
 }

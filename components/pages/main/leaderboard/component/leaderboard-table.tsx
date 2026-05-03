@@ -1,5 +1,5 @@
 import { LeaderboardEntry } from "@/utils/types/leaderboard-types";
-import { Calendar, Gauge } from "lucide-react";
+import { Calendar, Gauge, Crown, Medal } from "lucide-react";
 
 interface LeaderboardTableProps {
   topThree: LeaderboardEntry[];
@@ -12,10 +12,15 @@ const rankBadgeColor: Record<number, string> = {
   3: "bg-linear-to-br from-[#CD7F32] to-[#8B4513] text-white",
 };
 
+const rankBorderColor: Record<number, string> = {
+  1: "border-l-4 border-l-[#FFB800]",
+  2: "border-l-4 border-l-[#C0C0C0]",
+  3: "border-l-4 border-l-[#CD7F32]",
+};
+
 function RankBadge({ rank }: { rank: number }) {
   const style =
-    rankBadgeColor[rank] ??
-    "bg-gray-100 dark:bg-[#2A2A2E] text-foreground";
+    rankBadgeColor[rank] ?? "bg-gray-100 dark:bg-[#2A2A2E] text-foreground";
 
   return (
     <div
@@ -26,7 +31,30 @@ function RankBadge({ rank }: { rank: number }) {
   );
 }
 
-function LeaderboardRow({ entry, maxDistance }: { entry: LeaderboardEntry; maxDistance: number }) {
+function MedalIcon({ rank }: { rank: number }) {
+  if (rank === 1)
+    return (
+      <Crown
+        size={16}
+        className="text-[#FFB800]"
+        strokeWidth={2}
+        fill="#FFB800"
+      />
+    );
+  if (rank === 2)
+    return <Medal size={16} className="text-[#C0C0C0]" strokeWidth={1.5} />;
+  if (rank === 3)
+    return <Medal size={16} className="text-[#CD7F32]" strokeWidth={1.5} />;
+  return null;
+}
+
+function LeaderboardRow({
+  entry,
+  maxDistance,
+}: {
+  entry: LeaderboardEntry;
+  maxDistance: number;
+}) {
   const distNum = parseFloat(entry.distance);
   const pct = maxDistance > 0 ? (distNum / maxDistance) * 100 : 0;
   const isTopThree = entry.rank <= 3;
@@ -34,11 +62,20 @@ function LeaderboardRow({ entry, maxDistance }: { entry: LeaderboardEntry; maxDi
   return (
     <div
       className={`flex items-center gap-4 px-4 sm:px-6 py-4 rounded-xl transition-colors hover:bg-gray-100 dark:hover:bg-[#2A2A2E] ${
-        isTopThree ? "bg-[#FF5733]/5 dark:bg-[#FF5733]/5" : ""
+        isTopThree
+          ? `bg-[#FF5733]/5 dark:bg-[#FF5733]/5 ${rankBorderColor[entry.rank] ?? ""}`
+          : ""
       }`}
     >
       {/* Rank Badge */}
       <RankBadge rank={entry.rank} />
+
+      {/* Medal Icon (top 3 only) */}
+      {isTopThree && (
+        <div className="shrink-0">
+          <MedalIcon rank={entry.rank} />
+        </div>
+      )}
 
       {/* Avatar */}
       <div className="w-10 h-10 rounded-full bg-[#1A1A1A] dark:bg-[#2A2A2E] flex items-center justify-center shrink-0">
@@ -102,9 +139,14 @@ function LeaderboardRow({ entry, maxDistance }: { entry: LeaderboardEntry; maxDi
   );
 }
 
-export default function LeaderboardTable({ topThree, remaining }: LeaderboardTableProps) {
+export default function LeaderboardTable({
+  topThree,
+  remaining,
+}: LeaderboardTableProps) {
   const allEntries = [...topThree, ...remaining];
-  const maxDistance = Math.max(...allEntries.map((e) => parseFloat(e.distance)));
+  const maxDistance = Math.max(
+    ...allEntries.map((e) => parseFloat(e.distance)),
+  );
 
   return (
     <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
@@ -139,10 +181,36 @@ export default function LeaderboardTable({ topThree, remaining }: LeaderboardTab
         </div>
       </div>
 
-      {/* Rows */}
+      {/* Top 3 Medal Section */}
       <div className="divide-y divide-gray-50 dark:divide-white/5">
-        {allEntries.map((entry) => (
-          <LeaderboardRow key={entry.rank} entry={entry} maxDistance={maxDistance} />
+        {topThree.map((entry) => (
+          <LeaderboardRow
+            key={entry.rank}
+            entry={entry}
+            maxDistance={maxDistance}
+          />
+        ))}
+      </div>
+
+      {/* Separator between Top 3 and remaining */}
+      {remaining.length > 0 && (
+        <div className="flex items-center gap-3 px-4 sm:px-6 py-3 bg-gray-50/80 dark:bg-[#1A1A1A]/50">
+          <div className="flex-1 h-px bg-gray-200 dark:bg-white/10" />
+          <span className="font-raleway font-semibold text-[11px] uppercase tracking-widest text-gray-400 dark:text-gray-500">
+            Other Rankings
+          </span>
+          <div className="flex-1 h-px bg-gray-200 dark:bg-white/10" />
+        </div>
+      )}
+
+      {/* Remaining Rows */}
+      <div className="divide-y divide-gray-50 dark:divide-white/5">
+        {remaining.map((entry) => (
+          <LeaderboardRow
+            key={entry.rank}
+            entry={entry}
+            maxDistance={maxDistance}
+          />
         ))}
       </div>
     </div>

@@ -5,12 +5,19 @@ import { Plus, Trash2, ToggleLeft, ToggleRight, Handshake } from "lucide-react";
 import { toast } from "sonner";
 import type { AdminSponsor } from "@/app/actions/admin-actions";
 import { createSponsor, updateSponsor, deleteSponsor } from "@/app/actions/admin-actions";
+import Pagination from "@/components/ui/pagination";
 
 interface Props {
   sponsors: AdminSponsor[];
+  total: number;
+  page: number;
 }
 
-export default function AdminSponsorsPage({ sponsors: initialSponsors }: Props) {
+export default function AdminSponsorsPage({
+  sponsors: initialSponsors,
+  total,
+  page,
+}: Props) {
   const [sponsors, setSponsors] = useState(initialSponsors);
   const [showCreate, setShowCreate] = useState(false);
   const [newName, setNewName] = useState("");
@@ -51,8 +58,8 @@ export default function AdminSponsorsPage({ sponsors: initialSponsors }: Props) 
     if (result.success) {
       setSponsors((prev) =>
         prev.map((s) =>
-          s.id === sponsorId ? { ...s, active: !currentActive } : s
-        )
+          s.id === sponsorId ? { ...s, active: !currentActive } : s,
+        ),
       );
       toast.success(`Sponsor ${!currentActive ? "activated" : "deactivated"}.`);
     } else {
@@ -75,7 +82,7 @@ export default function AdminSponsorsPage({ sponsors: initialSponsors }: Props) 
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">
-          Sponsors ({sponsors.length})
+          Sponsors ({total})
         </h2>
         <button
           onClick={() => setShowCreate(!showCreate)}
@@ -165,7 +172,10 @@ export default function AdminSponsorsPage({ sponsors: initialSponsors }: Props) 
             </thead>
             <tbody className="divide-y divide-black/5 dark:divide-white/5">
               {sponsors.map((sponsor) => (
-                <tr key={sponsor.id} className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02]">
+                <tr
+                  key={sponsor.id}
+                  className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
+                >
                   <td className="px-5 py-3 text-[#1A1A1A]/60 dark:text-white/40">
                     {sponsor.display_order}
                   </td>
@@ -183,7 +193,9 @@ export default function AdminSponsorsPage({ sponsors: initialSponsors }: Props) 
                     {sponsor.logo_url || "—"}
                   </td>
                   <td className="px-5 py-3">
-                    <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold ${sponsor.active ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : "bg-red-500/10 text-red-500"}`}>
+                    <span
+                      className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold ${sponsor.active ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" : "bg-red-500/10 text-red-500"}`}
+                    >
                       {sponsor.active ? "Active" : "Inactive"}
                     </span>
                   </td>
@@ -213,7 +225,10 @@ export default function AdminSponsorsPage({ sponsors: initialSponsors }: Props) 
               ))}
               {sponsors.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-5 py-10 text-center text-[#1A1A1A]/40 dark:text-white/30">
+                  <td
+                    colSpan={5}
+                    className="px-5 py-10 text-center text-[#1A1A1A]/40 dark:text-white/30"
+                  >
                     <Handshake className="w-8 h-8 mx-auto mb-2 opacity-30" />
                     No sponsors yet.
                   </td>
@@ -223,6 +238,7 @@ export default function AdminSponsorsPage({ sponsors: initialSponsors }: Props) 
           </table>
         </div>
       </div>
+      <Pagination currentPage={page} totalPages={Math.ceil(total / 50)} />
     </div>
   );
 }

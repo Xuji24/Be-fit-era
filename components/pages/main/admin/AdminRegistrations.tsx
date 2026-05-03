@@ -4,9 +4,12 @@ import { useState } from "react";
 import { ClipboardList } from "lucide-react";
 import type { AdminRegistration } from "@/app/actions/admin-actions";
 import CustomSelect from "@/components/ui/custom-select";
+import Pagination from "@/components/ui/pagination";
 
 interface Props {
   registrations: AdminRegistration[];
+  total: number;
+  page: number;
 }
 
 const statusColors: Record<string, string> = {
@@ -15,7 +18,11 @@ const statusColors: Record<string, string> = {
   completed: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
 };
 
-export default function AdminRegistrationsPage({ registrations }: Props) {
+export default function AdminRegistrationsPage({
+  registrations,
+  total,
+  page,
+}: Props) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
@@ -24,7 +31,8 @@ export default function AdminRegistrationsPage({ registrations }: Props) {
       !search ||
       (r.full_name?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
       (r.race_title?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
-      (r.user_display_name?.toLowerCase().includes(search.toLowerCase()) ?? false) ||
+      (r.user_display_name?.toLowerCase().includes(search.toLowerCase()) ??
+        false) ||
       (r.email?.toLowerCase().includes(search.toLowerCase()) ?? false);
     const matchesStatus = statusFilter === "all" || r.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -34,7 +42,7 @@ export default function AdminRegistrationsPage({ registrations }: Props) {
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">
-          Registrations ({registrations.length})
+          Registrations ({total})
         </h2>
         <div className="flex gap-2">
           <input
@@ -85,7 +93,10 @@ export default function AdminRegistrationsPage({ registrations }: Props) {
             </thead>
             <tbody className="divide-y divide-black/5 dark:divide-white/5">
               {filtered.map((reg) => (
-                <tr key={reg.id} className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02]">
+                <tr
+                  key={reg.id}
+                  className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
+                >
                   <td className="px-5 py-3.5">
                     <p className="font-semibold text-[#1A1A1A] dark:text-white">
                       {reg.full_name || reg.user_display_name}
@@ -98,7 +109,9 @@ export default function AdminRegistrationsPage({ registrations }: Props) {
                     {reg.race_title}
                   </td>
                   <td className="px-5 py-3.5">
-                    <span className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-semibold ${statusColors[reg.status] ?? ""}`}>
+                    <span
+                      className={`inline-block px-2 py-0.5 rounded-full text-[11px] font-semibold ${statusColors[reg.status] ?? ""}`}
+                    >
                       {reg.status}
                     </span>
                   </td>
@@ -106,8 +119,12 @@ export default function AdminRegistrationsPage({ registrations }: Props) {
                     {reg.logged_distance} km
                   </td>
                   <td className="px-5 py-3.5 text-[10px] text-[#1A1A1A]/50 dark:text-white/30">
-                    {reg.shirt_size && <span className="mr-2">Size: {reg.shirt_size}</span>}
-                    {reg.payment_method && <span>Pay: {reg.payment_method}</span>}
+                    {reg.shirt_size && (
+                      <span className="mr-2">Size: {reg.shirt_size}</span>
+                    )}
+                    {reg.payment_method && (
+                      <span>Pay: {reg.payment_method}</span>
+                    )}
                   </td>
                   <td className="px-5 py-3.5 text-[#1A1A1A]/60 dark:text-white/40">
                     {new Date(reg.registered_at).toLocaleDateString("en-US", {
@@ -120,7 +137,10 @@ export default function AdminRegistrationsPage({ registrations }: Props) {
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-5 py-10 text-center text-[#1A1A1A]/40 dark:text-white/30">
+                  <td
+                    colSpan={6}
+                    className="px-5 py-10 text-center text-[#1A1A1A]/40 dark:text-white/30"
+                  >
                     <ClipboardList className="w-8 h-8 mx-auto mb-2 opacity-30" />
                     No registrations found.
                   </td>
@@ -130,6 +150,7 @@ export default function AdminRegistrationsPage({ registrations }: Props) {
           </table>
         </div>
       </div>
+      <Pagination currentPage={page} totalPages={Math.ceil(total / 50)} />
     </div>
   );
 }

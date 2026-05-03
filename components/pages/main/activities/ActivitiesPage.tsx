@@ -59,12 +59,6 @@ const ActivitiesPage = ({
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#FF5733]/20 bg-[#FF5733]/10 mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF5733] animate-pulse" />
-                <span className="text-[#FF5733] text-xs font-medium tracking-wide uppercase">
-                  Your Activity
-                </span>
-              </div>
               <h1 className="font-raleway text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
                 Activity <span className="text-[#FF5733]">Dashboard</span>
               </h1>

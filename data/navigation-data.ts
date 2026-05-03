@@ -6,6 +6,7 @@ export interface NavLink {
 export const quickLinksData: NavLink[] = [
   { name: "Home", href: "/" },
   { name: "Race", href: "/race" },
+  { name: "Community", href: "/community" },
   { name: "Activities", href: "/activities" },
   { name: "Leaderboard", href: "/leaderboard" },
 ];

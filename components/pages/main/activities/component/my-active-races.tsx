@@ -1,8 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { X } from "lucide-react";
 import type { JoinedRace } from "@/data/activities-data";
+import { cancelRegistration } from "@/app/actions/main-actions";
 
 const statusStyles: Record<
   JoinedRace["status"],
@@ -27,7 +30,10 @@ interface Props {
   onLogDistance?: (raceId: string) => void;
 }
 
-const MyActiveRaces = ({ races, onLogDistance }: Props) => {
+const MyActiveRaces = ({ races: initialRaces, onLogDistance }: Props) => {
+  const [races, setRaces] = useState(initialRaces);
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
+  const [cancelLoading, setCancelLoading] = useState(false);
   if (races.length === 0) {
     return (
       <div>
@@ -145,6 +151,55 @@ const MyActiveRaces = ({ races, onLogDistance }: Props) => {
                   <div className="w-full py-2 rounded-xl bg-emerald-500/10 text-emerald-500 text-xs font-semibold text-center">
                     Race Completed!
                   </div>
+                )}
+
+                {/* Cancel Registration */}
+                {race.status !== "completed" && (
+                  <>
+                    {cancellingId === race.id ? (
+                      <div className="mt-2 p-3 bg-red-50 dark:bg-red-950/20 rounded-xl border border-red-200 dark:border-red-900/30">
+                        <p className="text-xs text-red-700 dark:text-red-300 mb-2">
+                          Cancel registration for this race?
+                        </p>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={async () => {
+                              setCancelLoading(true);
+                              const result = await cancelRegistration(
+                                race.id,
+                                "Cancelled by runner",
+                              );
+                              setCancelLoading(false);
+                              if (result.success) {
+                                setRaces((prev) =>
+                                  prev.filter((r) => r.id !== race.id),
+                                );
+                              }
+                              setCancellingId(null);
+                            }}
+                            disabled={cancelLoading}
+                            className="flex-1 py-1.5 rounded-lg bg-red-600 text-white text-xs font-semibold hover:bg-red-700 transition-colors cursor-pointer disabled:opacity-50"
+                          >
+                            {cancelLoading ? "..." : "Yes, Cancel"}
+                          </button>
+                          <button
+                            onClick={() => setCancellingId(null)}
+                            className="flex-1 py-1.5 rounded-lg border border-gray-300 dark:border-zinc-600 text-xs font-semibold hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                          >
+                            Keep
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setCancellingId(race.id)}
+                        className="mt-2 w-full flex items-center justify-center gap-1 py-1.5 rounded-xl text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors cursor-pointer"
+                      >
+                        <X className="w-3 h-3" />
+                        Cancel Registration
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             </div>

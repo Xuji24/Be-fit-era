@@ -13,10 +13,12 @@ import {
   Shirt,
   Medal,
   Award,
+  Ban,
 } from "lucide-react";
 import CreateRaceModal from "./component/create-race-modal";
 import EditRaceDesignsModal from "./component/edit-race-designs-modal";
 import EditRaceModal from "./component/edit-race-modal";
+import CancelRaceModal from "./component/cancel-race-modal";
 
 export interface OrganizerRace {
   id: string;
@@ -43,6 +45,9 @@ export default function OrganizerDashboard({ races: initialRaces }: Props) {
   const [editingRace, setEditingRace] = useState<OrganizerRace | null>(null);
   const [editingRaceDetail, setEditingRaceDetail] =
     useState<OrganizerRace | null>(null);
+  const [cancellingRace, setCancellingRace] = useState<OrganizerRace | null>(
+    null,
+  );
 
   const totalRegistrations = races.reduce(
     (sum, r) => sum + r.registrationCount,
@@ -79,12 +84,6 @@ export default function OrganizerDashboard({ races: initialRaces }: Props) {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#FFB800]/20 bg-[#FFB800]/10 mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FFB800] animate-pulse" />
-                <span className="text-[#FFB800] text-xs font-medium tracking-wide uppercase">
-                  Organizer
-                </span>
-              </div>
               <h1 className="font-raleway text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
                 Race <span className="text-[#FFB800]">Management</span>
               </h1>
@@ -244,6 +243,13 @@ export default function OrganizerDashboard({ races: initialRaces }: Props) {
                           <Pencil className="w-3 h-3" />
                           Designs
                         </button>
+                        <button
+                          onClick={() => setCancellingRace(race)}
+                          className="inline-flex items-center gap-1 text-[10px] font-semibold text-red-500 hover:text-red-700 transition-colors cursor-pointer"
+                        >
+                          <Ban className="w-3 h-3" />
+                          Cancel
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -283,6 +289,19 @@ export default function OrganizerDashboard({ races: initialRaces }: Props) {
               ),
             );
             setEditingRaceDetail(null);
+          }}
+        />
+      )}
+
+      {/* Cancel Race Modal */}
+      {cancellingRace && (
+        <CancelRaceModal
+          raceId={cancellingRace.id}
+          raceTitle={cancellingRace.title}
+          onClose={() => setCancellingRace(null)}
+          onCancelled={() => {
+            setRaces((prev) => prev.filter((r) => r.id !== cancellingRace.id));
+            setCancellingRace(null);
           }}
         />
       )}

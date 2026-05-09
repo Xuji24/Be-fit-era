@@ -65,7 +65,7 @@ export default function AdminDisputesPage({ disputes: initialDisputes }: Props) 
             <tbody className="divide-y divide-gray-100 dark:divide-zinc-800">
               {disputes.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                     No active disputes found.
                   </td>
                 </tr>
@@ -82,14 +82,14 @@ export default function AdminDisputesPage({ disputes: initialDisputes }: Props) 
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
                         {dispute.distance_km} km
                       </div>
-                      <div className="text-xs text-gray-500 capitalize">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 capitalize">
                         {dispute.activity_type}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-red-600 dark:text-red-400 max-w-xs truncate" title={dispute.flag_reason || "Flagged"}>
                       {dispute.flag_reason || "Flagged"}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
                       {new Date(dispute.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">

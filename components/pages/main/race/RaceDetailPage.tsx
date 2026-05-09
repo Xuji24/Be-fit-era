@@ -302,6 +302,7 @@ export default function RaceDetailPage({
                     <span>{race.maxParticipants} max</span>
                   </div>
                   <div className="h-2 rounded-full bg-gray-100 dark:bg-white/10 overflow-hidden">
+                    {/* eslint-disable-next-line react/forbid-component-props */}
                     <div
                       className="h-full rounded-full bg-[#FF5733] transition-all duration-500"
                       style={{ width: `${Math.min(fillPercentage, 100)}%` }}

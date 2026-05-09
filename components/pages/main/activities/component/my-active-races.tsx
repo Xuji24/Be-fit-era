@@ -119,6 +119,7 @@ const MyActiveRaces = ({ races: initialRaces, onLogDistance }: Props) => {
                     </span>
                   </div>
                   <div className="w-full h-2 rounded-full bg-black/5 dark:bg-white/5 overflow-hidden">
+                    {/* eslint-disable-next-line react/forbid-component-props */}
                     <div
                       className={`h-full rounded-full transition-all ${
                         race.status === "completed"

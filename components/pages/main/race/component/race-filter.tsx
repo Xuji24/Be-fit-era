@@ -47,6 +47,7 @@ export default function RaceFilter({
       <div className="relative w-full sm:w-72">
         <input
           type="text"
+          aria-label="Search races"
           placeholder="Search races..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}

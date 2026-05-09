@@ -95,7 +95,7 @@ export default function AdminRegistrationsPage({
               {filtered.map((reg) => (
                 <tr
                   key={reg.id}
-                  className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
+                  className="hover:bg-black/2 dark:hover:bg-white/2"
                 >
                   <td className="px-5 py-3.5">
                     <p className="font-semibold text-[#1A1A1A] dark:text-white">

@@ -301,6 +301,7 @@ export default function EditRaceModal({
               </h2>
             </div>
             <button
+              title="Close"
               onClick={onClose}
               className="w-8 h-8 rounded-full flex items-center justify-center text-[#1A1A1A]/40 dark:text-white/40 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
             >
@@ -362,6 +363,7 @@ export default function EditRaceModal({
               </label>
               <input
                 type="date"
+                aria-label="Event Date"
                 value={eventDate}
                 onChange={(e) => setEventDate(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
@@ -373,6 +375,7 @@ export default function EditRaceModal({
               </label>
               <input
                 type="date"
+                aria-label="Registration Deadline"
                 value={registrationDeadline}
                 onChange={(e) => setRegistrationDeadline(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
@@ -454,6 +457,7 @@ export default function EditRaceModal({
                       </div>
                       <button
                         type="button"
+                        title={`Remove ${label} design`}
                         onClick={() => handleDesignRemove(key)}
                         className="absolute top-1 right-1 p-1 rounded-md bg-red-500/80 text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                       >
@@ -477,6 +481,7 @@ export default function EditRaceModal({
                       designRefs.current[key] = el;
                     }}
                     type="file"
+                    aria-label={`Upload ${label} design`}
                     accept=".png,.jpg,.jpeg,.webp,.svg"
                     onChange={(e) =>
                       handleDesignSelect(key, e.target.files?.[0] ?? null)

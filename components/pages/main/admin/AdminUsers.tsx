@@ -124,7 +124,7 @@ export default function AdminUsersPage({
                 return (
                   <tr
                     key={user.id}
-                    className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
+                    className="hover:bg-black/2 dark:hover:bg-white/2"
                   >
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">

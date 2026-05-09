@@ -26,6 +26,7 @@ function getError(error: string): string {
 import { Lock, Eye, EyeOff, Loader2, Shield } from "lucide-react";
 import PasswordStrengthIndicator from "@/components/password-strength-indicator";
 import OrganizerApplication from "./component/organizer-application";
+import PushNotificationToggle from "./component/PushNotificationToggle";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -260,6 +261,9 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
+
+          {/* Push Notifications */}
+          <PushNotificationToggle />
 
           {/* Organizer Application */}
           <OrganizerApplication />

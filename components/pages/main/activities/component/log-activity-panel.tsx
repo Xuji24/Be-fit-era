@@ -217,6 +217,7 @@ const LogActivityPanel = ({
               </h2>
             </div>
             <button
+              title="Close"
               onClick={onClose}
               className="w-8 h-8 rounded-full flex items-center justify-center text-[#1A1A1A]/40 dark:text-white/40 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
             >
@@ -327,11 +328,10 @@ const LogActivityPanel = ({
               <>
                 <div className="space-y-2 max-h-72 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black/10 dark:[&::-webkit-scrollbar-thumb]:bg-white/10 hover:[&::-webkit-scrollbar-thumb]:bg-black/20 dark:hover:[&::-webkit-scrollbar-thumb]:bg-white/20">
                   {activities.map((activity) => (
-                    <button
+                    <div
                       key={activity.id}
-                      type="button"
-                      disabled={activity.imported}
-                      onClick={() => handleSelectActivity(activity)}
+                      onClick={() => !activity.imported && handleSelectActivity(activity)}
+                      onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && !activity.imported) handleSelectActivity(activity); }}
                       className={`w-full text-left p-3 rounded-xl border transition-all cursor-pointer ${
                         activity.imported
                           ? "border-emerald-200 dark:border-emerald-800/30 bg-emerald-50 dark:bg-emerald-900/10 opacity-60"
@@ -386,7 +386,7 @@ const LogActivityPanel = ({
                           </p>
                         </div>
                       </div>
-                    </button>
+                    </div>
                   ))}
                 </div>
 
@@ -441,6 +441,7 @@ const LogActivityPanel = ({
               </div>
               <button
                 type="button"
+                title="Deselect activity"
                 onClick={() => setSelectedActivity(null)}
                 className="text-[#1A1A1A]/30 dark:text-white/30 hover:text-[#1A1A1A] dark:hover:text-white cursor-pointer"
               >

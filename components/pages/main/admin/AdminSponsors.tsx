@@ -174,7 +174,7 @@ export default function AdminSponsorsPage({
               {sponsors.map((sponsor) => (
                 <tr
                   key={sponsor.id}
-                  className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
+                  className="hover:bg-black/2 dark:hover:bg-white/2"
                 >
                   <td className="px-5 py-3 text-[#1A1A1A]/60 dark:text-white/40">
                     {sponsor.display_order}

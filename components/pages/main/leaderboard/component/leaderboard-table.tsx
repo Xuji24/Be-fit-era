@@ -102,6 +102,7 @@ function LeaderboardRow({
           </span>
         </div>
         <div className="w-full h-2 bg-gray-200 dark:bg-[#2A2A2E] rounded-full overflow-hidden">
+          {/* eslint-disable-next-line react/forbid-component-props */}
           <div
             className={`h-full rounded-full ${
               isTopThree
@@ -122,7 +123,7 @@ function LeaderboardRow({
 
       {/* Pacing */}
       <div className="hidden md:flex items-center gap-1.5 min-w-20">
-        <Gauge size={14} className="text-gray-400" />
+        <Gauge size={14} className="text-gray-400 dark:text-gray-500" />
         <span className="font-merriweather-sans text-sm text-foreground">
           {entry.pacing}/km
         </span>

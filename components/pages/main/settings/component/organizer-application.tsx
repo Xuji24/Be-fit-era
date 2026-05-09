@@ -394,6 +394,7 @@ export default function OrganizerApplication() {
                     </span>
                     <button
                       type="button"
+                      title="Remove file"
                       onClick={() => removeFile(idx)}
                       className="text-[#1A1A1A]/30 dark:text-white/30 hover:text-red-500 transition-colors cursor-pointer"
                     >

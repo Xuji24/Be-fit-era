@@ -2,17 +2,24 @@
 
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { Heart, Trash2, Pencil, MoreHorizontal, X, Check } from "lucide-react";
+import { Heart, Trash2, Pencil, MoreHorizontal, X, Check, MessageCircle } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import { toggleLike, deletePost, updatePost } from "@/app/actions/community-actions";
+import { POST_CATEGORIES } from "@/lib/community-types";
+import type { PostCategory } from "@/lib/community-types";
 import { toast } from "sonner";
+import PostComments from "./PostComments";
+import ImageGallery from "./ImageGallery";
 
 export interface CommunityPost {
   id: string;
   userId: string;
   content: string;
   imageUrl: string | null;
+  imageUrls: string[];
   likesCount: number;
+  commentsCount: number;
+  category: PostCategory;
   createdAt: string;
   updatedAt: string;
   authorName: string;
@@ -29,10 +36,12 @@ interface PostCardProps {
 export default function PostCard({ post, onPostUpdated }: PostCardProps) {
   const [liked, setLiked] = useState(post.isLiked);
   const [likesCount, setLikesCount] = useState(post.likesCount);
+  const [commentsCount, setCommentsCount] = useState(post.commentsCount);
   const [showMenu, setShowMenu] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editContent, setEditContent] = useState(post.content);
   const [busy, setBusy] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
   const handleLike = async () => {
     // Optimistic update
@@ -88,7 +97,14 @@ export default function PostCard({ post, onPostUpdated }: PostCardProps) {
             )}
           </div>
           <div>
-            <p className="font-raleway font-semibold text-sm text-foreground">{post.authorName}</p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="font-raleway font-semibold text-sm text-foreground">{post.authorName}</p>
+              {post.category && post.category !== "general" && (
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#FF5733]/10 text-[#FF5733] font-raleway uppercase tracking-wide">
+                  {POST_CATEGORIES.find((c) => c.value === post.category)?.label ?? post.category}
+                </span>
+              )}
+            </div>
             <p className="text-xs text-muted-foreground">
               {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
               {post.updatedAt !== post.createdAt && " (edited)"}
@@ -126,6 +142,9 @@ export default function PostCard({ post, onPostUpdated }: PostCardProps) {
       {editing ? (
         <div className="mb-3">
           <textarea
+            title="Edit post"
+            aria-label="Edit post content"
+            placeholder="Edit your post..."
             value={editContent}
             onChange={(e) => setEditContent(e.target.value)}
             maxLength={1000}
@@ -146,12 +165,16 @@ export default function PostCard({ post, onPostUpdated }: PostCardProps) {
         </p>
       )}
 
-      {/* Image */}
-      {post.imageUrl && (
+      {/* Image Gallery */}
+      {post.imageUrls && post.imageUrls.length > 0 ? (
+        <div className="mb-3">
+          <ImageGallery images={post.imageUrls} />
+        </div>
+      ) : post.imageUrl ? (
         <div className="mb-3 rounded-lg overflow-hidden">
           <img src={post.imageUrl} alt="Post image" className="w-full max-h-100 object-cover" />
         </div>
-      )}
+      ) : null}
 
       {/* Actions */}
       <div className="flex items-center gap-4 pt-2 border-t border-gray-100 dark:border-zinc-800">
@@ -162,7 +185,23 @@ export default function PostCard({ post, onPostUpdated }: PostCardProps) {
           <Heart className={`w-4 h-4 ${liked ? "fill-red-500" : ""}`} />
           <span className="font-medium">{likesCount}</span>
         </button>
+        <button
+          onClick={() => setShowComments((v) => !v)}
+          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-[#FF5733] transition-colors"
+        >
+          <MessageCircle className="w-4 h-4" />
+          <span className="font-medium">{commentsCount}</span>
+        </button>
       </div>
+
+      {/* Comments Section */}
+      {showComments && (
+        <PostComments
+          postId={post.id}
+          onCommentAdded={() => setCommentsCount((c) => c + 1)}
+          onCommentDeleted={() => setCommentsCount((c) => Math.max(c - 1, 0))}
+        />
+      )}
     </div>
   );
 }

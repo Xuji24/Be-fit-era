@@ -184,6 +184,7 @@ export default function JoinRaceModal({
             </p>
           </div>
           <button
+            title="Close"
             onClick={handleClose}
             className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-[#2A2A2E] transition-colors cursor-pointer"
           >
@@ -203,6 +204,7 @@ export default function JoinRaceModal({
                   <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                     type="text"
+                    aria-label="Full Name"
                     value={form.fullName}
                     onChange={(e) => handleChange("fullName", e.target.value)}
                     placeholder="Juan Dela Cruz"
@@ -225,6 +227,7 @@ export default function JoinRaceModal({
                   <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                     type="email"
+                    aria-label="Email"
                     value={form.email}
                     onChange={(e) => handleChange("email", e.target.value)}
                     placeholder="your@email.com"
@@ -247,6 +250,7 @@ export default function JoinRaceModal({
                   <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                     type="tel"
+                    aria-label="Phone Number"
                     value={form.phone}
                     onChange={(e) =>
                       handleChange(

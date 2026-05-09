@@ -165,6 +165,7 @@ export default function ProfilePage() {
                   <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
                   <input
                     type="text"
+                    aria-label="First Name"
                     value={profile.firstName}
                     onChange={(e) =>
                       setProfile({ ...profile, firstName: e.target.value })
@@ -184,6 +185,7 @@ export default function ProfilePage() {
                   <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
                   <input
                     type="text"
+                    aria-label="Last Name"
                     value={profile.lastName}
                     onChange={(e) =>
                       setProfile({ ...profile, lastName: e.target.value })
@@ -203,6 +205,8 @@ export default function ProfilePage() {
                   <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
                   <input
                     type="email"
+                    title="Email address"
+                    placeholder="your@email.com"
                     value={profile.email}
                     readOnly
                     disabled
@@ -221,6 +225,7 @@ export default function ProfilePage() {
                 </label>
                 <input
                   type="text"
+                  aria-label="Username"
                   value={profile.username}
                   onChange={(e) =>
                     setProfile({ ...profile, username: e.target.value })

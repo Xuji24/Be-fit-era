@@ -73,7 +73,7 @@ function PodiumColumn({
       <p className={`font-raleway font-bold text-sm sm:text-base text-white ${isChampion ? "text-base sm:text-lg" : ""}`}>
         {entry.user}
       </p>
-      <p className="font-merriweather-sans text-xs text-gray-400 mb-3">
+      <p className="font-merriweather-sans text-xs text-gray-400 dark:text-gray-300 mb-3">
         {entry.username}
       </p>
 
@@ -83,7 +83,7 @@ function PodiumColumn({
           <p className={`font-raleway font-bold text-sm sm:text-base ${config.text}`}>
             {entry.distance}
           </p>
-          <p className="font-merriweather-sans text-[10px] text-gray-500 uppercase tracking-wide">
+          <p className="font-merriweather-sans text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wide">
             Distance
           </p>
         </div>
@@ -91,7 +91,7 @@ function PodiumColumn({
           <p className="font-raleway font-bold text-sm sm:text-base text-white">
             {entry.pacing}
           </p>
-          <p className="font-merriweather-sans text-[10px] text-gray-500 uppercase tracking-wide">
+          <p className="font-merriweather-sans text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wide">
             Pace/km
           </p>
         </div>

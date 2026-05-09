@@ -52,6 +52,7 @@ export default function CancelRaceModal({
             </h2>
           </div>
           <button
+            title="Close"
             onClick={onClose}
             className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
           >

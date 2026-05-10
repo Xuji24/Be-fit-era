@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import { Trash2, Send, Loader2 } from "lucide-react";
 import { getPostComments, addComment, deleteComment } from "@/app/actions/community-actions";
@@ -34,6 +35,7 @@ export default function PostComments({ postId, onCommentAdded, onCommentDeleted 
     if (append) setLoadingMore(false); else setLoading(false);
   }, [postId]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchComments(1); }, [fetchComments]);
 
   const handleSubmit = async () => {
@@ -113,7 +115,7 @@ export default function PostComments({ postId, onCommentAdded, onCommentDeleted 
             <div key={comment.id} className="flex gap-2 group">
               <div className="w-7 h-7 rounded-full bg-linear-to-br from-[#FF5733] to-[#FFB800] flex items-center justify-center shrink-0 overflow-hidden text-white text-xs font-bold">
                 {comment.authorAvatar ? (
-                  <img src={comment.authorAvatar} alt={comment.authorName} className="w-full h-full object-cover" />
+                  <Image src={comment.authorAvatar} alt={comment.authorName} width={28} height={28} className="w-full h-full object-cover" />
                 ) : (
                   comment.authorName.charAt(0).toUpperCase()
                 )}
@@ -122,7 +124,7 @@ export default function PostComments({ postId, onCommentAdded, onCommentDeleted 
                 <div className="flex items-start justify-between gap-2">
                   <div className="bg-gray-50 dark:bg-zinc-800 rounded-xl px-3 py-2 flex-1 min-w-0">
                     <p className="font-raleway font-semibold text-xs text-foreground mb-0.5">{comment.authorName}</p>
-                    <p className="font-merriweather-sans text-sm text-foreground leading-relaxed break-words">{comment.content}</p>
+                    <p className="font-merriweather-sans text-sm text-foreground leading-relaxed wrap-break-word">{comment.content}</p>
                   </div>
                   {comment.isOwn && (
                     <button

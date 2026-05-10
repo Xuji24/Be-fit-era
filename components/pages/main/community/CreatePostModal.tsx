@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
 import { X, ImagePlus, Send, Trash2 } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import { createPost } from "@/app/actions/community-actions";
@@ -147,7 +148,7 @@ export default function CreatePostModal({ open, onClose, onPostCreated }: Create
           <div className="mt-3 grid grid-cols-2 gap-2">
             {images.map((img, idx) => (
               <div key={idx} className="relative rounded-lg overflow-hidden border border-gray-200 dark:border-zinc-700 group">
-                <img src={img.preview} alt={`Preview ${idx + 1}`} className="w-full h-28 object-cover" />
+                <Image src={img.preview} alt={`Preview ${idx + 1}`} width={200} height={112} unoptimized className="w-full h-28 object-cover" />
                 <button
                   type="button"
                   title="Remove image"

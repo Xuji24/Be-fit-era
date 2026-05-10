@@ -59,6 +59,7 @@ export function RewardPreviewCarousel({ images, altPrefix, theme = "orange" }: R
         <>
           <button 
             type="button"
+            title="Previous image"
             onClick={prevImage}
             className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 bg-white/80 dark:bg-black/50 hover:bg-white dark:hover:bg-black rounded-full shadow-sm text-gray-600 dark:text-gray-300 transition-colors z-20"
           >
@@ -67,6 +68,7 @@ export function RewardPreviewCarousel({ images, altPrefix, theme = "orange" }: R
           
           <button 
             type="button"
+            title="Next image"
             onClick={nextImage}
             className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-white/80 dark:bg-black/50 hover:bg-white dark:hover:bg-black rounded-full shadow-sm text-gray-600 dark:text-gray-300 transition-colors z-20"
           >

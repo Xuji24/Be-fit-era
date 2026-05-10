@@ -102,7 +102,6 @@ function LeaderboardRow({
           </span>
         </div>
         <div className="w-full h-2 bg-gray-200 dark:bg-[#2A2A2E] rounded-full overflow-hidden">
-          {/* eslint-disable-next-line react/forbid-component-props */}
           <div
             className={`h-full rounded-full ${
               isTopThree

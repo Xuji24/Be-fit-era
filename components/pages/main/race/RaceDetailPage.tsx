@@ -16,6 +16,10 @@ import {
   Gift,
   Shirt,
   CheckCircle2,
+  Banknote,
+  PackageCheck,
+  Timer,
+  ShoppingBag,
 } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import RaceRecentActivities from "./component/RaceRecentActivities";
@@ -30,12 +34,14 @@ interface Props {
   race: RaceEvent;
   initialRegistered?: boolean;
   isLoggedIn?: boolean;
+  isOrganizer?: boolean;
 }
 
 export default function RaceDetailPage({
   race,
   initialRegistered = false,
   isLoggedIn = false,
+  isOrganizer = false,
 }: Props) {
   const router = useRouter();
   const [joinOpen, setJoinOpen] = useState(false);
@@ -280,10 +286,13 @@ export default function RaceDetailPage({
                 </ul>
               </div>
             )}
-          </div>
 
-          <div className="mt-8">
-            <RaceRecentActivities raceDbId={race.dbId} />
+            {/* Live feed — only visible to the organizer/admin of this race */}
+            {isOrganizer && (
+              <div className="mt-4">
+                <RaceRecentActivities raceDbId={race.dbId} />
+              </div>
+            )}
           </div>
 
           {/* Sidebar — Right 1/3 */}
@@ -291,9 +300,26 @@ export default function RaceDetailPage({
             <div className="sticky top-24 space-y-5">
               {/* Registration Card */}
               <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl p-6 border border-gray-100 dark:border-white/8 shadow-sm">
-                <h3 className="font-raleway font-bold text-base text-foreground mb-4">
-                  Registration
-                </h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-raleway font-bold text-base text-foreground">
+                    Registration
+                  </h3>
+                  {/* Fee badge */}
+                  {race.registrationFee !== undefined && (
+                    <span
+                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-raleway font-bold ${
+                        race.registrationFee === 0
+                          ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
+                          : "bg-[#FF5733]/10 text-[#FF5733]"
+                      }`}
+                    >
+                      <Banknote size={11} />
+                      {race.registrationFee === 0
+                        ? "FREE"
+                        : `₱${race.registrationFee.toLocaleString()}`}
+                    </span>
+                  )}
+                </div>
 
                 {/* Progress bar */}
                 <div className="mb-4">
@@ -302,7 +328,6 @@ export default function RaceDetailPage({
                     <span>{race.maxParticipants} max</span>
                   </div>
                   <div className="h-2 rounded-full bg-gray-100 dark:bg-white/10 overflow-hidden">
-                    {/* eslint-disable-next-line react/forbid-component-props */}
                     <div
                       className="h-full rounded-full bg-[#FF5733] transition-all duration-500"
                       style={{ width: `${Math.min(fillPercentage, 100)}%` }}
@@ -316,8 +341,8 @@ export default function RaceDetailPage({
                 </div>
 
                 {/* Deadline */}
-                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-5">
-                  <Clock size={14} className="text-[#FF5733]" />
+                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-3">
+                  <Clock size={14} className="text-[#FF5733] shrink-0" />
                   <span className="font-merriweather-sans">
                     Deadline:{" "}
                     <span className="font-semibold">
@@ -325,6 +350,56 @@ export default function RaceDetailPage({
                     </span>
                   </span>
                 </div>
+
+                {/* Cutoff time */}
+                {race.cutoffTimeMinutes !== undefined && (
+                  <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-3">
+                    <Timer size={14} className="text-[#FF5733] shrink-0" />
+                    <span className="font-merriweather-sans">
+                      Cutoff:{" "}
+                      <span className="font-semibold">
+                        {Math.floor(race.cutoffTimeMinutes / 60)}h{" "}
+                        {race.cutoffTimeMinutes % 60 > 0
+                          ? `${race.cutoffTimeMinutes % 60}m`
+                          : ""}
+                      </span>
+                    </span>
+                  </div>
+                )}
+
+                {/* Kit pickup */}
+                {race.kitPickupInfo && (
+                  <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300 mb-3">
+                    <ShoppingBag size={14} className="text-[#FF5733] shrink-0 mt-0.5" />
+                    <span className="font-merriweather-sans">
+                      <span className="font-semibold">Kit Pickup:</span>{" "}
+                      {race.kitPickupInfo}
+                    </span>
+                  </div>
+                )}
+
+                {/* Inclusions checklist */}
+                {race.inclusions && race.inclusions.length > 0 && (
+                  <div className="mb-4 pt-3 border-t border-gray-100 dark:border-white/8">
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <PackageCheck size={13} className="text-emerald-500" />
+                      <span className="text-xs font-raleway font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        What&apos;s Included
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {race.inclusions.map((item) => (
+                        <span
+                          key={item}
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-merriweather-sans bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/40"
+                        >
+                          <CheckCircle2 size={10} />
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Join Button */}
                 <Button
@@ -367,6 +442,11 @@ export default function RaceDetailPage({
                         : `/race/${race.id}`
                     }
                     title={race.title}
+                    date={race.date}
+                    time={race.time}
+                    location={race.location}
+                    category={race.category}
+                    registrationDeadline={race.registrationDeadline}
                   />
                 </div>
               </div>

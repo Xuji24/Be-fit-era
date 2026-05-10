@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // next/og image routes must use inline styles (Satori limitation)
+    "app/api/og/**",
+    // Salesforce auto-generated type files
+    ".sfdx/**",
   ]),
 ]);
 

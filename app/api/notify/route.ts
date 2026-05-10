@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const { email, subject, message } = await req.json();
 
     if (!process.env.RESEND_API_KEY) {
-       console.log("Mock Email Sent to ${email}: ${subject} ");
+       console.log(`Mock Email Sent to ${email}: ${subject}`);
        return NextResponse.json({ success: true, mock: true });
     }
 
@@ -16,7 +16,7 @@ export async function POST(req: Request) {
       from: "Be Fit Era <onboarding@resend.dev>",
       to: [email],
       subject: subject,
-      html: "<p>${message}</p>",
+      html: `<p>${message}</p>`,
     });
 
     return NextResponse.json(data);

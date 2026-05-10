@@ -68,9 +68,17 @@ export default async function Activities() {
       const targetDist = Number(race.target_distance_km);
 
       let status: JoinedRace["status"];
+      // A race is "archived" (completed) when:
+      //  - explicitly marked completed in DB, OR
+      //  - the user has logged the full target distance, OR
+      //  - the event date has already passed (race day is over)
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const eventDate = race.event_date ? new Date(race.event_date) : null;
+      const eventEnded = eventDate && eventDate < today;
       const eventStarted =
         race.event_date && new Date(race.event_date) <= new Date();
-      if (r.status === "completed" || loggedDist >= targetDist) {
+      if (r.status === "completed" || loggedDist >= targetDist || eventEnded) {
         status = "completed";
       } else if (loggedDist > 0 || eventStarted) {
         status = "in-progress";

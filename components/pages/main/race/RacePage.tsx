@@ -24,7 +24,7 @@ export default function RacePage({ races }: RacePageProps) {
         race.location.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, searchQuery, races]);
 
   return (
     <div className="min-h-screen bg-background">

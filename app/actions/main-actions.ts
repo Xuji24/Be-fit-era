@@ -257,7 +257,6 @@ export async function submitOrganizerApplication(
   if (!user)
     return { success: false, error: "You must be logged in to apply." };
 
-  const ip = await getClientIp();
   const allowed = checkRateLimit(
     `organizer-apply:${user.id}`,
     3,
@@ -386,7 +385,17 @@ export async function getRecentActivitiesForRace(raceDbId: string) {
   const supabase = await createClient();
   const { data, error } = await supabase.from('activity_entries').select('id, user_id, distance_km, activity_type, activity_date, created_at, source, user:profiles!activity_entries_user_id_fkey(full_name, avatar_url), registration:race_registrations!inner(race_id)').eq('registration.race_id', raceDbId).order('created_at', { ascending: false }).limit(20);
   if (error) return { success: false, error: error.message };
-  return { success: true, data: data.map((d: any) => ({...d, runner_name: d.user?.[0]?.full_name || 'Anonymous', avatar: d.user?.[0]?.avatar_url})) };
+  return { success: true, data: data.map((d: {
+    id: string;
+    user_id: string;
+    distance_km: number;
+    activity_type: string;
+    activity_date: string;
+    created_at: string;
+    source: string;
+    user: { full_name: string; avatar_url: string }[] | null;
+    registration: { race_id: string }[] | null;
+  }) => ({...d, runner_name: d.user?.[0]?.full_name || 'Anonymous', avatar: d.user?.[0]?.avatar_url})) };
 }
 
 export async function flagActivity(activityId: string, reason: string) {

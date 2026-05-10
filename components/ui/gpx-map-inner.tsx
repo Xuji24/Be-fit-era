@@ -11,6 +11,25 @@ interface GpxMapInnerProps {
   rawGpx?: string; // Raw XML string (if loaded from DB/local)
 }
 
+interface GpxPoint {
+  $: { lat: string; lon: string };
+}
+interface GpxTrackSegment {
+  trkpt?: GpxPoint[];
+}
+interface GpxTrack {
+  trkseg?: GpxTrackSegment[];
+}
+interface GpxRoute {
+  rtept?: GpxPoint[];
+}
+interface GpxParsed {
+  gpx?: {
+    trk?: GpxTrack[];
+    rte?: GpxRoute[];
+  };
+}
+
 function BoundsUpdater({ bounds }: { bounds: L.LatLngBounds | null }) {
   const map = useMap();
   useEffect(() => {
@@ -42,16 +61,16 @@ export default function GpxMapInner({ gpxUrl, rawGpx }: GpxMapInnerProps) {
 
             if (!xmlText) throw new Error("No GPX data available");
 
-            const result = await parseStringPromise(xmlText);
+            const result = await parseStringPromise(xmlText) as GpxParsed;
             const pts: [number, number][] = [];
 
             // Traverse typical GPX structure (gpx -> trk -> trkseg -> trkpt)
             if (result.gpx && result.gpx.trk) {
-                result.gpx.trk.forEach((trk: any) => {
+                result.gpx.trk.forEach((trk: GpxTrack) => {
                     if (trk.trkseg) {
-                        trk.trkseg.forEach((seg: any) => {
+                        trk.trkseg.forEach((seg: GpxTrackSegment) => {
                             if (seg.trkpt) {
-                                seg.trkpt.forEach((pt: any) => {
+                                seg.trkpt.forEach((pt: GpxPoint) => {
                                     pts.push([parseFloat(pt.$.lat), parseFloat(pt.$.lon)]);
                                 });
                             }
@@ -60,9 +79,9 @@ export default function GpxMapInner({ gpxUrl, rawGpx }: GpxMapInnerProps) {
                 });
             } else if (result.gpx && result.gpx.rte) {
                  // Or route format
-                 result.gpx.rte.forEach((rte: any) => {
+                 result.gpx.rte.forEach((rte: GpxRoute) => {
                     if (rte.rtept) {
-                         rte.rtept.forEach((pt: any) => {
+                         rte.rtept.forEach((pt: GpxPoint) => {
                              pts.push([parseFloat(pt.$.lat), parseFloat(pt.$.lon)]);
                          });
                     }
@@ -75,8 +94,8 @@ export default function GpxMapInner({ gpxUrl, rawGpx }: GpxMapInnerProps) {
             } else {
                 setError("No valid track points found in GPX file.");
             }
-        } catch (err: any) {
-             setError("Failed to parse GPX: " + err.message);
+        } catch (err: unknown) {
+             setError("Failed to parse GPX: " + (err instanceof Error ? err.message : String(err)));
         } finally {
             setLoading(false);
         }
@@ -89,7 +108,7 @@ export default function GpxMapInner({ gpxUrl, rawGpx }: GpxMapInnerProps) {
   }
 
   return (
-    <div className="relative w-full h-[400px] overflow-hidden rounded-xl border border-gray-200 dark:border-zinc-800">
+    <div className="relative w-full h-100 overflow-hidden rounded-xl border border-gray-200 dark:border-zinc-800">
       {loading && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/50 dark:bg-zinc-900/50">
           <p className="text-gray-500 font-medium">Loading Route...</p>

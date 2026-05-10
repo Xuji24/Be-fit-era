@@ -23,9 +23,10 @@ export const TEST_USERS = {
 export async function loginAs(page: Page, role: keyof typeof TEST_USERS) {
   const user = TEST_USERS[role];
   await page.goto("/login");
-  await page.getByLabel(/email/i).fill(user.email);
-  await page.getByLabel(/password/i).fill(user.password);
-  await page.getByRole("button", { name: /log in|sign in/i }).click();
+  // Auth forms use visual labels only (no htmlFor/id), so use placeholder to locate inputs
+  await page.getByPlaceholder(/email/i).fill(user.email);
+  await page.locator('input[type="password"]').first().fill(user.password);
+  await page.getByRole("button", { name: /log in|login|sign in/i }).click();
   // Wait for redirect away from login page
   await page.waitForURL((url) => !url.pathname.startsWith("/login"), { timeout: 10_000 });
 }

@@ -2,22 +2,12 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { checkRateLimit } from "@/lib/rate-limit";
-import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 
 export type ActionResult = {
   success: boolean;
   error?: string;
 };
-
-async function getClientIp(): Promise<string> {
-  const h = await headers();
-  return (
-    h.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    h.get("x-real-ip") ??
-    "unknown"
-  );
-}
 
 /* ── Create Race (Organizer Only) ── */
 
@@ -26,6 +16,7 @@ export interface CreateRaceInput {
   category: string;
   targetDistance: number;
   eventDate: string;
+  eventTime?: string;
   location?: string;
   description?: string;
   maxParticipants?: number;
@@ -33,6 +24,10 @@ export interface CreateRaceInput {
   tshirtDesignUrl?: string;
   medalDesignUrl?: string;
   certificateDesignUrl?: string;
+  registrationFee?: number;
+  cutoffTimeMinutes?: number;
+  kitPickupInfo?: string;
+  inclusions?: string[];
 }
 
 type CreateRaceResult = ActionResult & { raceId?: string };
@@ -60,7 +55,6 @@ export async function createRace(
       error: "You do not have permission to create races.",
     };
 
-  const ip = await getClientIp();
   const allowed = checkRateLimit(`create-race:${user.id}`, 10, 60 * 60 * 1000);
   if (!allowed)
     return {
@@ -102,6 +96,7 @@ export async function createRace(
     registration_open: true,
   };
 
+  if (input.eventTime) insertData.event_time = input.eventTime;
   if (input.location) insertData.location = input.location;
   if (input.description) insertData.description = input.description;
   if (input.maxParticipants && input.maxParticipants > 0)
@@ -113,6 +108,13 @@ export async function createRace(
   if (input.medalDesignUrl) insertData.medal_design_url = input.medalDesignUrl;
   if (input.certificateDesignUrl)
     insertData.certificate_design_url = input.certificateDesignUrl;
+  if (input.registrationFee !== undefined)
+    insertData.registration_fee = input.registrationFee;
+  if (input.cutoffTimeMinutes !== undefined)
+    insertData.cutoff_time_minutes = input.cutoffTimeMinutes;
+  if (input.kitPickupInfo) insertData.kit_pickup_info = input.kitPickupInfo;
+  if (input.inclusions && input.inclusions.length > 0)
+    insertData.inclusions = input.inclusions;
 
   const { data, error } = await supabase
     .from("races")
@@ -161,7 +163,6 @@ export async function updateRace(
       error: "You do not have permission to update races.",
     };
 
-  const ip = await getClientIp();
   const allowed = checkRateLimit(`update-race:${user.id}`, 20, 60 * 60 * 1000);
   if (!allowed)
     return {
@@ -228,6 +229,14 @@ export async function updateRace(
     updateData.medal_design_url = input.medalDesignUrl;
   if (input.certificateDesignUrl !== undefined)
     updateData.certificate_design_url = input.certificateDesignUrl;
+  if (input.eventTime !== undefined) updateData.event_time = input.eventTime;
+  if (input.registrationFee !== undefined)
+    updateData.registration_fee = input.registrationFee;
+  if (input.cutoffTimeMinutes !== undefined)
+    updateData.cutoff_time_minutes = input.cutoffTimeMinutes;
+  if (input.kitPickupInfo !== undefined)
+    updateData.kit_pickup_info = input.kitPickupInfo;
+  if (input.inclusions !== undefined) updateData.inclusions = input.inclusions;
 
   if (Object.keys(updateData).length === 0)
     return { success: false, error: "No changes to save." };

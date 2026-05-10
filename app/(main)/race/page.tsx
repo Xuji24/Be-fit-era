@@ -6,13 +6,20 @@ import type { RaceEvent } from "@/utils/types/race-types";
 export default async function Race() {
   const supabase = await createClient();
 
-  // Fetch races from DB, ordered by event_date ascending (upcoming first)
+  // Fetch only upcoming races where:
+  // - event_date >= today (race hasn't happened yet)
+  // - registration_deadline >= today OR null (registration not yet closed)
+  // - registration_open = true
+  const today = new Date().toISOString().split("T")[0]; // e.g. "2026-05-10"
   const { data: dbRaces } = await supabase
     .from("races")
     .select(
       "id, title, organizer, description, full_description, category, target_distance_km, event_date, event_time, location, image_url, organizer_logo_url, max_participants, registration_open, registration_deadline, tshirt_design_url, medal_design_url, certificate_design_url",
     )
     .neq("status", "cancelled")
+    .eq("registration_open", true)
+    .gte("event_date", today)
+    .or(`registration_deadline.gte.${today},registration_deadline.is.null`)
     .order("event_date", { ascending: true })
     .limit(50);
 
@@ -87,9 +94,19 @@ export default async function Race() {
     }));
   }
 
-  // Fallback to static data if no DB races
+  // Fallback to static data if no DB races — filter to upcoming + open races only
   if (races.length === 0) {
-    races = racesData;
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+    races = racesData.filter((r) => {
+      const deadline = new Date(r.registrationDeadline);
+      const eventDate = new Date(r.date);
+      return (
+        r.registrationOpen &&
+        !isNaN(deadline.getTime()) && deadline >= todayDate &&
+        !isNaN(eventDate.getTime()) && eventDate >= todayDate
+      );
+    });
   }
 
   return <RacePage races={races} />;

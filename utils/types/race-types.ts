@@ -29,6 +29,14 @@ export interface RaceEvent {
   registrationDeadline: string;
   rewards: RaceReward;
   gpxUrl?: string;
+  /** 0 = free, positive = fee in PHP */
+  registrationFee?: number;
+  /** cutoff time to finish the race, in minutes (e.g. 360 = 6 hrs) */
+  cutoffTimeMinutes?: number;
+  /** where/when runners collect their race kit */
+  kitPickupInfo?: string;
+  /** items included in registration (e.g. ["Medal", "T-Shirt", "E-Certificate"]) */
+  inclusions?: string[];
 }
 
 export type RaceCategory = "All" | "5K" | "10K" | "Half Marathon" | "Marathon";

@@ -22,6 +22,11 @@ type ExtendedRace = OrganizerRace & {
   location?: string;
   description?: string;
   registrationDeadline?: string;
+  eventTime?: string;
+  registrationFee?: number;
+  cutoffTimeMinutes?: number;
+  kitPickupInfo?: string;
+  inclusions?: string[];
 };
 
 export default function EditRaceModal({
@@ -52,6 +57,28 @@ export default function EditRaceModal({
   );
   const [registrationDeadline, setRegistrationDeadline] = useState(
     extendedRace?.registrationDeadline || "",
+  );
+  const [eventTime, setEventTime] = useState(extendedRace?.eventTime || "");
+  const [registrationFee, setRegistrationFee] = useState(
+    extendedRace?.registrationFee !== undefined
+      ? extendedRace.registrationFee.toString()
+      : "",
+  );
+  const [cutoffHours, setCutoffHours] = useState(
+    extendedRace?.cutoffTimeMinutes !== undefined
+      ? Math.floor(extendedRace.cutoffTimeMinutes / 60).toString()
+      : "",
+  );
+  const [cutoffMinutes, setCutoffMinutes] = useState(
+    extendedRace?.cutoffTimeMinutes !== undefined
+      ? (extendedRace.cutoffTimeMinutes % 60).toString()
+      : "0",
+  );
+  const [kitPickupInfo, setKitPickupInfo] = useState(
+    extendedRace?.kitPickupInfo || "",
+  );
+  const [inclusions, setInclusions] = useState<string[]>(
+    extendedRace?.inclusions ?? [],
   );
 
   // Design upload states
@@ -88,6 +115,24 @@ export default function EditRaceModal({
     setDescription(extendedRace?.description || "");
     setMaxParticipants(extendedRace?.maxParticipants?.toString() || "");
     setRegistrationDeadline(extendedRace?.registrationDeadline || "");
+    setEventTime(extendedRace?.eventTime || "");
+    setRegistrationFee(
+      extendedRace?.registrationFee !== undefined
+        ? extendedRace.registrationFee.toString()
+        : "",
+    );
+    setCutoffHours(
+      extendedRace?.cutoffTimeMinutes !== undefined
+        ? Math.floor(extendedRace.cutoffTimeMinutes / 60).toString()
+        : "",
+    );
+    setCutoffMinutes(
+      extendedRace?.cutoffTimeMinutes !== undefined
+        ? (extendedRace.cutoffTimeMinutes % 60).toString()
+        : "0",
+    );
+    setKitPickupInfo(extendedRace?.kitPickupInfo || "");
+    setInclusions(extendedRace?.inclusions ?? []);
     setDesignPreviews({
       tshirt: extendedRace?.tshirtDesignUrl ?? null,
       medal: extendedRace?.medalDesignUrl ?? null,
@@ -232,10 +277,19 @@ export default function EditRaceModal({
         category,
         targetDistance: Number(targetDistance),
         eventDate,
+        eventTime: eventTime || undefined,
         location: location.trim() || undefined,
         description: description.trim() || undefined,
         maxParticipants: maxParticipants ? Number(maxParticipants) : undefined,
         registrationDeadline: registrationDeadline || undefined,
+        registrationFee:
+          registrationFee !== "" ? Number(registrationFee) : undefined,
+        cutoffTimeMinutes:
+          cutoffHours !== ""
+            ? Number(cutoffHours) * 60 + Number(cutoffMinutes)
+            : undefined,
+        kitPickupInfo: kitPickupInfo.trim() || undefined,
+        inclusions: inclusions.length > 0 ? inclusions : undefined,
       };
 
       if (tshirtDesignUrl !== undefined)
@@ -425,6 +479,107 @@ export default function EditRaceModal({
               maxLength={2000}
               className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans resize-none"
             />
+          </div>
+
+          {/* Gun Start Time + Registration Fee */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+                Gun Start Time
+              </label>
+              <input
+                type="time"
+                aria-label="Gun Start Time"
+                value={eventTime}
+                onChange={(e) => setEventTime(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+                Registration Fee (₱)
+              </label>
+              <input
+                type="number"
+                value={registrationFee}
+                onChange={(e) => setRegistrationFee(e.target.value)}
+                placeholder="0 = FREE"
+                min="0"
+                step="50"
+                className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+              />
+            </div>
+          </div>
+
+          {/* Cutoff Time */}
+          <div>
+            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+              Cutoff Time (optional)
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              <input
+                type="number"
+                value={cutoffHours}
+                onChange={(e) => setCutoffHours(e.target.value)}
+                placeholder="Hours (e.g. 6)"
+                min="0"
+                max="24"
+                className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+              />
+              <input
+                type="number"
+                value={cutoffMinutes}
+                onChange={(e) => setCutoffMinutes(e.target.value)}
+                placeholder="Minutes (e.g. 30)"
+                min="0"
+                max="59"
+                className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+              />
+            </div>
+          </div>
+
+          {/* Kit Pickup Info */}
+          <div>
+            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+              Kit Pickup Info (optional)
+            </label>
+            <input
+              type="text"
+              value={kitPickupInfo}
+              onChange={(e) => setKitPickupInfo(e.target.value)}
+              placeholder="e.g. June 19–20 at Rizal Park Entrance, 8AM–5PM"
+              maxLength={300}
+              className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+            />
+          </div>
+
+          {/* Inclusions */}
+          <div>
+            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-2 uppercase tracking-wider font-merriweather-sans">
+              What&apos;s Included (optional)
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {["Medal", "T-Shirt", "E-Certificate", "Timing Chip", "Race Bib", "Loot Bag", "Post-Race Meal"].map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() =>
+                    setInclusions((prev) =>
+                      prev.includes(item)
+                        ? prev.filter((i) => i !== item)
+                        : [...prev, item]
+                    )
+                  }
+                  className={`px-3 py-1.5 rounded-full text-xs font-merriweather-sans font-semibold border transition-all cursor-pointer ${
+                    inclusions.includes(item)
+                      ? "bg-emerald-500 text-white border-emerald-500"
+                      : "bg-[#F5F5F0] dark:bg-[#2A2A2E] text-[#1A1A1A]/60 dark:text-white/40 border-transparent hover:border-emerald-300"
+                  }`}
+                >
+                  {inclusions.includes(item) ? "✓ " : ""}{item}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Design Uploads (Optional) */}

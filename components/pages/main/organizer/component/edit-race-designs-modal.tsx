@@ -200,6 +200,7 @@ export default function EditRaceDesignsModal({ race, onClose, onUpdated }: Props
               </p>
             </div>
             <button
+              title="Close"
               onClick={onClose}
               className="w-8 h-8 rounded-full flex items-center justify-center text-[#1A1A1A]/40 dark:text-white/40 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
             >
@@ -238,6 +239,7 @@ export default function EditRaceDesignsModal({ race, onClose, onUpdated }: Props
                     </button>
                     <button
                       type="button"
+                      title={`Remove ${label} design`}
                       onClick={() => handleRemove(key)}
                       className="p-1.5 rounded-lg bg-red-500/90 text-white hover:bg-red-500 transition-colors cursor-pointer"
                     >
@@ -265,6 +267,7 @@ export default function EditRaceDesignsModal({ race, onClose, onUpdated }: Props
                 ref={(el) => { fileInputRefs.current[key] = el; }}
                 type="file"
                 accept=".png,.jpg,.jpeg,.webp,.svg"
+                aria-label={`Upload ${label} design`}
                 onChange={(e) => handleFileSelect(key, e.target.files?.[0] ?? null)}
                 className="hidden"
               />

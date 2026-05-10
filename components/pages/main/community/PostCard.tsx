@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import { Heart, Trash2, Pencil, MoreHorizontal, X, Check, MessageCircle } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
@@ -91,7 +92,7 @@ export default function PostCard({ post, onPostUpdated }: PostCardProps) {
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-linear-to-br from-[#FF5733] to-[#FFB800] flex items-center justify-center shrink-0 overflow-hidden">
             {post.authorAvatar ? (
-              <img src={post.authorAvatar} alt={post.authorName} className="w-full h-full object-cover" />
+              <Image src={post.authorAvatar} alt={post.authorName} width={40} height={40} className="w-full h-full object-cover" />
             ) : (
               <span className="text-white font-bold text-sm">{post.authorName.charAt(0).toUpperCase()}</span>
             )}
@@ -172,7 +173,7 @@ export default function PostCard({ post, onPostUpdated }: PostCardProps) {
         </div>
       ) : post.imageUrl ? (
         <div className="mb-3 rounded-lg overflow-hidden">
-          <img src={post.imageUrl} alt="Post image" className="w-full max-h-100 object-cover" />
+          <Image src={post.imageUrl} alt="Post image" width={800} height={400} className="w-full max-h-100 object-cover" />
         </div>
       ) : null}
 

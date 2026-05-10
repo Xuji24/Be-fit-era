@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 interface ImageGalleryProps {
@@ -39,9 +40,11 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
             }`}
             onClick={() => openLightbox(i)}
           >
-            <img
+            <Image
               src={url}
               alt={`Post image ${i + 1}`}
+              width={600}
+              height={208}
               className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-200"
             />
             {/* Overlay for remaining count */}
@@ -87,9 +90,11 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
             </>
           )}
 
-          <img
+          <Image
             src={images[lightboxIndex]}
             alt={`Image ${lightboxIndex + 1} of ${images.length}`}
+            width={1200}
+            height={900}
             className="max-w-full max-h-screen object-contain rounded-lg"
             onClick={(e) => e.stopPropagation()}
           />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import { AlertCircle, Activity as ActivityIcon, X } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
@@ -76,7 +77,7 @@ export default function RaceRecentActivities({ raceDbId }: Props) {
           <div key={activity.id} className="flex gap-4 items-start p-4 hover:bg-gray-50 dark:hover:bg-zinc-800/50 rounded-lg transition-colors border border-gray-50 dark:border-zinc-800/50">
             <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-zinc-700 border border-gray-300 dark:border-zinc-600 flex items-center justify-center overflow-hidden shrink-0">
               {activity.avatar ? (
-                <img src={activity.avatar} alt={activity.runner_name} className="w-full h-full object-cover" />
+                <Image src={activity.avatar} alt={activity.runner_name} width={40} height={40} className="w-full h-full object-cover" />
               ) : (
                 <span className="text-gray-500 dark:text-gray-300 font-bold">{activity.runner_name.charAt(0)}</span>
               )}

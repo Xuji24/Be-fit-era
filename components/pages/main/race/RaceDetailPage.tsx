@@ -60,7 +60,7 @@ export default function RaceDetailPage({
   }, [race.dbId]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen relative">
       {/* Banner Image */}
       <div className="relative w-full h-64 sm:h-80 lg:h-96">
         <Image

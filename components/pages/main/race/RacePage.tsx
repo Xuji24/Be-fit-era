@@ -27,7 +27,7 @@ export default function RacePage({ races }: RacePageProps) {
   }, [selectedCategory, searchQuery, races]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen relative">
       {/* Hero Header */}
       <section className="relative bg-[#1A1A1A] dark:bg-[#0D0D0D] pt-28 pb-14 md:pt-32 md:pb-16">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">

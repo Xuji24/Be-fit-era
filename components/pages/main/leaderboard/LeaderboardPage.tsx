@@ -25,7 +25,7 @@ export default async function LeaderboardPage() {
   const remaining = entries.slice(3, 10);
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212]">
+    <div className="min-h-screen relative">
       {/* Hero Header */}
       <section className="relative bg-[#1A1A1A] dark:bg-[#0D0D0D] overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">

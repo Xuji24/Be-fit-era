@@ -97,7 +97,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212] flex items-center justify-center">
+      <div className="min-h-screen relative flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-[#FF5733]" />
       </div>
     );
@@ -109,7 +109,7 @@ export default function ProfilePage() {
 
   return (
     <div>
-      <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212]">
+      <div className="min-h-screen relative">
         {/* Hero Header */}
         <section className="relative bg-[#1A1A1A] dark:bg-[#0D0D0D] pt-28 pb-14 md:pt-32 md:pb-16">
           <div className="absolute inset-0 overflow-hidden pointer-events-none">

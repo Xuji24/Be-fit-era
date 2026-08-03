@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { sendEmail } from "@/lib/email";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 
@@ -204,15 +205,10 @@ export async function registerForRace(
     return { success: false, error: "Registration failed. Please try again." };
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-  fetch(`${appUrl}/api/notify`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      email: input.email.trim(),
-      subject: "Race Registration Confirmed!",
-      message: "You have joined the race!",
-    }),
+  sendEmail({
+    to: input.email.trim(),
+    subject: "Race Registration Confirmed!",
+    message: "You have joined the race!",
   }).catch(console.error);
 
   return { success: true };
@@ -257,16 +253,18 @@ export async function submitOrganizerApplication(
   if (!user)
     return { success: false, error: "You must be logged in to apply." };
 
-  const allowed = checkRateLimit(
+  const { allowed, retryAfterMs } = checkRateLimit(
     `organizer-apply:${user.id}`,
     3,
     60 * 60 * 1000,
   );
-  if (!allowed)
+  if (!allowed) {
+    const mins = Math.ceil(retryAfterMs / 60000);
     return {
       success: false,
-      error: "Too many applications. Please try again later.",
+      error: `Too many applications. Try again in ${mins} min.`,
     };
+  }
 
   // Validate inputs
   const orgName = input.organizationName?.trim();

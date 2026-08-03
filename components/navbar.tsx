@@ -17,30 +17,37 @@ export default function Navbar() {
   useEffect(() => {
     const supabase = createClient();
 
-    // Get initial session + role
+    async function loadRole(userId: string) {
+      const { data } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", userId)
+        .single();
+      setUserRole(data?.role ?? "runner");
+    }
+
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       setUser(user);
-      if (user) {
-        const { data } = await supabase
-          .from("profiles")
-          .select("role")
-          .eq("id", user.id)
-          .single();
-        if (data?.role) setUserRole(data.role);
-      }
+      if (user) await loadRole(user.id);
       setLoading(false);
     });
 
-    // Listen for auth state changes (login, logout, token refresh)
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      if (!session?.user) setUserRole("runner");
+      const nextUser = session?.user ?? null;
+      setUser(nextUser);
+      if (nextUser) {
+        loadRole(nextUser.id);
+      } else {
+        setUserRole("runner");
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const closeMobileMenu = () => setIsOpen(false);
 
   return (
     <nav className="w-full bg-background px-4 sm:px-6 lg:p-8 py-3 sm:py-4 flex items-center justify-between lg:justify-start gap-4 lg:gap-10 relative">
@@ -130,36 +137,42 @@ export default function Navbar() {
         <div className="absolute top-full left-0 right-0 bg-[#1A1A1A] dark:bg-[#0D0D0D] lg:hidden flex flex-col px-4 py-4 space-y-3 border-t border-[#FF5733]/20 z-50">
           <Link
             href="/"
+            onClick={closeMobileMenu}
             className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
           >
             Home
           </Link>
           <Link
             href="/race"
+            onClick={closeMobileMenu}
             className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
           >
             Race
           </Link>
           <Link
             href="/activities"
+            onClick={closeMobileMenu}
             className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
           >
             Activities
           </Link>
           <Link
             href="/leaderboard"
+            onClick={closeMobileMenu}
             className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
           >
             Leaderboard
           </Link>
           <Link
             href="/community"
+            onClick={closeMobileMenu}
             className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
           >
             Community
           </Link>
           <Link
             href="/contact"
+            onClick={closeMobileMenu}
             className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
           >
             Contact
@@ -168,6 +181,7 @@ export default function Navbar() {
           {(userRole === "organizer" || userRole === "admin") && (
             <Link
               href="/organizer"
+              onClick={closeMobileMenu}
               className="font-raleway font-bold text-sm text-[#FFB800] hover:text-[#FF5733] transition-colors py-2"
             >
               Organizer
@@ -206,12 +220,14 @@ export default function Navbar() {
                 </div>
                 <Link
                   href="/profile"
+                  onClick={closeMobileMenu}
                   className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2 block"
                 >
                   Profile
                 </Link>
                 <Link
                   href="/settings"
+                  onClick={closeMobileMenu}
                   className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2 block"
                 >
                   Settings
@@ -232,6 +248,7 @@ export default function Navbar() {
           ) : (
             <Link
               href="/login"
+              onClick={closeMobileMenu}
               className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
             >
               Sign In

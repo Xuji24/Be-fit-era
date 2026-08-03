@@ -100,7 +100,7 @@ export default async function Activities() {
               year: "numeric",
             })
           : "TBD",
-        image: race.image_url || "/Running.jpg",
+        image: race.image_url || "/fitra.png",
       };
     });
 

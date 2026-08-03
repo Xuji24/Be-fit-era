@@ -7,11 +7,10 @@ export default function HeroSection({ isLoggedIn }: { isLoggedIn: boolean }) {
     <section className="w-full relative min-h-[85vh] sm:min-h-[90vh] flex items-center overflow-hidden">
       {/* Full-bleed background image */}
       <Image
-        src="/Running.jpg"
+        src="/fitra.png"
         alt="Runner in action"
         fill
         priority
-        className="object-cover object-center"
       />
 
       {/* Dark overlay for text readability */}
@@ -23,7 +22,6 @@ export default function HeroSection({ isLoggedIn }: { isLoggedIn: boolean }) {
       {/* Content */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-10 lg:px-16 py-20 sm:py-24">
         <div className="max-w-2xl">
-
           <h1 className="font-raleway font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[1.05] mb-5 sm:mb-6">
             Run Your Race.{" "}
             <span className="text-[#FF5733]">Own Your Pace.</span>

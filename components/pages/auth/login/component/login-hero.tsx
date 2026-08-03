@@ -5,10 +5,9 @@ export default function LoginHero() {
     <div className="hidden lg:flex relative w-full lg:w-1/2 min-h-screen overflow-hidden items-center justify-center">
       {/* Background running image */}
       <Image
-        src="/Running.jpg"
+        src="/fitra.png"
         alt="Runner in action"
         fill
-        className="object-cover"
         priority
         sizes="50vw"
       />

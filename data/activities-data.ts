@@ -58,7 +58,7 @@ export const joinedRacesData: JoinedRace[] = [
     loggedDistance: 28.4,
     status: "in-progress",
     date: "March 15, 2026",
-    image: "/Running.jpg",
+    image: "/fitra.png",
   },
   {
     id: "race-2",
@@ -68,7 +68,7 @@ export const joinedRacesData: JoinedRace[] = [
     loggedDistance: 10,
     status: "completed",
     date: "March 22, 2026",
-    image: "/Running.jpg",
+    image: "/fitra.png",
   },
   {
     id: "race-3",
@@ -78,7 +78,7 @@ export const joinedRacesData: JoinedRace[] = [
     loggedDistance: 0,
     status: "upcoming",
     date: "April 5, 2026",
-    image: "/Running.jpg",
+    image: "/fitra.png",
   },
   {
     id: "race-4",
@@ -88,7 +88,7 @@ export const joinedRacesData: JoinedRace[] = [
     loggedDistance: 14.2,
     status: "in-progress",
     date: "May 10, 2026",
-    image: "/Running.jpg",
+    image: "/fitra.png",
   },
 ];
 
@@ -177,7 +177,7 @@ export const completedRacesData: CompletedRace[] = [
     totalDistance: 10,
     completedDate: "June 8, 2025",
     totalEntries: 3,
-    image: "/Running.jpg",
+    image: "/fitra.png",
   },
 ];
 

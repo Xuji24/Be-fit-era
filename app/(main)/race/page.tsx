@@ -68,7 +68,7 @@ export default async function Race() {
       category: r.category as RaceEvent["category"],
       description: r.description ?? "",
       fullDescription: r.full_description ?? r.description ?? "",
-      image: r.image_url || "/Running.jpg",
+      image: r.image_url || "/fitra.png",
       organizerLogo: r.organizer_logo_url || "/fitra-logo.png",
       participants: regCounts[r.id] ?? 0,
       maxParticipants: r.max_participants ?? 0,

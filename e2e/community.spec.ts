@@ -218,7 +218,6 @@ test.describe("TC-C06 – TC-C19: Authenticated community interactions", () => {
   test("TC-C15 can add a comment to a post", async ({ page }) => {
     const firstPost = page.locator("article, [data-testid='post-card']").first();
     if (await firstPost.isVisible({ timeout: 5_000 }).catch(() => false)) {
-      // Click comment icon to expand
       const commentBtn = firstPost.getByRole("button", { name: /comment|chat/i });
       if (await commentBtn.isVisible()) {
         await commentBtn.click();
@@ -226,9 +225,10 @@ test.describe("TC-C06 – TC-C19: Authenticated community interactions", () => {
           page.getByPlaceholder(/comment/i)
         );
         await expect(commentInput).toBeVisible({ timeout: 5_000 });
-        await commentInput.fill(`Test comment ${Date.now()}`);
+        const commentText = `Test comment ${Date.now()}`;
+        await commentInput.fill(commentText);
         await page.keyboard.press("Enter");
-        await page.waitForTimeout(1_000);
+        await expect(page.getByText(commentText)).toBeVisible({ timeout: 8_000 });
       }
     }
   });

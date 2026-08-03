@@ -55,12 +55,18 @@ export async function createRace(
       error: "You do not have permission to create races.",
     };
 
-  const allowed = checkRateLimit(`create-race:${user.id}`, 10, 60 * 60 * 1000);
-  if (!allowed)
+  const { allowed, retryAfterMs } = checkRateLimit(
+    `create-race:${user.id}`,
+    10,
+    60 * 60 * 1000,
+  );
+  if (!allowed) {
+    const mins = Math.ceil(retryAfterMs / 60000);
     return {
       success: false,
-      error: "Too many requests. Please try again later.",
+      error: `Too many requests. Try again in ${mins} min.`,
     };
+  }
 
   // Validate inputs
   const title = input.title?.trim();
@@ -163,12 +169,18 @@ export async function updateRace(
       error: "You do not have permission to update races.",
     };
 
-  const allowed = checkRateLimit(`update-race:${user.id}`, 20, 60 * 60 * 1000);
-  if (!allowed)
+  const { allowed, retryAfterMs } = checkRateLimit(
+    `update-race:${user.id}`,
+    20,
+    60 * 60 * 1000,
+  );
+  if (!allowed) {
+    const mins = Math.ceil(retryAfterMs / 60000);
     return {
       success: false,
-      error: "Too many requests. Please try again later.",
+      error: `Too many requests. Try again in ${mins} min.`,
     };
+  }
 
   // Verify the race belongs to this organizer (or user is admin)
   const { data: race, error: raceError } = await supabase

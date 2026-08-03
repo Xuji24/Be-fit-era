@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { loginAs } from "./helpers/auth";
 
 /**
  * Navigation & layout smoke tests — no auth required.
@@ -36,5 +37,22 @@ test.describe("Navigation & layout", () => {
       .getByRole("button", { name: /theme|dark|light|toggle/i })
       .first();
     await expect(themeToggle).toBeVisible({ timeout: 8_000 });
+  });
+});
+
+test.describe("Navbar role-based links", () => {
+  test.skip(
+    !process.env.E2E_ORGANIZER_EMAIL || !process.env.E2E_ORGANIZER_PASSWORD,
+    "Skipped: set E2E_ORGANIZER_EMAIL and E2E_ORGANIZER_PASSWORD",
+  );
+
+  test("organizer link visible after login without page reload", async ({
+    page,
+  }) => {
+    await loginAs(page, "organizer");
+    await page.goto("/");
+
+    const organizerLink = page.getByRole("link", { name: /^Organizer$/i });
+    await expect(organizerLink).toBeVisible({ timeout: 8_000 });
   });
 });

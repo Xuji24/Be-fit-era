@@ -70,9 +70,30 @@ export async function POST(request: NextRequest) {
   // Validate activity date is within allowed range (race start date → today)
   const { data: race } = await supabase
     .from("races")
-    .select("event_date")
+    .select("event_date, target_distance_km")
     .eq("id", registration.race_id)
     .single();
+
+  const parsedDistance = Number(distance);
+  if (!Number.isFinite(parsedDistance) || parsedDistance <= 0) {
+    return NextResponse.json(
+      { error: "Invalid distance" },
+      { status: 400 },
+    );
+  }
+
+  const targetKm = Number(race?.target_distance_km);
+  if (Number.isFinite(targetKm) && targetKm > 0) {
+    const maxDistance = targetKm * 2;
+    if (parsedDistance > maxDistance) {
+      return NextResponse.json(
+        {
+          error: `Distance cannot exceed ${maxDistance} km for this race`,
+        },
+        { status: 400 },
+      );
+    }
+  }
 
   if (race?.event_date) {
     const raceStart = new Date(race.event_date);
@@ -118,7 +139,7 @@ export async function POST(request: NextRequest) {
       user_id: user.id,
       registration_id: registrationId,
       activity_type: activityType,
-      distance_km: distance,
+      distance_km: parsedDistance,
       activity_date: activityDate,
       notes: `Imported from Strava: ${activityName}`,
       strava_activity_id: stravaActivityId,
@@ -138,6 +159,6 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({
     success: true,
     entry,
-    message: `+${distance} km logged from Strava`,
+    message: `+${parsedDistance} km logged from Strava`,
   });
 }

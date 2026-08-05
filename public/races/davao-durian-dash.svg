@@ -1,0 +1,33 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="tropsky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE29A"/>
+      <stop offset="100%" stop-color="#8CD790"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#tropsky)"/>
+  <circle cx="120" cy="100" r="60" fill="#FFF3C4" opacity="0.9"/>
+  <rect y="380" width="800" height="120" fill="#4E8C3F"/>
+  <g fill="#3B6E2E">
+    <path d="M0,380 Q120,340 240,380 T480,380 T720,380 T800,380 V500 H0 Z"/>
+  </g>
+  <g>
+    <ellipse cx="620" cy="330" rx="90" ry="80" fill="#5B7A2E"/>
+    <g fill="#3B4A1A">
+      <polygon points="600,290 610,270 620,290 605,300"/>
+      <polygon points="630,280 645,260 655,285 638,295"/>
+      <polygon points="580,320 595,305 600,330 585,335"/>
+      <polygon points="650,310 665,295 670,320 655,325"/>
+      <polygon points="610,350 625,335 630,360 615,365"/>
+    </g>
+  </g>
+  <g fill="#7A9E3A">
+    <ellipse cx="150" cy="330" rx="55" ry="45"/>
+    <rect x="140" y="360" width="20" height="60"/>
+  </g>
+  <g fill="#7A9E3A">
+    <ellipse cx="720" cy="360" rx="45" ry="38"/>
+    <rect x="712" y="385" width="16" height="55"/>
+  </g>
+  <text x="400" y="470" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#3B4A1A" text-anchor="middle" opacity="0.5">DURIAN DASH</text>
+</svg>

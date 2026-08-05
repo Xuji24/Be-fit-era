@@ -55,6 +55,10 @@ export default function LoginForm() {
       toast.success("Your email has been verified! You can now log in.");
       window.history.replaceState(null, "", "/login");
     }
+    if (searchParams.get("reset") === "success") {
+      toast.success("Password reset successfully. Please log in with your new password.");
+      window.history.replaceState(null, "", "/login");
+    }
   }, [searchParams]);
 
   const handleEmailChange = (value: string) => {

@@ -133,13 +133,37 @@ export default function JoinRaceModal({
       shirtSize: form.shirtSize,
       paymentMethod: form.paymentMethod,
     });
-    setSubmitting(false);
 
     if (!result.success) {
+      setSubmitting(false);
       toast.error(result.error ?? "Registration failed.");
       return;
     }
 
+    // For paid races using any online method, redirect to PayMongo checkout
+    // (card, gcash, bank — PayMongo handles all of them via a single checkout URL)
+    const isPaidOnlinePayment =
+      race.registrationFee != null &&
+      race.registrationFee > 0 &&
+      ["card", "gcash", "bank"].includes(form.paymentMethod);
+
+    if (isPaidOnlinePayment) {
+      const checkoutRes = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ raceId: race.dbId }),
+      });
+      const checkoutData = await checkoutRes.json();
+      setSubmitting(false);
+      if (checkoutRes.ok && checkoutData.url) {
+        window.location.href = checkoutData.url;
+        return;
+      }
+      toast.error(checkoutData.error ?? "Failed to start payment. Please try again.");
+      return;
+    }
+
+    setSubmitting(false);
     toast.success("Registration submitted successfully!");
     onClose();
     setForm({
@@ -170,6 +194,8 @@ export default function JoinRaceModal({
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
 
       <div
+        role="dialog"
+        aria-modal="true"
         onClick={(e) => e.stopPropagation()}
         className="relative bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto animate-scale-in"
       >
@@ -407,6 +433,16 @@ export default function JoinRaceModal({
                     </span>
                     <span className="text-foreground font-semibold">
                       {race.title}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500 dark:text-gray-400">
+                      Registration Fee
+                    </span>
+                    <span className="text-foreground font-semibold">
+                      {race.registrationFee && race.registrationFee > 0
+                        ? `₱${race.registrationFee.toLocaleString()}`
+                        : "Free"}
                     </span>
                   </div>
                 </div>

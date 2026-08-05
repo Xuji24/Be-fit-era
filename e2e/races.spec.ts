@@ -111,9 +111,9 @@ test.describe("TC-R05 – TC-R12: Race detail page (public + auth)", () => {
         await expect(page.getByLabel(/email/i)).toBeVisible();
         await expect(page.getByLabel(/phone/i)).toBeVisible();
         // Shirt size options
-        await expect(page.getByText(/shirt size|size/i)).toBeVisible();
+        await expect(page.getByText(/shirt size|size/i).first()).toBeVisible();
         // Payment method
-        await expect(page.getByText(/payment|gcash|credit|bank/i)).toBeVisible();
+        await expect(page.getByText(/payment|gcash|credit|bank/i).first()).toBeVisible();
       }
     }
   });
@@ -138,7 +138,8 @@ test.describe("TC-R05 – TC-R12: Race detail page (public + auth)", () => {
         await page.getByLabel(/email/i).fill("runner@test.com");
         await page.getByLabel(/phone/i).fill("12345"); // invalid format
         // Try to proceed
-        const nextBtn = page.getByRole("button", { name: /next|continue|proceed/i });
+        const dialog = page.getByRole("dialog");
+        const nextBtn = dialog.getByRole("button", { name: /next|continue|proceed/i }).first();
         if (await nextBtn.isVisible()) {
           await nextBtn.click();
           await expect(

@@ -40,6 +40,7 @@ export default function SettingsPage() {
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [samePasswordError, setSamePasswordError] = useState(false);
 
   useEffect(() => {
     async function checkAuth() {
@@ -76,6 +77,12 @@ export default function SettingsPage() {
       toast.error("New passwords do not match.");
       return;
     }
+
+    if (currentPassword === newPassword) {
+      setSamePasswordError(true);
+      return;
+    }
+    setSamePasswordError(false);
 
     startTransition(async () => {
       const formData = new FormData();
@@ -128,7 +135,7 @@ export default function SettingsPage() {
       </section>
 
       {/* Content */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 pb-20">
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-2 pb-20">
         <div className="space-y-6">
           {/* Password Card */}
           <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm overflow-hidden">
@@ -154,12 +161,13 @@ export default function SettingsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {/* Current Password - full width */}
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+                  <label htmlFor="current-password" className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                     Current Password
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
                     <input
+                      id="current-password"
                       type={showCurrent ? "text" : "password"}
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
@@ -182,15 +190,16 @@ export default function SettingsPage() {
 
                 {/* New Password */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+                  <label htmlFor="new-password" className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                     New Password
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
                     <input
+                      id="new-password"
                       type={showNew ? "text" : "password"}
                       value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
+                      onChange={(e) => { setNewPassword(e.target.value); setSamePasswordError(false); }}
                       placeholder="Enter new password"
                       className="w-full pl-10 pr-11 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
                     />
@@ -210,12 +219,13 @@ export default function SettingsPage() {
 
                 {/* Confirm New Password */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+                  <label htmlFor="confirm-password" className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                     Confirm New Password
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
                     <input
+                      id="confirm-password"
                       type={showConfirm ? "text" : "password"}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
@@ -238,6 +248,11 @@ export default function SettingsPage() {
 
                 {/* Password Strength + Button */}
                 <div className="md:col-span-2 space-y-5">
+                  {samePasswordError && (
+                    <p className="text-sm text-red-500 font-merriweather-sans">
+                      New password must be different from your current password.
+                    </p>
+                  )}
                   <PasswordStrengthIndicator password={newPassword} />
 
                   <button

@@ -23,7 +23,7 @@ export default async function OrganizerPage() {
   // Fetch organizer's races
   const { data: races } = await supabase
     .from("races")
-    .select("id, title, category, target_distance_km, event_date, image_url, registration_open, max_participants, tshirt_design_url, medal_design_url, certificate_design_url, created_at")
+    .select("id, title, category, target_distance_km, event_date, image_url, registration_open, max_participants, tshirt_design_url, medal_design_url, certificate_design_url, location, latitude, longitude, created_at")
     .eq("organizer", user.id)
     .order("created_at", { ascending: false });
 
@@ -58,6 +58,9 @@ export default async function OrganizerPage() {
     tshirtDesignUrl: race.tshirt_design_url,
     medalDesignUrl: race.medal_design_url,
     certificateDesignUrl: race.certificate_design_url,
+    location: race.location,
+    latitude: race.latitude,
+    longitude: race.longitude,
   }));
 
   return <OrganizerDashboard races={organizerRaces} />;

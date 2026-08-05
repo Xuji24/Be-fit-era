@@ -33,6 +33,9 @@ export interface OrganizerRace {
   tshirtDesignUrl: string | null;
   medalDesignUrl: string | null;
   certificateDesignUrl: string | null;
+  location?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 interface Props {

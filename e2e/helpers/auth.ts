@@ -22,13 +22,21 @@ export const TEST_USERS = {
 
 export async function loginAs(page: Page, role: keyof typeof TEST_USERS) {
   const user = TEST_USERS[role];
-  await page.goto("/login");
-  // Auth forms use visual labels only (no htmlFor/id), so use placeholder to locate inputs
-  await page.getByPlaceholder(/email/i).fill(user.email);
-  await page.locator('input[type="password"]').first().fill(user.password);
-  await page.getByRole("button", { name: /log in|login|sign in/i }).click();
-  // Wait for redirect away from login page
-  await page.waitForURL((url) => !url.pathname.startsWith("/login"), { timeout: 10_000 });
+
+  // Use the test-only API route to bypass hCaptcha.
+  // The route calls signInWithPassword via @supabase/ssr and sets session cookies
+  // in the response — Playwright's context picks them up automatically.
+  const res = await page.request.post("/api/e2e/login", {
+    data: { email: user.email, password: user.password },
+  });
+
+  if (!res.ok()) {
+    throw new Error(`E2E login failed for ${role} (${user.email}): ${await res.text()}`);
+  }
+
+  // Navigate to home so middleware refreshes and the session is live
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
 }
 
 export async function logout(page: Page) {

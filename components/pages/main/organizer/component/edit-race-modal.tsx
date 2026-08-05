@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useTransition, useRef } from "react";
-import { X, Loader2, Trophy, Upload, Trash2, Shirt, Medal, Award } from "lucide-react";
+import { X, Loader2, Trophy, Upload, Trash2, Shirt, Medal, Award, Route } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { updateRace } from "@/app/actions/organizer-actions";
 import type { OrganizerRace } from "../OrganizerDashboard";
 import CustomSelect from "@/components/ui/custom-select";
+import LocationField from "@/components/ui/location-field";
 import Image from "next/image";
 
 interface Props {
@@ -19,7 +20,6 @@ interface Props {
 const CATEGORIES = ["5K", "10K", "Half Marathon", "Marathon", "Ultra"] as const;
 
 type ExtendedRace = OrganizerRace & {
-  location?: string;
   description?: string;
   registrationDeadline?: string;
   eventTime?: string;
@@ -27,7 +27,15 @@ type ExtendedRace = OrganizerRace & {
   cutoffTimeMinutes?: number;
   kitPickupInfo?: string;
   inclusions?: string[];
+  gpxUrl?: string;
 };
+
+function coordsOf(race?: ExtendedRace) {
+  return typeof race?.latitude === "number" &&
+    typeof race?.longitude === "number"
+    ? { lat: race.latitude, lng: race.longitude }
+    : null;
+}
 
 export default function EditRaceModal({
   open,
@@ -49,6 +57,9 @@ export default function EditRaceModal({
   const [eventDate, setEventDate] = useState(extendedRace?.eventDate || "");
 
   const [location, setLocation] = useState(extendedRace?.location || "");
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
+    coordsOf(extendedRace),
+  );
   const [description, setDescription] = useState(
     extendedRace?.description || "",
   );
@@ -81,6 +92,11 @@ export default function EditRaceModal({
     extendedRace?.inclusions ?? [],
   );
 
+  // GPX upload state
+  const [gpxFile, setGpxFile] = useState<File | null>(null);
+  const [existingGpxUrl, setExistingGpxUrl] = useState<string | null>(extendedRace?.gpxUrl ?? null);
+  const gpxRef = useRef<HTMLInputElement | null>(null);
+
   // Design upload states
   type DesignKey = "tshirt" | "medal" | "certificate";
   const [designFiles, setDesignFiles] = useState<
@@ -112,6 +128,7 @@ export default function EditRaceModal({
     setTargetDistance(extendedRace?.targetDistance?.toString() || "");
     setEventDate(extendedRace?.eventDate || "");
     setLocation(extendedRace?.location || "");
+    setCoords(coordsOf(extendedRace));
     setDescription(extendedRace?.description || "");
     setMaxParticipants(extendedRace?.maxParticipants?.toString() || "");
     setRegistrationDeadline(extendedRace?.registrationDeadline || "");
@@ -139,6 +156,9 @@ export default function EditRaceModal({
       certificate: extendedRace?.certificateDesignUrl ?? null,
     });
     setDesignFiles({ tshirt: null, medal: null, certificate: null });
+    setGpxFile(null);
+    setExistingGpxUrl(extendedRace?.gpxUrl ?? null);
+    if (gpxRef.current) gpxRef.current.value = "";
   }
 
   const DESIGN_CONFIGS = [
@@ -270,6 +290,22 @@ export default function EditRaceModal({
         }
       }
 
+      let gpxUrl: string | undefined = existingGpxUrl ?? undefined;
+      if (gpxFile) {
+        const filePath = `${user.id}/${raceId}/route_${Date.now()}.gpx`;
+        const { error: gpxError } = await supabase.storage
+          .from("race-gpx")
+          .upload(filePath, gpxFile, { upsert: true });
+        if (gpxError) {
+          toast.error("Failed to upload GPX file. Please try again.");
+          return;
+        }
+        const { data: gpxUrlData } = supabase.storage.from("race-gpx").getPublicUrl(filePath);
+        gpxUrl = gpxUrlData.publicUrl;
+      } else if (existingGpxUrl === null) {
+        gpxUrl = undefined;
+      }
+
       const payload: Parameters<typeof updateRace>[0] = {
         raceId,
 
@@ -279,6 +315,8 @@ export default function EditRaceModal({
         eventDate,
         eventTime: eventTime || undefined,
         location: location.trim() || undefined,
+        latitude: coords ? coords.lat : null,
+        longitude: coords ? coords.lng : null,
         description: description.trim() || undefined,
         maxParticipants: maxParticipants ? Number(maxParticipants) : undefined,
         registrationDeadline: registrationDeadline || undefined,
@@ -290,6 +328,7 @@ export default function EditRaceModal({
             : undefined,
         kitPickupInfo: kitPickupInfo.trim() || undefined,
         inclusions: inclusions.length > 0 ? inclusions : undefined,
+        gpxUrl,
       };
 
       if (tshirtDesignUrl !== undefined)
@@ -437,33 +476,27 @@ export default function EditRaceModal({
             </div>
           </div>
 
-          {/* Location + Max Participants */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
-                Location
-              </label>
-              <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="e.g. Manila, Philippines"
-                className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
-                Max Participants
-              </label>
-              <input
-                type="number"
-                value={maxParticipants}
-                onChange={(e) => setMaxParticipants(e.target.value)}
-                placeholder="500"
-                min="1"
-                className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
-              />
-            </div>
+          {/* Location */}
+          <LocationField
+            location={location}
+            onLocationChange={setLocation}
+            coords={coords}
+            onCoordsChange={setCoords}
+          />
+
+          {/* Max Participants */}
+          <div>
+            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+              Max Participants
+            </label>
+            <input
+              type="number"
+              value={maxParticipants}
+              onChange={(e) => setMaxParticipants(e.target.value)}
+              placeholder="500"
+              min="1"
+              className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+            />
           </div>
 
           {/* Description */}
@@ -580,6 +613,55 @@ export default function EditRaceModal({
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* GPX Route (Optional) */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 uppercase tracking-wider font-merriweather-sans flex items-center gap-1.5">
+                <Route className="w-3.5 h-3.5" />
+                GPX Route File
+              </label>
+              <span className="text-[10px] text-[#1A1A1A]/30 dark:text-white/20 font-merriweather-sans">Optional</span>
+            </div>
+            {gpxFile || existingGpxUrl ? (
+              <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
+                <span className="text-sm font-merriweather-sans text-emerald-600 dark:text-emerald-400 truncate">
+                  {gpxFile ? gpxFile.name : "Route attached"}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => { setGpxFile(null); setExistingGpxUrl(null); if (gpxRef.current) gpxRef.current.value = ""; }}
+                  className="ml-3 text-[#1A1A1A]/40 dark:text-white/30 hover:text-red-500 transition-colors cursor-pointer shrink-0"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => gpxRef.current?.click()}
+                className="w-full py-3 rounded-xl border-2 border-dashed border-[#1A1A1A]/10 dark:border-white/10 hover:border-[#FF5733]/30 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Upload className="w-4 h-4 text-[#1A1A1A]/20 dark:text-white/15" />
+                <span className="text-xs text-[#1A1A1A]/30 dark:text-white/20 font-merriweather-sans">Upload .gpx file</span>
+              </button>
+            )}
+            <input
+              ref={gpxRef}
+              type="file"
+              aria-label="Upload GPX route file"
+              accept=".gpx"
+              onChange={(e) => {
+                const file = e.target.files?.[0] ?? null;
+                if (file && file.size > 10 * 1024 * 1024) {
+                  toast.error("GPX file must be under 10MB.");
+                  return;
+                }
+                setGpxFile(file);
+              }}
+              className="hidden"
+            />
           </div>
 
           {/* Design Uploads (Optional) */}

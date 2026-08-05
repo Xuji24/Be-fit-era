@@ -205,6 +205,7 @@ export default function ProfilePage() {
                   <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
                   <input
                     type="email"
+                    aria-label="Email"
                     title="Email address"
                     placeholder="your@email.com"
                     value={profile.email}

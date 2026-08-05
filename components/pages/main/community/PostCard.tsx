@@ -31,10 +31,11 @@ export interface CommunityPost {
 
 interface PostCardProps {
   post: CommunityPost;
-  onPostUpdated: () => void;
+  onPostEdited: (id: string, content: string, updatedAt: string) => void;
+  onPostDeleted: (id: string) => void;
 }
 
-export default function PostCard({ post, onPostUpdated }: PostCardProps) {
+export default function PostCard({ post, onPostEdited, onPostDeleted }: PostCardProps) {
   const [liked, setLiked] = useState(post.isLiked);
   const [likesCount, setLikesCount] = useState(post.likesCount);
   const [commentsCount, setCommentsCount] = useState(post.commentsCount);
@@ -64,7 +65,7 @@ export default function PostCard({ post, onPostUpdated }: PostCardProps) {
     setBusy(false);
     if (res.success) {
       toast.success("Post deleted");
-      onPostUpdated();
+      onPostDeleted(post.id);
     } else {
       toast.error(res.error || "Failed to delete");
     }
@@ -79,14 +80,18 @@ export default function PostCard({ post, onPostUpdated }: PostCardProps) {
     if (res.success) {
       toast.success("Post updated");
       setEditing(false);
-      onPostUpdated();
+      onPostEdited(post.id, editContent.trim(), res.updatedAt ?? new Date().toISOString());
     } else {
       toast.error(res.error || "Failed to update");
     }
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+    <article
+      data-testid="post-card"
+      aria-label={`Post by ${post.authorName}`}
+      className="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow"
+    >
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
@@ -115,18 +120,27 @@ export default function PostCard({ post, onPostUpdated }: PostCardProps) {
 
         {post.isOwn && (
           <div className="relative">
-            <Button variant="ghost" size="icon-xs" onClick={() => setShowMenu(!showMenu)}>
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              aria-label="Post options"
+              aria-expanded={showMenu}
+              aria-haspopup="menu"
+              onClick={() => setShowMenu(!showMenu)}
+            >
               <MoreHorizontal className="w-4 h-4" />
             </Button>
             {showMenu && (
-              <div className="absolute right-0 top-8 z-20 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-lg py-1 min-w-30">
+              <div role="menu" className="absolute right-0 top-8 z-20 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg shadow-lg py-1 min-w-30">
                 <button
+                  role="menuitem"
                   onClick={() => { setEditing(true); setShowMenu(false); }}
                   className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors"
                 >
                   <Pencil className="w-3.5 h-3.5" /> Edit
                 </button>
                 <button
+                  role="menuitem"
                   onClick={handleDelete}
                   disabled={busy}
                   className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
@@ -203,6 +217,6 @@ export default function PostCard({ post, onPostUpdated }: PostCardProps) {
           onCommentDeleted={() => setCommentsCount((c) => Math.max(c - 1, 0))}
         />
       )}
-    </div>
+    </article>
   );
 }

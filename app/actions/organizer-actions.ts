@@ -9,6 +9,19 @@ export type ActionResult = {
   error?: string;
 };
 
+function hasValidCoords(lat?: number, lng?: number): boolean {
+  return (
+    typeof lat === "number" &&
+    typeof lng === "number" &&
+    Number.isFinite(lat) &&
+    Number.isFinite(lng) &&
+    lat >= -90 &&
+    lat <= 90 &&
+    lng >= -180 &&
+    lng <= 180
+  );
+}
+
 /* ── Create Race (Organizer Only) ── */
 
 export interface CreateRaceInput {
@@ -18,6 +31,8 @@ export interface CreateRaceInput {
   eventDate: string;
   eventTime?: string;
   location?: string;
+  latitude?: number;
+  longitude?: number;
   description?: string;
   maxParticipants?: number;
   registrationDeadline?: string;
@@ -28,6 +43,7 @@ export interface CreateRaceInput {
   cutoffTimeMinutes?: number;
   kitPickupInfo?: string;
   inclusions?: string[];
+  gpxUrl?: string;
 }
 
 type CreateRaceResult = ActionResult & { raceId?: string };
@@ -104,6 +120,12 @@ export async function createRace(
 
   if (input.eventTime) insertData.event_time = input.eventTime;
   if (input.location) insertData.location = input.location;
+  if (input.latitude !== undefined || input.longitude !== undefined) {
+    if (!hasValidCoords(input.latitude, input.longitude))
+      return { success: false, error: "Please select a valid map location." };
+    insertData.latitude = input.latitude;
+    insertData.longitude = input.longitude;
+  }
   if (input.description) insertData.description = input.description;
   if (input.maxParticipants && input.maxParticipants > 0)
     insertData.max_participants = input.maxParticipants;
@@ -121,6 +143,7 @@ export async function createRace(
   if (input.kitPickupInfo) insertData.kit_pickup_info = input.kitPickupInfo;
   if (input.inclusions && input.inclusions.length > 0)
     insertData.inclusions = input.inclusions;
+  if (input.gpxUrl) insertData.gpx_url = input.gpxUrl;
 
   const { data, error } = await supabase
     .from("races")
@@ -142,8 +165,12 @@ export async function createRace(
 
 /* ── Update Race (Organizer/Admin) ── */
 
-export interface UpdateRaceInput extends Partial<CreateRaceInput> {
+export interface UpdateRaceInput
+  extends Omit<Partial<CreateRaceInput>, "latitude" | "longitude"> {
   raceId: string;
+  // null clears a previously pinned location
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export async function updateRace(
@@ -229,6 +256,20 @@ export async function updateRace(
   }
 
   if (input.location !== undefined) updateData.location = input.location;
+  if (input.latitude !== undefined || input.longitude !== undefined) {
+    if (input.latitude === null || input.longitude === null) {
+      updateData.latitude = null;
+      updateData.longitude = null;
+    } else {
+      if (!hasValidCoords(input.latitude, input.longitude))
+        return { success: false, error: "Please select a valid map location." };
+      updateData.latitude = input.latitude;
+      updateData.longitude = input.longitude;
+    }
+    // A pin placed (or cleared) through the map picker is never a rough
+    // estimate — clear any prior "approximate" flag set by a backfill.
+    updateData.location_approximate = false;
+  }
   if (input.description !== undefined)
     updateData.description = input.description;
   if (input.maxParticipants !== undefined)
@@ -249,6 +290,7 @@ export async function updateRace(
   if (input.kitPickupInfo !== undefined)
     updateData.kit_pickup_info = input.kitPickupInfo;
   if (input.inclusions !== undefined) updateData.inclusions = input.inclusions;
+  if (input.gpxUrl !== undefined) updateData.gpx_url = input.gpxUrl;
 
   if (Object.keys(updateData).length === 0)
     return { success: false, error: "No changes to save." };

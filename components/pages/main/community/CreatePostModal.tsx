@@ -9,6 +9,10 @@ import { POST_CATEGORIES } from "@/lib/community-types";
 import type { PostCategory } from "@/lib/community-types";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
+import type { CommunityPost } from "./PostCard";
+import StravaSuggestionStrip from "./component/strava-suggestion-strip";
+import { useActivityCard } from "./component/activity-share-card";
+import { buildCaption, type StravaActivity } from "@/lib/strava-share";
 
 const MAX_IMAGES = 4;
 
@@ -20,7 +24,7 @@ interface ImageEntry {
 interface CreatePostModalProps {
   open: boolean;
   onClose: () => void;
-  onPostCreated: () => void;
+  onPostCreated: (post: CommunityPost) => void;
 }
 
 export default function CreatePostModal({ open, onClose, onPostCreated }: CreatePostModalProps) {
@@ -28,7 +32,36 @@ export default function CreatePostModal({ open, onClose, onPostCreated }: Create
   const [category, setCategory] = useState<PostCategory>("general");
   const [images, setImages] = useState<ImageEntry[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [pendingActivityId, setPendingActivityId] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { generate } = useActivityCard();
+
+  // Build a share card for the tapped run, pre-fill the caption, and attach the
+  // card through the same `images` state a manual upload uses.
+  const handleActivitySelect = async (activity: StravaActivity) => {
+    if (images.length >= MAX_IMAGES) {
+      toast.error(`Maximum ${MAX_IMAGES} images allowed.`);
+      return;
+    }
+
+    setPendingActivityId(activity.id);
+    try {
+      const blob = await generate(activity);
+      if (!blob) {
+        toast.error("Couldn't build a card for that activity.");
+        return;
+      }
+
+      const file = new File([blob], `run-${activity.id}.jpg`, { type: "image/jpeg" });
+      setImages((prev) => [...prev, { file, preview: URL.createObjectURL(file) }]);
+      // Don't overwrite something the user has already written.
+      setContent((prev) => (prev.trim() ? prev : buildCaption(activity)));
+    } catch {
+      toast.error("Couldn't build a card for that activity.");
+    } finally {
+      setPendingActivityId(null);
+    }
+  };
 
   if (!open) return null;
 
@@ -82,13 +115,13 @@ export default function CreatePostModal({ open, onClose, onPostCreated }: Create
     const res = await createPost(content, uploadedUrls[0], uploadedUrls, category);
     setSubmitting(false);
 
-    if (res.success) {
+    if (res.success && res.post) {
       toast.success("Post shared with the community!");
       setContent("");
       setCategory("general");
       images.forEach((img) => URL.revokeObjectURL(img.preview));
       setImages([]);
-      onPostCreated();
+      onPostCreated(res.post);
       onClose();
     } else {
       toast.error(res.error || "Failed to create post");
@@ -100,10 +133,10 @@ export default function CreatePostModal({ open, onClose, onPostCreated }: Create
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-2xl max-w-lg w-full p-5 sm:p-6 animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+      <div role="dialog" aria-modal="true" aria-labelledby="create-post-title" className="bg-white dark:bg-zinc-900 rounded-xl shadow-2xl max-w-lg w-full p-5 sm:p-6 animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
-          <h3 className="font-raleway font-bold text-lg text-foreground">Share with the Community</h3>
+          <h3 id="create-post-title" className="font-raleway font-bold text-lg text-foreground">Share with the Community</h3>
           <button title="Close" onClick={handleClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
             <X className="w-5 h-5" />
           </button>
@@ -142,6 +175,13 @@ export default function CreatePostModal({ open, onClose, onPostCreated }: Create
             ))}
           </div>
         </div>
+
+        {/* Strava run suggestions */}
+        <StravaSuggestionStrip
+          onSelect={handleActivitySelect}
+          pendingId={pendingActivityId}
+          disabled={submitting || images.length >= MAX_IMAGES}
+        />
 
         {/* Image Previews */}
         {images.length > 0 && (

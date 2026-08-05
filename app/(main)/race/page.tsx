@@ -14,7 +14,7 @@ export default async function Race() {
   const { data: dbRaces } = await supabase
     .from("races")
     .select(
-      "id, title, organizer, description, full_description, category, target_distance_km, event_date, event_time, location, image_url, organizer_logo_url, max_participants, registration_open, registration_deadline, tshirt_design_url, medal_design_url, certificate_design_url",
+      "id, title, organizer, description, full_description, category, target_distance_km, event_date, event_time, location, latitude, longitude, location_approximate, image_url, organizer_logo_url, max_participants, registration_open, registration_deadline, tshirt_design_url, medal_design_url, certificate_design_url, registration_fee",
     )
     .neq("status", "cancelled")
     .eq("registration_open", true)
@@ -65,6 +65,9 @@ export default async function Race() {
           })
         : "TBD",
       location: r.location ?? "TBD",
+      latitude: r.latitude,
+      longitude: r.longitude,
+      approximateLocation: r.location_approximate ?? false,
       category: r.category as RaceEvent["category"],
       description: r.description ?? "",
       fullDescription: r.full_description ?? r.description ?? "",
@@ -80,6 +83,7 @@ export default async function Race() {
             year: "numeric",
           })
         : "TBD",
+      registrationFee: Number(r.registration_fee ?? 0),
       rewards: {
         medal: {
           name: "Finisher's Medal",

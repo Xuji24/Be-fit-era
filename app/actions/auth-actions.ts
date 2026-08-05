@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { validatePasswordStrength } from "@/lib/validators";
+import { getPostLoginRedirect } from "@/lib/supabase/roles";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -50,7 +51,7 @@ export async function signIn(formData: FormData): Promise<AuthResult> {
 
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data: signInData, error } = await supabase.auth.signInWithPassword({
     email,
     password,
     options: { captchaToken },
@@ -60,18 +61,7 @@ export async function signIn(formData: FormData): Promise<AuthResult> {
     return { success: false, error: error.message };
   }
 
-  // Check if admin → redirect to admin panel
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", (await supabase.auth.getUser()).data.user!.id)
-    .single();
-
-  if (profile?.role === "admin") {
-    redirect("/admin");
-  }
-
-  redirect("/");
+  redirect(await getPostLoginRedirect(supabase, signInData.user.id));
 }
 
 /**
@@ -202,7 +192,8 @@ export async function resetPassword(formData: FormData): Promise<AuthResult> {
     return { success: false, error: error.message };
   }
 
-  redirect("/login");
+  await supabase.auth.signOut();
+  redirect("/login?reset=success");
 }
 
 /**

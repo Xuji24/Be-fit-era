@@ -1,0 +1,28 @@
+<svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mistsky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#B9D6E0"/>
+      <stop offset="100%" stop-color="#7FA6B8"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#mistsky)"/>
+  <polygon points="0,320 150,150 260,280 380,120 520,300 650,180 800,320 800,500 0,500" fill="#3F5D52"/>
+  <polygon points="0,360 180,220 320,340 470,200 600,330 800,240 800,500 0,500" fill="#2E4A40" opacity="0.9"/>
+  <g fill="#0F2A22">
+    <polygon points="150,150 190,220 110,220"/>
+    <polygon points="380,120 425,200 335,200"/>
+    <polygon points="650,180 695,250 605,250"/>
+  </g>
+  <g fill="#FFFFFF" opacity="0.75">
+    <ellipse cx="150" cy="220" rx="60" ry="14"/>
+    <ellipse cx="380" cy="200" rx="70" ry="16"/>
+    <ellipse cx="650" cy="250" rx="65" ry="15"/>
+  </g>
+  <g fill="#DDEAF0" opacity="0.5">
+    <ellipse cx="200" cy="200" rx="140" ry="30"/>
+    <ellipse cx="600" cy="230" rx="160" ry="35"/>
+  </g>
+  <g stroke="#4A3B2A" stroke-width="6" stroke-dasharray="18 14" opacity="0.8" fill="none">
+    <path d="M50,500 Q250,420 400,470 T800,430"/>
+  </g>
+</svg>

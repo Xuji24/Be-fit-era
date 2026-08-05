@@ -81,6 +81,21 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
+  // Block users who are neither organizer nor admin from /organizer routes
+  if (user && request.nextUrl.pathname.startsWith("/organizer")) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+
+    if (profile?.role !== "organizer" && profile?.role !== "admin") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/settings";
+      return NextResponse.redirect(url);
+    }
+  }
+
   // IMPORTANT: You *must* return the supabaseResponse object as-is.
   // If you create a new response, copy cookies over:
   //   const myResponse = NextResponse.next({ request })

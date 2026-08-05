@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getStravaAccessToken } from "@/lib/strava";
 
 /**
  * GET /api/strava/activities?after=YYYY-MM-DD&before=YYYY-MM-DD
@@ -30,45 +31,14 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
-  // Get Strava connection
-  const { data: connection, error: connError } = await supabase
-    .from("strava_connections")
-    .select("*")
-    .eq("user_id", user.id)
-    .single();
+  // Get a valid Strava access token (refreshes automatically if expired)
+  const accessToken = await getStravaAccessToken(supabase, user.id);
 
-  if (connError || !connection) {
+  if (!accessToken) {
     return NextResponse.json(
       { error: "Strava not connected", connected: false },
-      { status: 404 }
+      { status: 404 },
     );
-  }
-
-  // Check if token is expired and refresh if needed
-  let accessToken = connection.access_token;
-  const expiresAt = new Date(connection.expires_at);
-
-  if (expiresAt <= new Date()) {
-    const refreshResult = await refreshStravaToken(connection.refresh_token);
-
-    if (!refreshResult) {
-      return NextResponse.json(
-        { error: "Failed to refresh Strava token" },
-        { status: 401 }
-      );
-    }
-
-    accessToken = refreshResult.access_token;
-
-    // Update tokens in DB
-    await supabase
-      .from("strava_connections")
-      .update({
-        access_token: refreshResult.access_token,
-        refresh_token: refreshResult.refresh_token,
-        expires_at: new Date(refreshResult.expires_at * 1000).toISOString(),
-      })
-      .eq("user_id", user.id);
   }
 
   // Build the Strava API URL with optional date-range filtering
@@ -137,6 +107,7 @@ export async function GET(request: NextRequest) {
         total_elevation_gain: number;
         kilojoules?: number;
         average_speed: number;
+        map?: { summary_polyline?: string | null };
       }) => ({
         id: a.id,
         name: a.name,
@@ -150,6 +121,8 @@ export async function GET(request: NextRequest) {
         elevationGain: a.total_elevation_gain,
         calories: a.kilojoules ? Math.round(a.kilojoules) : null,
         imported: importedIds.has(a.id),
+        // Encoded route for the share card. Null for indoor/treadmill activities.
+        polyline: a.map?.summary_polyline ?? null,
         // Deep-link back to Strava (API Agreement Section 2.14.5 — clear links to Strava)
         stravaUrl: `https://www.strava.com/activities/${a.id}`,
       })
@@ -162,27 +135,6 @@ export async function GET(request: NextRequest) {
       { error: "Failed to fetch activities" },
       { status: 500 }
     );
-  }
-}
-
-/** Refresh an expired Strava access token */
-async function refreshStravaToken(refreshToken: string) {
-  try {
-    const response = await fetch("https://www.strava.com/oauth/token", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        client_id: process.env.STRAVA_CLIENT_ID,
-        client_secret: process.env.STRAVA_CLIENT_SECRET,
-        refresh_token: refreshToken,
-        grant_type: "refresh_token",
-      }),
-    });
-
-    if (!response.ok) return null;
-    return await response.json();
-  } catch {
-    return null;
   }
 }
 

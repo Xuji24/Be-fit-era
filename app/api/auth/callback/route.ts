@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getPostLoginRedirect } from "@/lib/supabase/roles";
 
 /**
  * GET /api/auth/callback
@@ -26,7 +27,10 @@ export async function GET(request: NextRequest) {
 
   if (code) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
       // Password reset flow → redirect to reset-password page
@@ -37,8 +41,12 @@ export async function GET(request: NextRequest) {
       if (type === "signup") {
         return NextResponse.redirect(`${origin}/login?verified=true`);
       }
-      // Normal flow (OAuth, etc.) → redirect to home or specified page
-      return NextResponse.redirect(`${origin}${next}`);
+      // Normal flow (OAuth, etc.) → send admins to /admin, others to `next`
+      const target =
+        rawNext === "/" && user
+          ? await getPostLoginRedirect(supabase, user.id)
+          : next;
+      return NextResponse.redirect(`${origin}${target}`);
     }
   }
 

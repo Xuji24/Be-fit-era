@@ -10,8 +10,10 @@ import {
   Clock,
   X,
   Trophy,
+  Ticket,
 } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
+import LocationMap from "@/components/ui/location-map";
 
 interface RaceModalProps {
   race: RaceEvent | null;
@@ -51,6 +53,8 @@ export default function RaceModal({ race, onClose }: RaceModalProps) {
 
       {/* Modal */}
       <div
+        role="dialog"
+        aria-modal="true"
         onClick={(e) => e.stopPropagation()}
         className="relative bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-scale-in"
       >
@@ -144,6 +148,38 @@ export default function RaceModal({ race, onClose }: RaceModalProps) {
               </div>
             </div>
           </div>
+
+          {/* Registration Fee */}
+          <div className="flex items-center gap-2.5 bg-[#F5F5F0] dark:bg-[#2A2A2E] rounded-lg p-3 mb-6">
+            <Ticket size={18} className="text-[#FF5733] shrink-0" />
+            <div>
+              <p className="font-merriweather-sans text-xs text-gray-500 dark:text-gray-400">
+                Registration Fee
+              </p>
+              <p className="font-raleway font-bold text-sm text-foreground">
+                {race.registrationFee && race.registrationFee > 0
+                  ? `₱${race.registrationFee.toLocaleString()}`
+                  : "Free"}
+              </p>
+            </div>
+          </div>
+
+          {/* Race Location */}
+          {typeof race.latitude === "number" &&
+            typeof race.longitude === "number" && (
+              <div className="mb-6">
+                <h3 className="font-raleway font-bold text-base text-foreground mb-2 flex items-center gap-2">
+                  <MapPin size={16} className="text-[#FF5733]" />
+                  {race.approximateLocation ? "Race Area" : "Where It Starts"}
+                </h3>
+                <LocationMap
+                  lat={race.latitude}
+                  lng={race.longitude}
+                  label={race.location}
+                  approximate={race.approximateLocation}
+                />
+              </div>
+            )}
 
           {/* Description */}
           <div className="mb-6">

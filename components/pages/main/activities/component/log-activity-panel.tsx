@@ -151,7 +151,6 @@ const LogActivityPanel = ({
         body: JSON.stringify({
           stravaActivityId: selectedActivity.id,
           registrationId: raceId,
-          distance: selectedActivity.distance,
           activityType: selectedActivity.type,
           activityDate: selectedActivity.startDate.split("T")[0],
           activityName: selectedActivity.name,
@@ -161,7 +160,8 @@ const LogActivityPanel = ({
       const data = await res.json();
 
       if (res.ok && data.success) {
-        setSuccessDistance(selectedActivity.distance.toFixed(1));
+        const verifiedKm: number = data.entry?.distance_km ?? selectedActivity.distance;
+        setSuccessDistance(verifiedKm.toFixed(1));
         setSuccess(true);
 
         // Mark as imported in local list
@@ -200,7 +200,7 @@ const LogActivityPanel = ({
       />
 
       {/* Panel */}
-      <div className="relative w-full max-w-lg bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-2xl flex flex-col max-h-[90vh]">
+      <div role="dialog" aria-modal="true" aria-labelledby="log-activity-title" className="relative w-full max-w-lg bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-2xl flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="p-5 border-b border-black/5 dark:border-white/5">
           <div className="flex items-center justify-between">
@@ -212,7 +212,7 @@ const LogActivityPanel = ({
               >
                 <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" />
               </svg>
-              <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">
+              <h2 id="log-activity-title" className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">
                 Log Distance via Strava
               </h2>
             </div>

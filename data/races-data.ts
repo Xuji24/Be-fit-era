@@ -14,7 +14,7 @@ export const racesData: RaceEvent[] = [
       "Experience the beauty of Manila at sunrise as you run through historical landmarks and scenic routes.",
     fullDescription:
       "The Manila Sunrise Marathon 2026 takes runners on an unforgettable journey through the heart of Manila. Starting at Rizal Park, the route passes through Intramuros, the Manila Baywalk, and other iconic landmarks. Whether you're a seasoned marathoner or challenging yourself for the first time, this event promises a world-class experience with full hydration stations, medical support, chip timing, and a stunning finisher's medal. Post-race celebrations include live music, food stalls, and an awards ceremony.",
-    image: "/fitra.png",
+    image: "/races/manila-sunrise-marathon.svg",
     organizerLogo: "/fitra-logo.png",
     participants: 1200,
     maxParticipants: 2000,
@@ -61,7 +61,7 @@ export const racesData: RaceEvent[] = [
       "A scenic 10K run through Cebu's most beautiful coastal roads and urban trails.",
     fullDescription:
       "The Cebu Island 10K Challenge is designed for runners who love coastal scenery and vibrant city culture. Starting from the Cebu IT Park, the course winds through Lahug, passes the Temple of Leah viewpoint area, and finishes at the Cebu Business Park. Expect a fast, flat course ideal for personal bests. All finishers receive a premium tech shirt, finisher's medal, and loot bag. Top 3 in each age group receive special prizes.",
-    image: "/fitra.png",
+    image: "/races/cebu-island-10k.svg",
     organizerLogo: "/fitra-logo.png",
     participants: 450,
     maxParticipants: 500,
@@ -102,7 +102,7 @@ export const racesData: RaceEvent[] = [
       "A fun nighttime 5K run through the vibrant streets of Bonifacio Global City.",
     fullDescription:
       "BGC Night Run 5K is a fun, community-driven event perfect for beginners and casual runners. The route loops through the well-lit streets of BGC, passing High Street, Terra 28th, and Mind Museum. The event features glow sticks, LED armbands, and a post-run party with DJs and food trucks. Families and groups are welcome! Every finisher gets a glow-in-the-dark medal and event shirt.",
-    image: "/fitra.png",
+    image: "/races/bgc-night-run.svg",
     organizerLogo: "/fitra-logo.png",
     participants: 300,
     maxParticipants: 800,
@@ -143,7 +143,7 @@ export const racesData: RaceEvent[] = [
       "Challenge yourself on the cool mountain trails of Baguio City in this half marathon.",
     fullDescription:
       "The Baguio Half Marathon is one of the most challenging yet rewarding races in the Philippines. Running at an elevation of 1,500 meters, participants experience cooler temperatures and pine-fresh air. The route passes through Camp John Hay, Burnham Park, and the scenic Kennon Road overlook. This is a true test of endurance with rolling hills and breathtaking views. Aid stations every 3km, full medical team, and chip timing included.",
-    image: "/fitra.png",
+    image: "/races/baguio-half-marathon.svg",
     organizerLogo: "/fitra-logo.png",
     participants: 600,
     maxParticipants: 600,
@@ -190,7 +190,7 @@ export const racesData: RaceEvent[] = [
       "A fun and fruity 5K run celebrating Davao's famous durian festival season.",
     fullDescription:
       "The Davao Durian Dash 5K is a unique themed run that celebrates Davao's iconic fruit. Runners pass through People's Park, Jack's Ridge, and the Durian Dome. The route is flat and beginner-friendly with durian-themed aid stations offering durian candies and shakes. Every finisher receives a quirky durian-shaped medal, event shirt, and a box of fresh durians. Fun run categories for kids and families available.",
-    image: "/fitra.png",
+    image: "/races/davao-durian-dash.svg",
     organizerLogo: "/fitra-logo.png",
     participants: 180,
     maxParticipants: 400,
@@ -231,7 +231,7 @@ export const racesData: RaceEvent[] = [
       "Run through the lush greenery and scenic bay views of the Subic Bay Freeport Zone.",
     fullDescription:
       "The Subic Bay 10K Classic offers one of the most scenic race routes in the Philippines. Starting at the Subic Bay Convention Center, runners pass through the jungle-lined roads, the historic Naval Magazine area, and finish with a stunning bayfront stretch. The clean air, flat terrain, and well-organized event make this a favorite among 10K enthusiasts. Includes chip timing, finisher's medal, race kit, and post-race brunch.",
-    image: "/fitra.png",
+    image: "/races/subic-bay-10k.svg",
     organizerLogo: "/fitra-logo.png",
     participants: 320,
     maxParticipants: 700,

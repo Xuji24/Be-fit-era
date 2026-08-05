@@ -11,6 +11,7 @@ import {
   FileCheck,
   Handshake,
   AlertTriangle,
+  Settings,
 } from "lucide-react";
 
 const navItems = [
@@ -22,6 +23,7 @@ const navItems = [
   { href: "/admin/contacts", label: "Contacts", icon: Mail },
   { href: "/admin/applications", label: "Applications", icon: FileCheck },
   { href: "/admin/sponsors", label: "Sponsors", icon: Handshake },
+  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 export default function AdminSidebar() {

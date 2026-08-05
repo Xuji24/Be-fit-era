@@ -18,6 +18,11 @@ export interface RaceEvent {
   date: string;
   time: string;
   location: string;
+  /** organizer-pinned coordinates; absent when no pin was set */
+  latitude?: number | null;
+  longitude?: number | null;
+  /** true when coordinates were geocoded from the location text, not pinned */
+  approximateLocation?: boolean;
   category: "5K" | "10K" | "Half Marathon" | "Marathon";
   description: string;
   fullDescription: string;

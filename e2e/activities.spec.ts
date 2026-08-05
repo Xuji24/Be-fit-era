@@ -31,10 +31,10 @@ test.describe("TC-AC01 – TC-AC04: Activities Dashboard (authenticated)", () =>
     // Stats cards
     await expect(page.getByText(/total.*km|km.*total/i).or(
       page.getByText(/\d+(\.\d+)?\s*km/i)
-    )).toBeVisible({ timeout: 10_000 });
+    ).first()).toBeVisible({ timeout: 10_000 });
     // Weekly chart or summary
     await expect(
-      page.getByText(/weekly|this week|mon|tue|wed/i)
+      page.getByText(/weekly|this week|mon|tue|wed/i).first()
     ).toBeVisible({ timeout: 8_000 });
     // Page heading
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible({ timeout: 8_000 });

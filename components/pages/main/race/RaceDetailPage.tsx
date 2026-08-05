@@ -24,6 +24,7 @@ import {
 import { Button } from "@/components/shadcn/button";
 import RaceRecentActivities from "./component/RaceRecentActivities";
 import GpxMap from "@/components/ui/gpx-map";
+import LocationMap from "@/components/ui/location-map";
 import JoinRaceModal from "./component/join-race-modal";
 import ShareRacePopover from "./component/share-race-popover";
 import { checkRaceRegistration } from "@/app/actions/main-actions";
@@ -173,6 +174,29 @@ export default function RaceDetailPage({
                 </div>
               )}
             </div>
+
+            {/* Race Location */}
+            {typeof race.latitude === "number" &&
+              typeof race.longitude === "number" && (
+                <div>
+                  <h2 className="font-raleway font-bold text-lg text-foreground mb-3 flex items-center gap-2">
+                    <MapPin size={18} className="text-[#FF5733]" />
+                    Race Location
+                  </h2>
+                  <LocationMap
+                    lat={race.latitude}
+                    lng={race.longitude}
+                    label={race.location}
+                    approximate={race.approximateLocation}
+                  />
+                  {race.approximateLocation && (
+                    <p className="mt-2 font-merriweather-sans text-xs text-gray-500 dark:text-gray-400">
+                      Approximate area based on “{race.location}”. The organizer
+                      hasn’t pinned an exact start point.
+                    </p>
+                  )}
+                </div>
+              )}
 
             {/* E-Certificate */}
             <div className="bg-linear-to-br from-[#FFF8F5] to-[#FFF1EB] dark:from-[#1C1C1E] dark:to-[#221A16] rounded-2xl p-6 border border-[#FF5733]/10 dark:border-[#FF5733]/20">

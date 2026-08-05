@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 
 interface ActionResult {
   success: boolean;
@@ -22,8 +22,47 @@ export interface PostComment {
 
 import type { PostCategory } from "@/lib/community-types";
 
+export interface EnrichedPost {
+  id: string;
+  userId: string;
+  content: string;
+  imageUrl: string | null;
+  imageUrls: string[];
+  likesCount: number;
+  commentsCount: number;
+  createdAt: string;
+  updatedAt: string;
+  authorName: string;
+  authorAvatar: string | null;
+  category: PostCategory;
+  isOwn: boolean;
+  isLiked: boolean;
+}
+
+/** Shape a raw community_posts row (with joined profile) into the client-facing post. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function enrichPost(p: any, currentUserId: string | null, likedPostIds: Set<string>): EnrichedPost {
+  return {
+    id: p.id,
+    userId: p.user_id,
+    content: p.content,
+    imageUrl: p.image_url,
+    imageUrls: (p.image_urls as string[]) ?? [],
+    likesCount: p.likes_count ?? 0,
+    commentsCount: (p.comments_count as number) ?? 0,
+    createdAt: p.created_at,
+    updatedAt: p.updated_at,
+    authorName: (p.profiles as { full_name?: string })?.full_name ?? "Anonymous",
+    authorAvatar: (p.profiles as { avatar_url?: string })?.avatar_url ?? null,
+    category: (p.category as PostCategory) ?? "general",
+    isOwn: p.user_id === currentUserId,
+    isLiked: likedPostIds.has(p.id),
+  };
+}
+
 // ─── Fetch Posts (paginated) ────────────────────────────────
 export async function getCommunityPosts(page = 1, limit = 10, search?: string, category?: PostCategory) {
+  noStore();
   const supabase = await createClient();
   const { data: authData } = await supabase.auth.getUser();
   const currentUserId = authData.user?.id ?? null;
@@ -59,28 +98,18 @@ export async function getCommunityPosts(page = 1, limit = 10, search?: string, c
     }
   }
 
-  const enriched = (posts ?? []).map((p) => ({
-    id: p.id,
-    userId: p.user_id,
-    content: p.content,
-    imageUrl: p.image_url,
-    imageUrls: (p.image_urls as string[]) ?? [],
-    likesCount: p.likes_count,
-    commentsCount: (p.comments_count as number) ?? 0,
-    createdAt: p.created_at,
-    updatedAt: p.updated_at,
-    authorName: (p.profiles as { full_name?: string })?.full_name ?? "Anonymous",
-    authorAvatar: (p.profiles as { avatar_url?: string })?.avatar_url ?? null,
-    category: (p.category as PostCategory) ?? "general",
-    isOwn: p.user_id === currentUserId,
-    isLiked: likedPostIds.has(p.id),
-  }));
+  const enriched = (posts ?? []).map((p) => enrichPost(p, currentUserId, likedPostIds));
 
   return { success: true, data: enriched };
 }
 
 // ─── Create Post ────────────────────────────────────────────
-export async function createPost(content: string, imageUrl?: string, imageUrls?: string[], category?: PostCategory): Promise<ActionResult> {
+export async function createPost(
+  content: string,
+  imageUrl?: string,
+  imageUrls?: string[],
+  category?: PostCategory,
+): Promise<ActionResult & { post?: EnrichedPost }> {
   if (!content.trim() || content.length > 1000) {
     return { success: false, error: "Content must be 1–1000 characters." };
   }
@@ -89,22 +118,30 @@ export async function createPost(content: string, imageUrl?: string, imageUrls?:
   const { data: authData, error: authError } = await supabase.auth.getUser();
   if (authError || !authData.user) return { success: false, error: "Not authenticated." };
 
-  const { error } = await supabase.from("community_posts").insert({
-    user_id: authData.user.id,
-    content: content.trim(),
-    image_url: imageUrl || null,
-    image_urls: imageUrls ?? [],
-    category: category ?? "general",
-  });
+  const { data: created, error } = await supabase
+    .from("community_posts")
+    .insert({
+      user_id: authData.user.id,
+      content: content.trim(),
+      image_url: imageUrl || null,
+      image_urls: imageUrls ?? [],
+      category: category ?? "general",
+    })
+    .select("id, user_id, content, image_url, image_urls, likes_count, comments_count, category, created_at, updated_at, profiles(full_name, avatar_url)")
+    .single();
 
   if (error) return { success: false, error: error.message };
 
   revalidatePath("/community");
-  return { success: true };
+  // Return the created row so the client can prepend it without refetching.
+  return { success: true, post: enrichPost(created, authData.user.id, new Set()) };
 }
 
 // ─── Update Post ────────────────────────────────────────────
-export async function updatePost(postId: string, content: string): Promise<ActionResult> {
+export async function updatePost(
+  postId: string,
+  content: string,
+): Promise<ActionResult & { updatedAt?: string }> {
   if (!content.trim() || content.length > 1000) {
     return { success: false, error: "Content must be 1–1000 characters." };
   }
@@ -113,16 +150,18 @@ export async function updatePost(postId: string, content: string): Promise<Actio
   const { data: authData, error: authError } = await supabase.auth.getUser();
   if (authError || !authData.user) return { success: false, error: "Not authenticated." };
 
-  const { error } = await supabase
+  const { data: updated, error } = await supabase
     .from("community_posts")
     .update({ content: content.trim() })
     .eq("id", postId)
-    .eq("user_id", authData.user.id); // RLS + explicit ownership check
+    .eq("user_id", authData.user.id) // RLS + explicit ownership check
+    .select("updated_at")
+    .single();
 
   if (error) return { success: false, error: error.message };
 
   revalidatePath("/community");
-  return { success: true };
+  return { success: true, updatedAt: updated?.updated_at };
 }
 
 // ─── Delete Post ────────────────────────────────────────────

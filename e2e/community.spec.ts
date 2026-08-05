@@ -113,7 +113,10 @@ test.describe("TC-C06 – TC-C19: Authenticated community interactions", () => {
     // Modal should close
     await expect(page.getByRole("dialog")).not.toBeVisible({ timeout: 10_000 });
     // New post should appear in feed
-    await expect(page.getByText(`E2E test post ${timestamp}`)).toBeVisible({ timeout: 10_000 });
+    const newPost = page.getByText(`E2E test post ${timestamp}`);
+    await newPost.waitFor({ state: "attached", timeout: 10_000 });
+    await newPost.scrollIntoViewIfNeeded();
+    await expect(newPost).toBeVisible({ timeout: 5_000 });
   });
 
   // TC-C08: Create post modal — cancel closes without posting
@@ -186,11 +189,10 @@ test.describe("TC-C06 – TC-C19: Authenticated community interactions", () => {
     await page.getByRole("button", { name: /^post$/i }).click();
     await expect(page.getByRole("dialog")).not.toBeVisible({ timeout: 10_000 });
     // Find the new post and open its three-dot menu
+    const newPostText = page.getByText(unique);
+    await expect(newPostText).toBeVisible({ timeout: 12_000 });
     const newPost = page.locator("article, [data-testid='post-card']").filter({ hasText: unique }).first();
-    await expect(newPost).toBeVisible({ timeout: 8_000 });
-    const menuBtn = newPost.getByRole("button", { name: /menu|more|⋯|\.{3}/i }).or(
-      newPost.locator("button").last()
-    );
+    const menuBtn = newPost.getByRole("button", { name: /post options/i });
     if (await menuBtn.isVisible()) {
       await menuBtn.click();
       await expect(page.getByRole("menuitem", { name: /edit/i }).or(

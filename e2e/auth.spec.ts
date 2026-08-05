@@ -172,7 +172,6 @@ test.describe("Auth route guards", () => {
       "Skipped: set E2E_RUNNER_EMAIL and E2E_RUNNER_PASSWORD to run authenticated tests"
     );
     await loginAs(page, "runner");
-    await expect(page).toHaveURL(/^\//);
     await expect(page).not.toHaveURL(/\/login/);
   });
 });

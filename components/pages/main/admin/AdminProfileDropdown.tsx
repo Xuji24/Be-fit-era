@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { User, Settings, LogOut, ChevronDown } from "lucide-react";
+import { Settings, LogOut, ChevronDown } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
@@ -82,15 +82,7 @@ export default function AdminProfileDropdown({
 
           <div className="py-1.5">
             <Link
-              href="/profile"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 text-sm font-merriweather-sans text-[#1A1A1A] dark:text-white hover:bg-[#FF5733]/5 dark:hover:bg-[#FF5733]/10 transition-colors"
-            >
-              <User className="w-4 h-4 text-[#1A1A1A]/40 dark:text-white/40" />
-              Profile
-            </Link>
-            <Link
-              href="/settings"
+              href="/admin/settings"
               onClick={() => setOpen(false)}
               className="flex items-center gap-3 px-4 py-2.5 text-sm font-merriweather-sans text-[#1A1A1A] dark:text-white hover:bg-[#FF5733]/5 dark:hover:bg-[#FF5733]/10 transition-colors"
             >

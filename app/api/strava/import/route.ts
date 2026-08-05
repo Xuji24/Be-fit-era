@@ -1,16 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import {
+  getStravaAccessToken,
+  fetchStravaActivityDistanceKm,
+} from "@/lib/strava";
 
 /**
  * POST /api/strava/import
  *
  * Imports a Strava activity into a specific race registration.
- * Creates an activity_entry record with the Strava data.
+ * Distance is verified against the real Strava API — the client-supplied
+ * value is ignored in favour of Strava's authoritative distance.
  *
  * Body: {
  *   stravaActivityId: number,
  *   registrationId: string (UUID),
- *   distance: number (km),
  *   activityType: "run" | "walk" | "cycle",
  *   activityDate: string (ISO date),
  *   activityName: string
@@ -19,7 +23,6 @@ import { createClient } from "@/lib/supabase/server";
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
 
-  // Check auth
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -29,23 +32,10 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const {
-    stravaActivityId,
-    registrationId,
-    distance,
-    activityType,
-    activityDate,
-    activityName,
-  } = body;
+  const { stravaActivityId, registrationId, activityType, activityDate, activityName } =
+    body;
 
-  // Validate required fields
-  if (
-    !stravaActivityId ||
-    !registrationId ||
-    !distance ||
-    !activityType ||
-    !activityDate
-  ) {
+  if (!stravaActivityId || !registrationId || !activityType || !activityDate) {
     return NextResponse.json(
       { error: "Missing required fields" },
       { status: 400 },
@@ -67,34 +57,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Validate activity date is within allowed range (race start date → today)
+  // Fetch the race for date-range validation
   const { data: race } = await supabase
     .from("races")
     .select("event_date, target_distance_km")
     .eq("id", registration.race_id)
     .single();
 
-  const parsedDistance = Number(distance);
-  if (!Number.isFinite(parsedDistance) || parsedDistance <= 0) {
-    return NextResponse.json(
-      { error: "Invalid distance" },
-      { status: 400 },
-    );
-  }
-
-  const targetKm = Number(race?.target_distance_km);
-  if (Number.isFinite(targetKm) && targetKm > 0) {
-    const maxDistance = targetKm * 2;
-    if (parsedDistance > maxDistance) {
-      return NextResponse.json(
-        {
-          error: `Distance cannot exceed ${maxDistance} km for this race`,
-        },
-        { status: 400 },
-      );
-    }
-  }
-
+  // Validate activity date is within allowed range (race start → today)
   if (race?.event_date) {
     const raceStart = new Date(race.event_date);
     raceStart.setUTCHours(0, 0, 0, 0);
@@ -117,7 +87,7 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Check if this Strava activity was already imported
+  // Check for duplicate import
   const { data: existing } = await supabase
     .from("activity_entries")
     .select("id")
@@ -132,14 +102,58 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Insert the activity entry
+  // --- Phase 2: verify distance via Strava API ---
+  const accessToken = await getStravaAccessToken(supabase, user.id);
+  if (!accessToken) {
+    return NextResponse.json(
+      { error: "Strava not connected or token could not be refreshed" },
+      { status: 401 },
+    );
+  }
+
+  const verifiedDistanceKm = await fetchStravaActivityDistanceKm(
+    accessToken,
+    Number(stravaActivityId),
+  );
+
+  if (verifiedDistanceKm === null) {
+    return NextResponse.json(
+      { error: "Could not verify activity distance with Strava" },
+      { status: 422 },
+    );
+  }
+
+  // Guard: activity must belong to this athlete — Strava returns 404 for
+  // activities the token's owner did not perform, so a null above already
+  // covers that case. Double-check distance is positive and finite.
+  if (!Number.isFinite(verifiedDistanceKm) || verifiedDistanceKm <= 0) {
+    return NextResponse.json(
+      { error: "Invalid distance reported by Strava" },
+      { status: 400 },
+    );
+  }
+
+  // Soft cap: verified distance still cannot wildly exceed the race target
+  // (protects against test/virtual activities tagged to a different race)
+  const targetKm = Number(race?.target_distance_km);
+  if (Number.isFinite(targetKm) && targetKm > 0) {
+    const maxDistance = targetKm * 2;
+    if (verifiedDistanceKm > maxDistance) {
+      return NextResponse.json(
+        { error: `Distance cannot exceed ${maxDistance} km for this race` },
+        { status: 400 },
+      );
+    }
+  }
+
+  // Insert the activity entry using the Strava-verified distance
   const { data: entry, error: insertError } = await supabase
     .from("activity_entries")
     .insert({
       user_id: user.id,
       registration_id: registrationId,
       activity_type: activityType,
-      distance_km: parsedDistance,
+      distance_km: verifiedDistanceKm,
       activity_date: activityDate,
       notes: `Imported from Strava: ${activityName}`,
       strava_activity_id: stravaActivityId,
@@ -159,6 +173,6 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({
     success: true,
     entry,
-    message: `+${parsedDistance} km logged from Strava`,
+    message: `+${verifiedDistanceKm} km logged from Strava`,
   });
 }

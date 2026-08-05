@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Trash2, ToggleLeft, ToggleRight, Handshake } from "lucide-react";
+import { useRef, useState } from "react";
+import { Plus, Trash2, ToggleLeft, ToggleRight, Handshake, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import type { AdminSponsor } from "@/app/actions/admin-actions";
 import { createSponsor, updateSponsor, deleteSponsor } from "@/app/actions/admin-actions";
+import { createClient } from "@/lib/supabase/client";
 import Pagination from "@/components/ui/pagination";
+
+const MAX_LOGO_SIZE = 5 * 1024 * 1024;
 
 interface Props {
   sponsors: AdminSponsor[];
@@ -21,10 +24,34 @@ export default function AdminSponsorsPage({
   const [sponsors, setSponsors] = useState(initialSponsors);
   const [showCreate, setShowCreate] = useState(false);
   const [newName, setNewName] = useState("");
-  const [newLogoUrl, setNewLogoUrl] = useState("");
+  const [newLogoFile, setNewLogoFile] = useState<File | null>(null);
+  const [newLogoPreview, setNewLogoPreview] = useState<string | null>(null);
   const [newWebsiteUrl, setNewWebsiteUrl] = useState("");
   const [newOrder, setNewOrder] = useState(0);
   const [creating, setCreating] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleLogoSelect = (file: File | undefined) => {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file.");
+      return;
+    }
+    if (file.size > MAX_LOGO_SIZE) {
+      toast.error("Logo must be under 5MB.");
+      return;
+    }
+    if (newLogoPreview) URL.revokeObjectURL(newLogoPreview);
+    setNewLogoFile(file);
+    setNewLogoPreview(URL.createObjectURL(file));
+  };
+
+  const clearLogoSelection = () => {
+    if (newLogoPreview) URL.revokeObjectURL(newLogoPreview);
+    setNewLogoFile(null);
+    setNewLogoPreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const handleCreate = async () => {
     if (!newName.trim()) {
@@ -32,16 +59,36 @@ export default function AdminSponsorsPage({
       return;
     }
     setCreating(true);
+
+    let logoUrl: string | undefined;
+    if (newLogoFile) {
+      const supabase = createClient();
+      const ext = newLogoFile.name.split(".").pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error: uploadError } = await supabase.storage
+        .from("sponsor-logos")
+        .upload(fileName, newLogoFile);
+      if (uploadError) {
+        toast.error("Failed to upload logo.");
+        setCreating(false);
+        return;
+      }
+      const { data: urlData } = supabase.storage
+        .from("sponsor-logos")
+        .getPublicUrl(fileName);
+      logoUrl = urlData.publicUrl;
+    }
+
     const result = await createSponsor({
       name: newName,
-      logoUrl: newLogoUrl || undefined,
+      logoUrl,
       websiteUrl: newWebsiteUrl || undefined,
       displayOrder: newOrder,
     });
     if (result.success) {
       toast.success("Sponsor created.");
       setNewName("");
-      setNewLogoUrl("");
+      clearLogoSelection();
       setNewWebsiteUrl("");
       setNewOrder(0);
       setShowCreate(false);
@@ -107,13 +154,42 @@ export default function AdminSponsorsPage({
               onChange={(e) => setNewName(e.target.value)}
               className="px-4 py-2.5 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
             />
-            <input
-              type="text"
-              placeholder="Logo URL (e.g. /sponsors/logo.png)"
-              value={newLogoUrl}
-              onChange={(e) => setNewLogoUrl(e.target.value)}
-              className="px-4 py-2.5 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
-            />
+            <div className="flex items-center gap-3">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleLogoSelect(e.target.files?.[0])}
+                className="hidden"
+                id="sponsor-logo-input"
+              />
+              {newLogoPreview ? (
+                <div className="flex items-center gap-2">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={newLogoPreview}
+                    alt="Logo preview"
+                    className="w-10 h-10 rounded-lg object-contain bg-white border border-black/5"
+                  />
+                  <button
+                    type="button"
+                    onClick={clearLogoSelection}
+                    className="p-1.5 rounded-lg hover:bg-red-500/10 text-[#1A1A1A]/40 dark:text-white/30 hover:text-red-500 transition-colors cursor-pointer"
+                    title="Remove"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <label
+                  htmlFor="sponsor-logo-input"
+                  className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A]/50 dark:text-white/30 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-merriweather-sans"
+                >
+                  <Upload className="w-4 h-4" />
+                  Upload logo image
+                </label>
+              )}
+            </div>
             <input
               type="text"
               placeholder="Website URL"
@@ -189,8 +265,19 @@ export default function AdminSponsorsPage({
                       </p>
                     )}
                   </td>
-                  <td className="px-5 py-3 text-[#1A1A1A]/50 dark:text-white/40 text-xs truncate max-w-32">
-                    {sponsor.logo_url || "—"}
+                  <td className="px-5 py-3">
+                    {sponsor.logo_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={sponsor.logo_url}
+                        alt={`${sponsor.name} logo`}
+                        className="w-10 h-10 rounded-lg object-contain bg-white border border-black/5"
+                      />
+                    ) : (
+                      <span className="text-[#1A1A1A]/40 dark:text-white/30 text-xs">
+                        —
+                      </span>
+                    )}
                   </td>
                   <td className="px-5 py-3">
                     <span

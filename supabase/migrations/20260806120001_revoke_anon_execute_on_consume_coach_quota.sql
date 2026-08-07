@@ -1,0 +1,15 @@
+-- Fix: the database linter flagged consume_coach_quota() as executable by the
+-- `anon` role via PostgREST (/rest/v1/rpc/consume_coach_quota).
+--
+-- The REVOKE ALL ... FROM PUBLIC in the previous migration does not cover
+-- `anon` — Supabase grants it its own EXECUTE on functions in the exposed API
+-- schema, so it survives the PUBLIC revoke.
+--
+-- Impact was limited: the function derives the user from auth.uid(), which is
+-- NULL for anon, so it returns granted=false and writes nothing. But an
+-- unauthenticated RPC endpoint should not be reachable at all.
+--
+-- Kept as its own migration because the preceding one is already applied
+-- remotely; editing it in place would not re-run. The REVOKE is also folded
+-- into that file so a fresh database gets it on the first pass.
+REVOKE EXECUTE ON FUNCTION public.consume_coach_quota(TEXT, TEXT, INT) FROM anon;

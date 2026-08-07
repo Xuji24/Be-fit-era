@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { User, Mail, Save, Loader2, UserCircle } from "lucide-react";
 import { toast } from "sonner";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
+import PageHeader from "@/components/page-header";
 
 interface ProfileData {
   firstName: string;
@@ -111,30 +112,15 @@ export default function ProfilePage() {
     <div>
       <div className="min-h-screen relative">
         {/* Hero Header */}
-        <section className="relative bg-[#1A1A1A] dark:bg-[#0D0D0D] pt-28 pb-14 md:pt-32 md:pb-16">
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-100 bg-[#FF5733]/5 rounded-full blur-3xl" />
-          </div>
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-[#FF5733]/10 flex items-center justify-center">
-                <UserCircle className="w-5 h-5 text-[#FF5733]" />
-              </div>
-              <div>
-                <h1 className="font-raleway font-bold text-2xl sm:text-3xl text-white">
-                  Profile
-                </h1>
-                <p className="font-merriweather-sans text-sm text-white/40 mt-0.5">
-                  Manage your personal information
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        <PageHeader
+          icon={UserCircle}
+          title="Profile"
+          subtitle="Manage your personal information"
+          maxWidthClassName="max-w-2xl"
+        />
 
         {/* Content */}
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 -mt-6 pb-20">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 pb-20">
           {/* Profile Card */}
           <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm overflow-hidden">
             {/* Avatar Header */}

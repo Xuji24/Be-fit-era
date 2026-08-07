@@ -6,6 +6,7 @@ import { Button } from "@/components/shadcn/button";
 import { getCommunityPosts } from "@/app/actions/community-actions";
 import { POST_CATEGORIES } from "@/lib/community-types";
 import type { PostCategory } from "@/lib/community-types";
+import PageHeader from "@/components/page-header";
 import PostCard, { type CommunityPost } from "./PostCard";
 import CreatePostModal from "./CreatePostModal";
 
@@ -215,23 +216,14 @@ export default function CommunityFeedPage() {
 
   return (
     <div className="min-h-screen relative">
-      {/* Hero Section */}
-      <section className="relative bg-[#1A1A1A] dark:bg-[#0D0D0D] pt-28 pb-14 md:pt-32 md:pb-16">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-100 bg-[#FF5733]/5 rounded-full blur-3xl" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="font-raleway text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-3">
-            Share Your <span className="text-[#FF5733]">Journey</span>
-          </h1>
-          <p className="font-merriweather-sans text-white/50 text-sm md:text-base max-w-lg">
-            Celebrate milestones, share race stories, and connect with fellow runners in the Fitra community.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        title="Share Your Journey"
+        subtitle="Celebrate milestones, share race stories, and connect with fellow runners in the Fitra community."
+        maxWidthClassName="max-w-2xl"
+      />
 
       {/* Feed */}
-      <div className="max-w-2xl mx-auto px-4 py-10 pb-16">
+      <div className="max-w-2xl mx-auto px-4 pb-16">
         {/* Action Bar */}
         <div className="flex items-center justify-between mb-5">
           <Button

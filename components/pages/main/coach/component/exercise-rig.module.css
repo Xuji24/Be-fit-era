@@ -1,0 +1,255 @@
+/*
+ * Hand-tuned keyframes per exercise, checked against real reference photos
+ * of each exercise's form (side-view standing vs. bottom/hold position)
+ * rather than guessed. Each exercise gets one class on the outer
+ * .exercise-rig group; nested selectors (.rig-arm-left etc.) then receive
+ * their own @keyframes so limbs move independently but in sync (same
+ * duration, so they stay locked to one rep cycle).
+ */
+
+.exercise-rig {
+  transform-origin: 100px 140px;
+}
+
+/* ---------------- Squat ---------------- */
+/* Reference: hips drop straight down and back, torso leans forward, shin
+   stays close to vertical while the thigh drops toward parallel (~90-110°
+   knee flexion), and the ARMS REACH FORWARD (not backward) for
+   counterbalance — this was backwards in an earlier pass and is the most
+   common real-world squat cue (“reach your arms out in front of you”). */
+
+.squat .rig-hips {
+  animation: squat-hips 2.4s ease-in-out infinite;
+}
+.squat .rig-torso {
+  animation: squat-torso 2.4s ease-in-out infinite;
+}
+.squat .rig-leg-left,
+.squat .rig-leg-right {
+  animation: squat-thigh 2.4s ease-in-out infinite;
+}
+.squat .rig-shin-left,
+.squat .rig-shin-right {
+  animation: squat-shin 2.4s ease-in-out infinite;
+}
+.squat .rig-arm-left {
+  animation: squat-arm-left 2.4s ease-in-out infinite;
+}
+.squat .rig-arm-right {
+  animation: squat-arm-right 2.4s ease-in-out infinite;
+}
+.squat .rig-forearm-left {
+  animation: squat-forearm-left 2.4s ease-in-out infinite;
+}
+.squat .rig-forearm-right {
+  animation: squat-forearm-right 2.4s ease-in-out infinite;
+}
+
+@keyframes squat-hips {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(30px) translateX(-4px); }
+}
+@keyframes squat-torso {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(16deg); }
+}
+@keyframes squat-thigh {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-42deg); }
+}
+@keyframes squat-shin {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(48deg); }
+}
+/* Shoulder rotates the upper arm up/forward to roughly horizontal. */
+@keyframes squat-arm-left {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(65deg); }
+}
+@keyframes squat-arm-right {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-65deg); }
+}
+/* Forearm straightens out from the elbow so the whole arm reads as one
+   outstretched line pointing forward, not folded. */
+@keyframes squat-forearm-left {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-20deg); }
+}
+@keyframes squat-forearm-right {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(20deg); }
+}
+
+/* ---------------- Push-up ---------------- */
+/* Reference: the whole body is horizontal/prone, supported on hands and
+   toes, in one roughly straight line from shoulders to ankles. The earlier
+   version kept the rig standing upright and only bent the arms, which
+   doesn't read as a push-up at all — the fix rotates the ENTIRE rig ~85°
+   so it lies body-horizontal, then the elbows do the up/down bending. */
+
+.pushup {
+  animation: pushup-orient 2s ease-in-out infinite;
+  transform: rotate(85deg) translate(6px, -18px);
+}
+.pushup .rig-arm-left {
+  animation: pushup-upper-left 2s ease-in-out infinite;
+}
+.pushup .rig-arm-right {
+  animation: pushup-upper-right 2s ease-in-out infinite;
+}
+.pushup .rig-forearm-left {
+  animation: pushup-fore-left 2s ease-in-out infinite;
+}
+.pushup .rig-forearm-right {
+  animation: pushup-fore-right 2s ease-in-out infinite;
+}
+
+/* Tiny full-body dip so the up/down of the rep still reads even though the
+   real motion is now carried by the elbow bend below. */
+@keyframes pushup-orient {
+  0%, 100% { transform: rotate(85deg) translate(6px, -18px); }
+  50% { transform: rotate(85deg) translate(6px, -14px); }
+}
+/* Upper arm goes from roughly vertical (top of push-up, arm straight under
+   shoulder) to angled back (bottom, elbow bent and trailing the shoulder). */
+@keyframes pushup-upper-left {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(35deg); }
+}
+@keyframes pushup-upper-right {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-35deg); }
+}
+@keyframes pushup-fore-left {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-45deg); }
+}
+@keyframes pushup-fore-right {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(45deg); }
+}
+
+/* ---------------- Plank (static hold) ---------------- */
+/* Reference: same horizontal body-line as a push-up's top position, held
+   still — supported on forearms (or hands) with the body straight from
+   head to heels. Rotated horizontal like push-up; arms point straight down
+   toward the floor (not swept across the chest, which read as crossed arms
+   in the very first pass of this rig). Only a very small tremor animates,
+   since a hold is defined by stillness, not motion. */
+
+.plank {
+  transform: rotate(85deg) translate(6px, -18px);
+  animation: plank-hold 3s ease-in-out infinite;
+}
+.plank .rig-arm-left {
+  animation: plank-arm-left 3s ease-in-out infinite;
+}
+.plank .rig-arm-right {
+  animation: plank-arm-right 3s ease-in-out infinite;
+}
+.plank .rig-forearm-left {
+  animation: plank-forearm-left 3s ease-in-out infinite;
+}
+.plank .rig-forearm-right {
+  animation: plank-forearm-right 3s ease-in-out infinite;
+}
+
+@keyframes plank-hold {
+  0%, 100% { transform: rotate(85deg) translate(6px, -18px); }
+  50% { transform: rotate(85.5deg) translate(6px, -17.5px); }
+}
+@keyframes plank-arm-left {
+  0%, 100% { transform: rotate(2deg); }
+  50% { transform: rotate(0deg); }
+}
+@keyframes plank-arm-right {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(0deg); }
+}
+@keyframes plank-forearm-left {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(0deg); }
+}
+@keyframes plank-forearm-right {
+  0%, 100% { transform: rotate(2deg); }
+  50% { transform: rotate(0deg); }
+}
+
+/* ---------------- Lunge ---------------- */
+/* Reference: torso stays upright/vertical throughout (no forward lean —
+   that was wrong in the earlier pass). The front leg steps forward and
+   bends to roughly 90° at the knee, with the knee staying stacked above
+   the ankle. The back leg's knee drops straight down toward the floor
+   (bending sharply), not trailing nearly straight behind as before. */
+
+.lunge .rig-hips {
+  animation: lunge-hips 2.6s ease-in-out infinite;
+}
+.lunge .rig-leg-left {
+  animation: lunge-front-thigh 2.6s ease-in-out infinite;
+}
+.lunge .rig-shin-left {
+  animation: lunge-front-shin 2.6s ease-in-out infinite;
+}
+.lunge .rig-leg-right {
+  animation: lunge-back-thigh 2.6s ease-in-out infinite;
+}
+.lunge .rig-shin-right {
+  animation: lunge-back-shin 2.6s ease-in-out infinite;
+}
+.lunge .rig-arm-left {
+  animation: lunge-arm-left 2.6s ease-in-out infinite;
+}
+.lunge .rig-arm-right {
+  animation: lunge-arm-right 2.6s ease-in-out infinite;
+}
+
+@keyframes lunge-hips {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(20px); }
+}
+/* Front leg: the whole leg translates forward first (real horizontal
+   separation between the feet, not just rotation from a shared hip point —
+   rotation alone made the two legs cross through each other at the
+   midpoint), then the knee bends so the shin ends up roughly upright,
+   stacked under the now-forward knee. */
+@keyframes lunge-front-thigh {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  50% { transform: translateX(22px) rotate(-20deg); }
+}
+@keyframes lunge-front-shin {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(38deg); }
+}
+/* Back leg: translates backward for the same separation, then the knee
+   drops straight down toward the floor (large shin fold). */
+@keyframes lunge-back-thigh {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  50% { transform: translateX(-14px) rotate(22deg); }
+}
+@keyframes lunge-back-shin {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-70deg); }
+}
+/* Arms stay relaxed at the sides (upright torso needs no counterbalance
+   swing) — only a small natural sway. */
+@keyframes lunge-arm-left {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-8deg); }
+}
+@keyframes lunge-arm-right {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(8deg); }
+}
+
+/* Respect reduced-motion: freeze on the midpoint (the "working" pose)
+   rather than disabling animation entirely, since the pose itself is
+   informative — a static plank/squat mid-position still shows the movement. */
+@media (prefers-reduced-motion: reduce) {
+  .exercise-rig,
+  .exercise-rig * {
+    animation-play-state: paused !important;
+    animation-delay: -1s !important;
+  }
+}

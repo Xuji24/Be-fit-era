@@ -1,0 +1,72 @@
+"use client";
+
+export interface OptionItem {
+  value: string;
+  label: string;
+  hint?: string;
+}
+
+interface OptionCardsProps {
+  options: OptionItem[];
+  /** string for single-select, string[] for multi. */
+  value: string | string[];
+  onChange: (value: string) => void;
+  multi?: boolean;
+  columns?: 1 | 2;
+  legend: string;
+}
+
+/** Tappable choice cards — the wizard's single- and multi-select control. */
+export default function OptionCards({
+  options,
+  value,
+  onChange,
+  multi = false,
+  columns = 1,
+  legend,
+}: OptionCardsProps) {
+  const isSelected = (v: string) => (Array.isArray(value) ? value.includes(v) : value === v);
+
+  return (
+    <fieldset>
+      <legend className="sr-only">{legend}</legend>
+      <div className={`grid gap-2 ${columns === 2 ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"}`}>
+        {options.map((opt) => {
+          const selected = isSelected(opt.value);
+          return (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => onChange(opt.value)}
+              aria-pressed={selected}
+              aria-label={opt.hint ? `${opt.label} — ${opt.hint}` : opt.label}
+              className={`text-left px-4 py-3 rounded-xl transition-colors cursor-pointer ${
+                selected
+                  ? "bg-[#FF5733]/10 ring-2 ring-[#FF5733]"
+                  : "bg-[#F5F5F0] dark:bg-[#2A2A2E] ring-1 ring-transparent hover:ring-[#FF5733]/30"
+              }`}
+            >
+              <span
+                className={`block text-sm font-semibold font-raleway ${
+                  selected ? "text-[#FF5733]" : "text-[#1A1A1A] dark:text-white"
+                }`}
+              >
+                {opt.label}
+              </span>
+              {opt.hint && (
+                <span className="block mt-0.5 text-xs text-[#1A1A1A]/50 dark:text-white/50 font-merriweather-sans">
+                  {opt.hint}
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+      {multi && (
+        <p className="mt-2 text-xs text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans">
+          Select all that apply.
+        </p>
+      )}
+    </fieldset>
+  );
+}

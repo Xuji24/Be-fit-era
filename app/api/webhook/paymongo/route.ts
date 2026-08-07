@@ -16,11 +16,25 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { createClient as createSupabaseClient, SupabaseClient } from "@supabase/supabase-js";
 import { verifyWebhookSignature, getCheckoutSession } from "@/lib/paymongo";
 import { createClient } from "@/lib/supabase/server";
+import { isPaidTier } from "@/lib/coach/tiers";
 
 // PayMongo sends raw JSON — we must read the raw body to verify the signature
 export const runtime = "nodejs";
+
+// The webhook has no user session and coach_subscriptions has no authenticated
+// UPDATE policy (by design — see the create-tables migration), so granting a
+// tier requires the service role, same as app/api/cron/update-races/route.ts.
+function getSupabaseAdmin(): SupabaseClient {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) {
+    throw new Error("Supabase admin credentials are not configured");
+  }
+  return createSupabaseClient(url, key);
+}
 
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
@@ -68,12 +82,7 @@ export async function POST(req: NextRequest) {
   }
 
   const paymentStatus: string = session.attributes?.payment_intent?.attributes?.status;
-  const raceId: string | undefined = session.attributes?.metadata?.race_id;
-
-  if (!raceId) {
-    console.error("[webhook/paymongo] No race_id in session metadata");
-    return NextResponse.json({ error: "Missing race_id" }, { status: 400 });
-  }
+  const metadata: Record<string, string> | undefined = session.attributes?.metadata;
 
   // Only mark paid if PayMongo confirms the payment succeeded
   if (paymentStatus !== "succeeded") {
@@ -81,6 +90,17 @@ export async function POST(req: NextRequest) {
       `[webhook/paymongo] Session ${checkoutSessionId} payment status: ${paymentStatus} — skipping`,
     );
     return NextResponse.json({ received: true });
+  }
+
+  if (metadata?.kind === "coach_subscription") {
+    return handleCoachSubscriptionPaid(checkoutSessionId, metadata);
+  }
+
+  const raceId: string | undefined = metadata?.race_id;
+
+  if (!raceId) {
+    console.error("[webhook/paymongo] No race_id in session metadata");
+    return NextResponse.json({ error: "Missing race_id" }, { status: 400 });
   }
 
   // Derive the user from the checkout session billing email
@@ -129,6 +149,55 @@ export async function POST(req: NextRequest) {
 
   console.log(
     `[webhook/paymongo] Payment confirmed — race ${raceId}, user ${profile.id}`,
+  );
+
+  return NextResponse.json({ received: true });
+}
+
+/**
+ * Grants a coach subscription tier after PayMongo confirms payment.
+ *
+ * Matched by metadata.user_id, not billing email — a user's profile email can
+ * differ from what they typed at checkout, and coach_subscriptions is already
+ * keyed by user_id everywhere else.
+ */
+async function handleCoachSubscriptionPaid(
+  checkoutSessionId: string,
+  metadata: Record<string, string>,
+): Promise<NextResponse> {
+  const userId = metadata.user_id;
+  const tier = metadata.tier;
+
+  if (!userId || !isPaidTier(tier)) {
+    console.error(
+      `[webhook/paymongo] Invalid coach subscription metadata for session ${checkoutSessionId}: user_id=${userId} tier=${tier}`,
+    );
+    return NextResponse.json({ error: "Invalid subscription metadata" }, { status: 400 });
+  }
+
+  const supabaseAdmin = getSupabaseAdmin();
+
+  const currentPeriodEnd = new Date();
+  currentPeriodEnd.setUTCMonth(currentPeriodEnd.getUTCMonth() + 1);
+
+  const { error: updateError } = await supabaseAdmin
+    .from("coach_subscriptions")
+    .update({
+      status: "active",
+      tier,
+      current_period_end: currentPeriodEnd.toISOString(),
+      paymongo_session_id: checkoutSessionId,
+    })
+    .eq("user_id", userId);
+
+  if (updateError) {
+    console.error("[webhook/paymongo] Failed to update coach subscription:", updateError);
+    // Return 500 so PayMongo retries
+    return NextResponse.json({ error: "Database update failed" }, { status: 500 });
+  }
+
+  console.log(
+    `[webhook/paymongo] Coach subscription activated — tier ${tier}, user ${userId}`,
   );
 
   return NextResponse.json({ received: true });

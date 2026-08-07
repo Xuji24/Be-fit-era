@@ -15,6 +15,7 @@ import {
   Award,
   Ban,
 } from "lucide-react";
+import PageHeader from "@/components/page-header";
 import CreateRaceModal from "./component/create-race-modal";
 import EditRaceDesignsModal from "./component/edit-race-designs-modal";
 import EditRaceModal from "./component/edit-race-modal";
@@ -78,49 +79,34 @@ export default function OrganizerDashboard({ races: initialRaces }: Props) {
 
   return (
     <div className="min-h-screen relative">
-      {/* Hero Header */}
-      <section className="relative bg-[#1A1A1A] dark:bg-[#0D0D0D] pt-28 pb-14 md:pt-32 md:pb-16">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-100 bg-[#FFB800]/5 rounded-full blur-3xl" />
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-            <div>
-              <h1 className="font-raleway text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
-                Race <span className="text-[#FFB800]">Management</span>
-              </h1>
-              <p className="mt-3 text-white/50 text-sm md:text-base max-w-lg">
-                Create and manage your virtual races. Track registrations and
-                monitor your events.
+      <PageHeader
+        title="Race Management"
+        subtitle="Create and manage your virtual races. Track registrations and monitor your events."
+        actions={
+          <div className="flex gap-6">
+            <div className="text-center">
+              <p className="text-xl md:text-2xl font-bold text-[#1A1A1A] dark:text-white font-raleway">
+                {races.length}
+              </p>
+              <p className="text-[#1A1A1A]/40 dark:text-white/40 text-xs uppercase tracking-wider mt-1">
+                Races
               </p>
             </div>
-
-            <div className="flex gap-6">
-              <div className="text-center">
-                <p className="text-2xl md:text-3xl font-bold text-white font-raleway">
-                  {races.length}
-                </p>
-                <p className="text-white/40 text-xs uppercase tracking-wider mt-1">
-                  Races
-                </p>
-              </div>
-              <div className="w-px bg-white/10" />
-              <div className="text-center">
-                <p className="text-2xl md:text-3xl font-bold text-[#FFB800] font-raleway">
-                  {totalRegistrations}
-                </p>
-                <p className="text-white/40 text-xs uppercase tracking-wider mt-1">
-                  Registrations
-                </p>
-              </div>
+            <div className="w-px bg-black/10 dark:bg-white/10" />
+            <div className="text-center">
+              <p className="text-xl md:text-2xl font-bold text-[#FFB800] font-raleway">
+                {totalRegistrations}
+              </p>
+              <p className="text-[#1A1A1A]/40 dark:text-white/40 text-xs uppercase tracking-wider mt-1">
+                Registrations
+              </p>
             </div>
           </div>
-        </div>
-      </section>
+        }
+      />
 
       {/* Main Content */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 md:pb-14">
         {/* Actions bar */}
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">

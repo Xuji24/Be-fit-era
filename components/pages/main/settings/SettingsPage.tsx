@@ -25,6 +25,7 @@ function getError(error: string): string {
 }
 import { Lock, Eye, EyeOff, Loader2, Shield } from "lucide-react";
 import PasswordStrengthIndicator from "@/components/password-strength-indicator";
+import PageHeader from "@/components/page-header";
 import OrganizerApplication from "./component/organizer-application";
 import PushNotificationToggle from "./component/PushNotificationToggle";
 
@@ -111,31 +112,15 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212]">
-      {/* Hero Header */}
-      <section className="relative bg-[#1A1A1A] dark:bg-[#0D0D0D] pt-28 pb-14 md:pt-32 md:pb-16">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-100 bg-[#FF5733]/5 rounded-full blur-3xl" />
-        </div>
-
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-[#FF5733]/10 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-[#FF5733]" />
-            </div>
-            <div>
-              <h1 className="font-raleway font-bold text-2xl sm:text-3xl text-white">
-                Settings
-              </h1>
-              <p className="font-merriweather-sans text-sm text-white/40 mt-0.5">
-                Manage your account security and preferences
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        icon={Shield}
+        title="Settings"
+        subtitle="Manage your account security and preferences"
+        maxWidthClassName="max-w-4xl"
+      />
 
       {/* Content */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-2 pb-20">
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
         <div className="space-y-6">
           {/* Password Card */}
           <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm overflow-hidden">

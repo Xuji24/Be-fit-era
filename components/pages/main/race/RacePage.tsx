@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import RaceCard from "./component/race-card";
 import RaceFilter from "./component/race-filter";
+import PageHeader from "@/components/page-header";
 import { RaceCategory, RaceEvent } from "@/utils/types/race-types";
 
 interface RacePageProps {
@@ -29,23 +30,13 @@ export default function RacePage({ races }: RacePageProps) {
   return (
     <div className="min-h-screen relative">
       {/* Hero Header */}
-      <section className="relative bg-[#1A1A1A] dark:bg-[#0D0D0D] pt-28 pb-14 md:pt-32 md:pb-16">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-100 bg-[#FF5733]/5 rounded-full blur-3xl" />
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="font-raleway text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight">
-            Upcoming <span className="text-[#FF5733]">Races</span>
-          </h1>
-          <p className="mt-3 text-white/50 text-sm md:text-base max-w-lg">
-            Browse and join races happening near you
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        title="Upcoming Races"
+        subtitle="Browse and join races happening near you"
+      />
 
       {/* Content */}
-      <div className="px-6 sm:px-10 lg:px-16 xl:px-20 py-8 sm:py-10">
+      <div className="px-6 sm:px-10 lg:px-16 xl:px-20 pb-8 sm:pb-10">
         {/* Filters & Search */}
         <RaceFilter
           selectedCategory={selectedCategory}

@@ -77,14 +77,96 @@ export async function createCheckoutSession(
             quantity: 1,
           },
         ],
-        // Supported PH payment methods — card, GCash, Maya, QR Ph
+        // Supported PH payment methods — GCash, Maya, QR Ph (no cards)
         payment_method_types: [
-          "card",
           "gcash",
           "paymaya",
           "qrph",
         ] satisfies PayMongoPaymentMethod[],
         metadata: { race_id: raceId },
+      },
+    },
+  };
+
+  const res = await fetch(`${PAYMONGO_API}/checkout_sessions`, {
+    method: "POST",
+    headers: {
+      Authorization: authHeader(),
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    const detail =
+      (err as { errors?: { detail?: string }[] })?.errors?.[0]?.detail ??
+      "PayMongo request failed";
+    throw new Error(detail);
+  }
+
+  const json = await res.json();
+  return {
+    id: json.data.id as string,
+    checkoutUrl: json.data.attributes.checkout_url as string,
+  };
+}
+
+interface CreateSubscriptionCheckoutParams {
+  userId: string;
+  /** 'starter' | 'pro' — carried in metadata so the webhook knows what to grant. */
+  tier: string;
+  tierName: string;
+  amountPhp: number;
+  buyerEmail: string;
+  buyerName: string;
+  appUrl: string;
+}
+
+/**
+ * Creates a checkout session for an AI coach subscription.
+ *
+ * Separate from createCheckoutSession because the race flow hardcodes race
+ * redirect URLs and race_id metadata. The webhook reads metadata.tier and
+ * metadata.user_id to decide what to activate, so both must be present.
+ *
+ * NOTE: this is a one-time charge, not a recurring mandate. PayMongo
+ * subscriptions require their own recurring-payment product; until that is
+ * wired, a "monthly" plan means the user is charged once and current_period_end
+ * is set a month out. Renewal is a manual re-purchase.
+ */
+export async function createSubscriptionCheckoutSession(
+  params: CreateSubscriptionCheckoutParams,
+): Promise<PayMongoCheckoutSession> {
+  const { userId, tier, tierName, amountPhp, buyerEmail, buyerName, appUrl } =
+    params;
+
+  const body = {
+    data: {
+      attributes: {
+        billing: { name: buyerName, email: buyerEmail },
+        send_email_receipt: true,
+        show_description: true,
+        show_line_items: true,
+        cancel_url: `${appUrl}/coach/subscribe?canceled=true`,
+        success_url: `${appUrl}/coach?subscribed=true`,
+        description: `Fitra AI Coach — ${tierName}`,
+        line_items: [
+          {
+            currency: "PHP",
+            amount: Math.round(amountPhp * 100),
+            name: `AI Coach ${tierName}`,
+            description: "One month of AI Coach access",
+            quantity: 1,
+          },
+        ],
+        payment_method_types: [
+          "gcash",
+          "paymaya",
+          "qrph",
+        ] satisfies PayMongoPaymentMethod[],
+        metadata: { user_id: userId, tier, kind: "coach_subscription" },
       },
     },
   };

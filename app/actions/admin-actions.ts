@@ -60,13 +60,63 @@ export interface AdminStats {
   pendingApplications: number;
   totalSponsors: number;
   registrationsPerMonth: { month: string; count: number }[];
+  paymentStatusBreakdown: { status: string; count: number }[];
+  totalRevenue: number;
+  newUsersPerMonth: { month: string; count: number }[];
+  usersByRole: { role: string; count: number }[];
+  raceParticipationByCategory: { category: string; count: number }[];
+  disputesPerMonth: { month: string; count: number }[];
+  communityPostsPerMonth: { month: string; count: number }[];
+}
+
+/** Group rows with a timestamp column into month buckets covering the last `months` months. */
+function groupByMonth(
+  rows: { created_at: string }[],
+  months = 6,
+): { month: string; count: number }[] {
+  const now = new Date();
+  const buckets: { key: string; month: string }[] = [];
+  for (let i = months - 1; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    buckets.push({
+      key: `${d.getFullYear()}-${d.getMonth()}`,
+      month: d.toLocaleString("en-US", { month: "short" }),
+    });
+  }
+
+  const counts = new Map(buckets.map((b) => [b.key, 0]));
+  for (const row of rows) {
+    const d = new Date(row.created_at);
+    const key = `${d.getFullYear()}-${d.getMonth()}`;
+    if (counts.has(key)) counts.set(key, (counts.get(key) ?? 0) + 1);
+  }
+
+  return buckets.map((b) => ({ month: b.month, count: counts.get(b.key) ?? 0 }));
 }
 
 export async function getAdminStats(): Promise<AdminStats> {
   const { supabase } = await requireAdmin();
 
-  const [users, races, registrations, contacts, applications, sponsors] =
-    await Promise.all([
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
+  sixMonthsAgo.setDate(1);
+  sixMonthsAgo.setHours(0, 0, 0, 0);
+
+  const [
+    users,
+    races,
+    registrations,
+    contacts,
+    applications,
+    sponsors,
+    recentRegistrations,
+    paymentData,
+    recentUsers,
+    allUsersRoles,
+    raceCategories,
+    recentDisputes,
+    recentPosts,
+  ] = await Promise.all([
       supabase.from("profiles").select("id", { count: "exact", head: true }),
       supabase.from("races").select("id", { count: "exact", head: true }),
       supabase
@@ -80,17 +130,82 @@ export async function getAdminStats(): Promise<AdminStats> {
         .select("id", { count: "exact", head: true })
         .eq("status", "pending"),
       supabase.from("sponsors").select("id", { count: "exact", head: true }),
+      supabase
+        .from("race_registrations")
+        .select("registered_at")
+        .gte("registered_at", sixMonthsAgo.toISOString()),
+      supabase
+        .from("race_registrations")
+        .select("payment_status, races(registration_fee)"),
+      supabase
+        .from("profiles")
+        .select("created_at")
+        .gte("created_at", sixMonthsAgo.toISOString()),
+      supabase.from("profiles").select("role"),
+      supabase.from("race_registrations").select("races(category)"),
+      supabase
+        .from("activity_entries")
+        .select("created_at")
+        .eq("is_flagged", true)
+        .gte("created_at", sixMonthsAgo.toISOString()),
+      supabase
+        .from("community_posts")
+        .select("created_at")
+        .gte("created_at", sixMonthsAgo.toISOString()),
     ]);
 
-  // Mock data for registrations per month
-  const registrationsPerMonth = [
-    { month: "Jan", count: 120 },
-    { month: "Feb", count: 150 },
-    { month: "Mar", count: 180 },
-    { month: "Apr", count: 220 },
-    { month: "May", count: 250 },
-    { month: "Jun", count: 300 },
-  ];
+  const registrationsPerMonth = groupByMonth(
+    (recentRegistrations.data ?? []).map((r) => ({ created_at: r.registered_at })),
+  );
+
+  const paymentRows = (paymentData.data ?? []) as unknown as {
+    payment_status: string;
+    races: { registration_fee: number } | { registration_fee: number }[] | null;
+  }[];
+
+  const paymentStatusCounts = new Map<string, number>();
+  let totalRevenue = 0;
+  for (const row of paymentRows) {
+    paymentStatusCounts.set(
+      row.payment_status,
+      (paymentStatusCounts.get(row.payment_status) ?? 0) + 1,
+    );
+    if (row.payment_status === "paid") {
+      const race = Array.isArray(row.races) ? row.races[0] : row.races;
+      totalRevenue += Number(race?.registration_fee ?? 0);
+    }
+  }
+
+  const paymentStatusBreakdown = ["pending", "paid", "refunded", "failed"].map(
+    (status) => ({ status, count: paymentStatusCounts.get(status) ?? 0 }),
+  );
+
+  const newUsersPerMonth = groupByMonth(recentUsers.data ?? []);
+
+  const roleCounts = new Map<string, number>();
+  for (const row of allUsersRoles.data ?? []) {
+    roleCounts.set(row.role, (roleCounts.get(row.role) ?? 0) + 1);
+  }
+  const usersByRole = ["runner", "organizer", "admin"].map((role) => ({
+    role,
+    count: roleCounts.get(role) ?? 0,
+  }));
+
+  const categoryRows = (raceCategories.data ?? []) as unknown as {
+    races: { category: string } | { category: string }[] | null;
+  }[];
+  const categoryCounts = new Map<string, number>();
+  for (const row of categoryRows) {
+    const race = Array.isArray(row.races) ? row.races[0] : row.races;
+    if (!race?.category) continue;
+    categoryCounts.set(race.category, (categoryCounts.get(race.category) ?? 0) + 1);
+  }
+  const raceParticipationByCategory = ["5K", "10K", "Half Marathon", "Marathon", "Ultra"].map(
+    (category) => ({ category, count: categoryCounts.get(category) ?? 0 }),
+  );
+
+  const disputesPerMonth = groupByMonth(recentDisputes.data ?? []);
+  const communityPostsPerMonth = groupByMonth(recentPosts.data ?? []);
 
   return {
     totalUsers: users.count ?? 0,
@@ -100,6 +215,13 @@ export async function getAdminStats(): Promise<AdminStats> {
     pendingApplications: applications.count ?? 0,
     totalSponsors: sponsors.count ?? 0,
     registrationsPerMonth,
+    paymentStatusBreakdown,
+    totalRevenue,
+    newUsersPerMonth,
+    usersByRole,
+    raceParticipationByCategory,
+    disputesPerMonth,
+    communityPostsPerMonth,
   };
 }
 

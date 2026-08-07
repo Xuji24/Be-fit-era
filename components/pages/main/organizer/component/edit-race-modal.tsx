@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useRef } from "react";
+import { useState, useTransition, useRef, useEffect } from "react";
 import { X, Loader2, Trophy, Upload, Trash2, Shirt, Medal, Award, Route } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
@@ -158,8 +158,14 @@ export default function EditRaceModal({
     setDesignFiles({ tshirt: null, medal: null, certificate: null });
     setGpxFile(null);
     setExistingGpxUrl(extendedRace?.gpxUrl ?? null);
-    if (gpxRef.current) gpxRef.current.value = "";
   }
+
+  // Clearing the file input's value is a DOM mutation, not a state update, so
+  // it can't happen in the render-time reset above — it runs here instead,
+  // keyed on the same race-change condition.
+  useEffect(() => {
+    if (gpxRef.current) gpxRef.current.value = "";
+  }, [extendedRace?.id]);
 
   const DESIGN_CONFIGS = [
     { key: "tshirt" as DesignKey, label: "T-Shirt Design", icon: Shirt },

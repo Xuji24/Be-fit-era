@@ -14,11 +14,14 @@
     "test:e2e:report": "playwright show-report",
     "test:load:smoke": "k6 run load-tests/smoke.js",
     "test:load:api": "k6 run load-tests/api.js",
-    "test:load:stress": "k6 run load-tests/stress.js"
+    "test:load:stress": "k6 run load-tests/stress.js",
+    "seed:coach-knowledge": "node --env-file=.env.local scripts/seed-coach-knowledge.mjs"
   },
   "dependencies": {
     "@hcaptcha/react-hcaptcha": "^2.0.2",
     "@mapbox/polyline": "^1.2.1",
+    "@react-three/drei": "^10.7.8",
+    "@react-three/fiber": "^9.7.0",
     "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.98.0",
     "@types/mapbox__polyline": "^1.0.5",
@@ -38,6 +41,7 @@
     "sonner": "^2.0.7",
     "stripe": "^20.4.1",
     "tailwind-merge": "^3.4.0",
+    "three": "^0.185.1",
     "web-push": "^3.6.7",
     "xml2js": "^0.6.2",
     "zod": "^4.4.3"
@@ -49,6 +53,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.185.4",
     "@types/web-push": "^3.6.4",
     "@types/xml2js": "^0.4.14",
     "eslint": "^9",

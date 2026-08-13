@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const error = searchParams.get("error");
+  const returnedState = searchParams.get("state");
 
   // User denied access
   if (error) {
@@ -23,6 +24,18 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(
       new URL("/activities?strava=error", request.url)
     );
+  }
+
+  // CSRF guard: the state minted in /api/strava/auth must round-trip
+  // unchanged. A missing/mismatched state means this request didn't
+  // originate from our own redirect — reject before touching any session.
+  const expectedState = request.cookies.get("strava_oauth_state")?.value;
+  if (!expectedState || returnedState !== expectedState) {
+    const response = NextResponse.redirect(
+      new URL("/activities?strava=error", request.url)
+    );
+    response.cookies.delete("strava_oauth_state");
+    return response;
   }
 
   const clientId = process.env.STRAVA_CLIENT_ID;
@@ -95,10 +108,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Success — redirect back to activities page
-    return NextResponse.redirect(
+    // Success — redirect back to activities page. Clear the state cookie so
+    // it can't be replayed against a second callback request.
+    const response = NextResponse.redirect(
       new URL("/activities?strava=connected", request.url)
     );
+    response.cookies.delete("strava_oauth_state");
+    return response;
   } catch (err) {
     console.error("Strava callback error:", err);
     return NextResponse.redirect(

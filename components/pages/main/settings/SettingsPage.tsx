@@ -28,6 +28,7 @@ import PasswordStrengthIndicator from "@/components/password-strength-indicator"
 import PageHeader from "@/components/page-header";
 import OrganizerApplication from "./component/organizer-application";
 import PushNotificationToggle from "./component/PushNotificationToggle";
+import CoachNotificationPreferences from "./component/CoachNotificationPreferences";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -264,6 +265,9 @@ export default function SettingsPage() {
 
           {/* Push Notifications */}
           <PushNotificationToggle />
+
+          {/* Coach Notifications */}
+          <CoachNotificationPreferences />
 
           {/* Organizer Application */}
           <OrganizerApplication />

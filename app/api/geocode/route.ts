@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Nominatim allows ~1 req/sec; keep well under it per user.
-  const { allowed } = checkRateLimit(`geocode:${user.id}`, 30, 60 * 1000);
+  const { allowed } = await checkRateLimit(`geocode:${user.id}`, 30, 60 * 1000);
   if (!allowed) {
     return NextResponse.json(
       { error: "Too many searches. Please slow down." },

@@ -21,16 +21,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// 500 and 600 are loaded because the UI leans on `font-medium` and
+// `font-semibold` throughout. With only 400/700 the browser was synthesising
+// those weights — faux-bolding real glyphs, which reads slightly smeared and
+// makes the type hierarchy weaker than the markup claims.
 const raleway = Raleway({
   variable: "--font-raleway",
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const merriweatherSans = Merriweather_Sans({
   variable: "--font-merriweather-sans",
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {

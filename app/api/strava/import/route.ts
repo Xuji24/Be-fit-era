@@ -163,6 +163,15 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (insertError) {
+    // Unique violation on (user_id, strava_activity_id) — the app-level
+    // duplicate check above has a TOCTOU gap under concurrent requests; this
+    // constraint is what actually closes it.
+    if (insertError.code === "23505") {
+      return NextResponse.json(
+        { error: "This Strava activity has already been imported" },
+        { status: 409 },
+      );
+    }
     console.error("Failed to import Strava activity:", insertError);
     return NextResponse.json(
       { error: "Failed to import activity" },

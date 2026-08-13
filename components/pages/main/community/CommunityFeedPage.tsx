@@ -282,16 +282,16 @@ export default function CommunityFeedPage() {
         {loading ? (
           <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white dark:bg-zinc-900 rounded-xl p-5 animate-pulse border border-gray-100 dark:border-zinc-800">
+              <div key={i} className="bg-white dark:bg-zinc-900 rounded-xl p-5 border border-gray-100 dark:border-zinc-800">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-zinc-700" />
+                  <div className="w-10 h-10 rounded-full skeleton-shimmer" />
                   <div className="space-y-2 flex-1">
-                    <div className="h-3 w-24 bg-gray-200 dark:bg-zinc-700 rounded" />
-                    <div className="h-2 w-16 bg-gray-200 dark:bg-zinc-700 rounded" />
+                    <div className="h-3 w-24 rounded skeleton-shimmer" />
+                    <div className="h-2 w-16 rounded skeleton-shimmer" />
                   </div>
                 </div>
-                <div className="h-3 w-full bg-gray-200 dark:bg-zinc-700 rounded mb-2" />
-                <div className="h-3 w-3/4 bg-gray-200 dark:bg-zinc-700 rounded" />
+                <div className="h-3 w-full rounded skeleton-shimmer mb-2" />
+                <div className="h-3 w-3/4 rounded skeleton-shimmer" />
               </div>
             ))}
           </div>
@@ -327,16 +327,16 @@ export default function CommunityFeedPage() {
             {loadingMore && (
               <div className="space-y-4" aria-hidden="true">
                 {[1, 2].map((i) => (
-                  <div key={i} className="bg-white dark:bg-zinc-900 rounded-xl p-5 animate-pulse border border-gray-100 dark:border-zinc-800">
+                  <div key={i} className="bg-white dark:bg-zinc-900 rounded-xl p-5 border border-gray-100 dark:border-zinc-800">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-zinc-700" />
+                      <div className="w-10 h-10 rounded-full skeleton-shimmer" />
                       <div className="space-y-2 flex-1">
-                        <div className="h-3 w-24 bg-gray-200 dark:bg-zinc-700 rounded" />
-                        <div className="h-2 w-16 bg-gray-200 dark:bg-zinc-700 rounded" />
+                        <div className="h-3 w-24 rounded skeleton-shimmer" />
+                        <div className="h-2 w-16 rounded skeleton-shimmer" />
                       </div>
                     </div>
-                    <div className="h-3 w-full bg-gray-200 dark:bg-zinc-700 rounded mb-2" />
-                    <div className="h-3 w-3/4 bg-gray-200 dark:bg-zinc-700 rounded" />
+                    <div className="h-3 w-full rounded skeleton-shimmer mb-2" />
+                    <div className="h-3 w-3/4 rounded skeleton-shimmer" />
                   </div>
                 ))}
               </div>

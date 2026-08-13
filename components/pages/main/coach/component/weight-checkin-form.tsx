@@ -9,9 +9,12 @@ const inputClass =
 interface WeightCheckInFormProps {
   isPending: boolean;
   onSubmit: (weightKg: number, bodyFatPct?: number) => void;
+  /** Whether this ISO week already has a weigh-in — changes the copy so
+   *  logging again doesn't read as adding a second entry. */
+  hasThisWeek: boolean;
 }
 
-export default function WeightCheckInForm({ isPending, onSubmit }: WeightCheckInFormProps) {
+export default function WeightCheckInForm({ isPending, onSubmit, hasThisWeek }: WeightCheckInFormProps) {
   const [weightKg, setWeightKg] = useState("");
   const [bodyFatPct, setBodyFatPct] = useState("");
 
@@ -30,7 +33,9 @@ export default function WeightCheckInForm({ isPending, onSubmit }: WeightCheckIn
 
   return (
     <form onSubmit={handleSubmit} className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-6 space-y-4">
-      <h3 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway">Log today&apos;s weigh-in</h3>
+      <h3 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway">
+        {hasThisWeek ? "Update this week's weigh-in" : "Log this week's weigh-in"}
+      </h3>
       <div className="flex gap-3">
         <input
           type="number"
@@ -66,7 +71,9 @@ export default function WeightCheckInForm({ isPending, onSubmit }: WeightCheckIn
       </div>
 
       <p className="text-xs text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans">
-        Logging again today replaces today&apos;s entry.
+        {hasThisWeek
+          ? "Logging again replaces this week's entry."
+          : "One weigh-in a week is enough to see the trend without the day-to-day noise."}
       </p>
     </form>
   );

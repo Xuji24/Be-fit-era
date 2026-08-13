@@ -17,6 +17,8 @@ vi.mock("@/lib/supabase/server", () => ({
 
 const coachSubscriptionUpdate = vi.fn();
 const coachSubscriptionEq = vi.fn();
+const coachSubscriptionOr = vi.fn();
+const coachSubscriptionSelect = vi.fn();
 const adminFrom = vi.fn();
 
 vi.mock("@supabase/supabase-js", () => ({
@@ -45,7 +47,9 @@ beforeEach(() => {
   process.env.NEXT_PUBLIC_SUPABASE_URL = "https://example.supabase.co";
   process.env.SUPABASE_SERVICE_ROLE_KEY = "service-role-key";
 
-  coachSubscriptionEq.mockResolvedValue({ error: null });
+  coachSubscriptionSelect.mockResolvedValue({ data: [{ user_id: "user-1" }], error: null });
+  coachSubscriptionOr.mockReturnValue({ select: coachSubscriptionSelect });
+  coachSubscriptionEq.mockReturnValue({ or: coachSubscriptionOr });
   coachSubscriptionUpdate.mockReturnValue({ eq: coachSubscriptionEq });
   adminFrom.mockReturnValue({ update: coachSubscriptionUpdate });
 
@@ -124,6 +128,24 @@ describe("POST /api/webhook/paymongo — coach subscription", () => {
     expect(adminFrom).not.toHaveBeenCalled();
   });
 
+  it("is a no-op when this session was already applied (idempotent retry)", async () => {
+    getCheckoutSession.mockResolvedValue({
+      attributes: {
+        payment_intent: { attributes: { status: "succeeded" } },
+        metadata: { kind: "coach_subscription", user_id: "user-1", tier: "pro" },
+      },
+    });
+    // The .or() filter excludes the row when paymongo_session_id already
+    // matches this session — simulated here as zero rows updated.
+    coachSubscriptionSelect.mockResolvedValue({ data: [], error: null });
+
+    const { POST } = await import("@/app/api/webhook/paymongo/route");
+    const res = await POST(jsonRequest(paidEvent));
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ received: true });
+  });
+
   it("returns 500 so PayMongo retries when the DB update fails", async () => {
     getCheckoutSession.mockResolvedValue({
       attributes: {
@@ -131,7 +153,7 @@ describe("POST /api/webhook/paymongo — coach subscription", () => {
         metadata: { kind: "coach_subscription", user_id: "user-1", tier: "starter" },
       },
     });
-    coachSubscriptionEq.mockResolvedValue({ error: { message: "db down" } });
+    coachSubscriptionSelect.mockResolvedValue({ data: null, error: { message: "db down" } });
 
     const { POST } = await import("@/app/api/webhook/paymongo/route");
     const res = await POST(jsonRequest(paidEvent));

@@ -180,7 +180,12 @@ async function handleCoachSubscriptionPaid(
   const currentPeriodEnd = new Date();
   currentPeriodEnd.setUTCMonth(currentPeriodEnd.getUTCMonth() + 1);
 
-  const { error: updateError } = await supabaseAdmin
+  // Idempotent against PayMongo redelivering the same event: only apply the
+  // update if this checkout session hasn't already been recorded, so a retry
+  // doesn't re-extend current_period_end by another month. `.or()` treats a
+  // NULL paymongo_session_id (brand-new subscription) as eligible too, since
+  // `<> checkoutSessionId` alone would exclude NULL rows in SQL.
+  const { data: updated, error: updateError } = await supabaseAdmin
     .from("coach_subscriptions")
     .update({
       status: "active",
@@ -188,12 +193,21 @@ async function handleCoachSubscriptionPaid(
       current_period_end: currentPeriodEnd.toISOString(),
       paymongo_session_id: checkoutSessionId,
     })
-    .eq("user_id", userId);
+    .eq("user_id", userId)
+    .or(`paymongo_session_id.is.null,paymongo_session_id.neq.${checkoutSessionId}`)
+    .select("user_id");
 
   if (updateError) {
     console.error("[webhook/paymongo] Failed to update coach subscription:", updateError);
     // Return 500 so PayMongo retries
     return NextResponse.json({ error: "Database update failed" }, { status: 500 });
+  }
+
+  if (!updated || updated.length === 0) {
+    console.log(
+      `[webhook/paymongo] Session ${checkoutSessionId} already applied for user ${userId} — skipping duplicate delivery`,
+    );
+    return NextResponse.json({ received: true });
   }
 
   console.log(

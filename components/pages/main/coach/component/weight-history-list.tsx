@@ -24,7 +24,7 @@ export default function WeightHistoryList({ history, onDelete }: WeightHistoryLi
           <div key={entry.loggedOn} className="px-5 py-3 flex items-center gap-3">
             <div className="min-w-0 flex-1">
               <p className="text-sm text-[#1A1A1A] dark:text-white font-merriweather-sans">
-                {new Date(entry.loggedOn).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" })}
+                Week of {new Date(entry.loggedOn).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
               </p>
               <p className="text-xs text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans">
                 {entry.weightKg}kg · BMI {entry.bmi}

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { communityData } from "@/data/community-data";
+import DotGridBackground from "@/components/backgrounds/dot-grid-background";
 
 function formatNumber(num: number): string {
   if (num >= 1000) {
@@ -15,6 +16,10 @@ export default function Community(){
         <div className="w-full bg-[#1A1A1A] dark:bg-[#0D0D0D] py-16 sm:py-20 md:py-28 lg:py-32 px-4 sm:px-6 md:px-12 lg:px-16 relative overflow-hidden">
             {/* Subtle radial glow */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-125 h-125 rounded-full bg-[#FF5733]/5 blur-[120px] pointer-events-none" />
+
+            {/* Flat dark section, no photo behind it — the one spot on the
+                home page this kind of texture earns its keep. */}
+            <DotGridBackground />
 
             <div className="max-w-6xl mx-auto relative z-10">
                 {/* Section Header */}

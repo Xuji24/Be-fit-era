@@ -3,7 +3,26 @@
 import { useState } from "react";
 import ExerciseDemoModal from "@/components/pages/main/coach/component/exercise-demo-modal";
 
-const TEST_NAMES = ["Squat", "Push-up", "Plank", "Lunges", "Tricep Dips (using a chair)"];
+/**
+ * One name per animation in lib/coach/exercise-poses.ts, plus deliberate misses,
+ * so this harness exercises all tiers of the demo modal's fallback: 3D model,
+ * 2D animation, wger photo, then the neutral placeholder figure. The set is
+ * the running-focused vocabulary in lib/coach/exercise-poses.ts.
+ */
+const TEST_NAMES = [
+  "Squat",
+  "Lunges",
+  "Calf raises",
+  "High knees",
+  "Glute bridge",
+  "Step-up",
+  "Single-leg RDL",
+  "Lateral band walk",
+  // No animation, but in the wger library -> photo + steps.
+  "Bird dog",
+  // In neither table -> placeholder figure.
+  "Tricep Dips (using a chair)",
+];
 
 export default function ExercisePreviewPage() {
   const [active, setActive] = useState<string | null>(null);

@@ -8,8 +8,12 @@ import { toast } from "sonner";
 import { logWeightCheckIn, getWeightHistory, deleteWeightCheckIn, type WeightLogRow } from "@/app/actions/coach-weight-actions";
 import { getActivityData, type AnalyticsInput } from "@/app/actions/coach-workout-actions";
 import { buildAnalytics } from "@/lib/coach/analytics";
+import { toWeeklyWeights, toWeeklyActivity, weekStartKey } from "@/lib/coach/weekly";
 import AnalyticsPanel from "./component/analytics-panel";
 import BmiTrendChart from "./component/bmi-trend-chart";
+import MacroSplitDonut from "./component/macro-split-donut";
+import AdherenceDonut from "./component/adherence-donut";
+import WeeklyActivityChart from "./component/weekly-activity-chart";
 import WeightCheckInForm from "./component/weight-checkin-form";
 import WeightHistoryList from "./component/weight-history-list";
 import CoachHero from "./component/coach-hero";
@@ -87,9 +91,15 @@ export default function ProgressPage() {
     );
   }
 
+  const weeklyWeights = toWeeklyWeights(history.map((h) => ({ date: h.loggedOn, weightKg: h.weightKg, bodyFatPct: h.bodyFatPct, bmi: h.bmi })));
+  const hasThisWeek = weeklyWeights.some((w) => w.weekKey === weekStartKey(new Date()));
+  const weeklyActivity = activity
+    ? toWeeklyActivity({ foodDates: activity.foodDates, workoutDates: activity.workoutDates, workoutMinutes: activity.workoutMinutes })
+    : [];
+
   return (
     <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212]">
-      <CoachHero icon={TrendingUp} title="Progress" />
+      <CoachHero icon={TrendingUp} title="Progress" maxWidthClassName="max-w-6xl" />
 
       <div className="max-w-6xl mx-auto px-6 pb-16 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
@@ -109,8 +119,20 @@ export default function ProgressPage() {
             />
           )}
 
-          <BmiTrendChart history={history} />
-          <WeightCheckInForm isPending={isPending} onSubmit={handleLogWeight} />
+          <BmiTrendChart weeks={weeklyWeights} />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <MacroSplitDonut totals={activity?.weekMacros ?? { proteinG: 0, carbsG: 0, fatG: 0 }} />
+            <AdherenceDonut
+              completed={activity?.adherence.completed ?? 0}
+              missed={activity?.adherence.missed ?? 0}
+              remaining={activity?.adherence.remaining ?? 0}
+            />
+          </div>
+
+          <WeeklyActivityChart weeks={weeklyActivity} />
+
+          <WeightCheckInForm isPending={isPending} onSubmit={handleLogWeight} hasThisWeek={hasThisWeek} />
         </div>
 
         <div className="lg:col-span-1 space-y-3">

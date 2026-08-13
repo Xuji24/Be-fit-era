@@ -149,6 +149,146 @@ Fixes, all of which must stay:
 Note that "Current plan" being unclickable is *correct* and not part of this
 bug: it is a status label for the tier the user is already on.
 
+### 7. RAG knowledge base (chat citations)
+
+Chat retrieval against `coach_knowledge_articles` (~20 original short articles
+across training/nutrition/recovery/injury-prevention/mindset). Embeddings are
+Gemini `text-embedding-004` (`lib/ai/embeddings.ts`), reusing the same
+`GEMINI_API_KEY` already configured as the chat fallback — no new provider
+account. `lib/coach/knowledge.ts` fetches the (small) corpus and scores it
+in-process:
+
+- **Embedding path**: cosine similarity against the query's embedding.
+- **Lexical fallback**: a zero-dependency keyword-overlap scorer, used
+  whenever embedding fails (missing key, network, timeout). Retrieval never
+  hard-fails the chat reply — a lookup error just means `sources: []`.
+
+No ANN index (`ivfflat`) yet — a full scan is fine at ~20 rows. Revisit if the
+library grows into the hundreds. Run `npm run seed:coach-knowledge` after
+adding new articles (it only backfills rows where `embedding IS NULL`, so
+it's safe to re-run).
+
+The chat UI (`chat-message.tsx`) shows a small "Sources: ..." footer on
+assistant replies that used reference material.
+
+### 8. Proactive coaching (weekly digest, streak nudges, goal celebration)
+
+`app/api/cron/coach-proactive/route.ts` runs daily (`CRON_SECRET`-gated,
+same convention as `update-races`) and sends three kinds of notification via
+both push (`web-push`) and email (`Resend`), each independently toggleable in
+Settings (`notification_preferences`, opt-out — a missing row means all
+defaults are enabled):
+
+- **Streak-break nudge**: fires once a user has gone 3+ days without a food
+  or workout log. Dedup key is `streak-break:<last_logged_date>`, so it fires
+  once per distinct quiet period rather than every day the user stays quiet.
+- **Weekly digest**: Mondays only. Content is a plain template built from
+  real numbers (`lib/coach/digest.ts`) — deliberately not an LLM call, for
+  $0 cost and zero hallucination risk on user-facing stats.
+- **Goal-reached celebration**: fires once ever, when the latest weigh-in
+  crosses `coach_profiles.target_weight_kg` in the direction it sits relative
+  to the weight captured at intake (`lib/coach/goals.ts`). Only covers
+  weight-based goals — `target_body_shape` is self-reported and not
+  auto-detected.
+
+All three share one dedup mechanism: `coach_notification_log` has
+`UNIQUE(user_id, kind, period_key)`, and the cron only sends after an insert
+into that table actually succeeds (mirrors `coach_usage`'s atomic-claim
+pattern, just for sends instead of quota).
+
+Sends are inline in the cron route (direct `webpush.sendNotification` +
+`sendEmail()`), not an HTTP hop through `/api/push/send` — see the note in
+item 2 above about avoiding unnecessary internal hops.
+
+**Not built**: per-notification-kind push toggles beyond the three switches
+above; AI-personalized digest prose (templated on purpose, see above).
+
+### 9. Training volume is set by the app, not the model
+
+`lib/coach/prescription.ts` assigns sets, reps, and rest deterministically from
+(experience level × goal × warm-up × rep-vs-time), and **always overrides**
+whatever the model produced. `applyPrescriptions()` runs in
+`generatePlanForUser()` after the equipment guardrail's corrective retry (which
+can replace the whole plan) and before persistence.
+
+The model is still asked for one prescription-shaped field — `mode`
+(`"reps"` | `"time"`) — because it knows the movement and we would otherwise be
+guessing from the exercise name. `detectEffortMode()` is the fallback when it
+omits that.
+
+Why override rather than clamp the model's numbers to a sane band:
+
+- Clamping keeps the model's value whenever it lands in range, which is most of
+  the time — so two generations for one profile still disagree. That is bounded
+  variance, not determinism, and determinism is the property being asked for.
+- `reps` was free text (`"10-12 per leg"`, `"AMRAP"`), so clamping needs a
+  parser before it can compare anything, and the parser's failure modes buy
+  *less* determinism.
+- The "the model has context we don't" argument doesn't hold here specifically:
+  the prompt never told it what rep scheme to target, so its numbers were
+  stylistic priors from training data, not reasoning about this user.
+
+**Do not re-add volume to the prompt.** The system prompt now says explicitly
+that sets/reps/rest are discarded, and the user message carries an
+`exercisesPerSession()` count so the model can still hit the user's session
+length by adjusting exercise *count* — the lever it does control.
+
+`plan-schema.ts` still accepts `sets`/`reps`/`durationMin`/`restSec`. That's
+deliberate: `details` is `.strict()`, models emit those keys out of habit, and
+removing them would turn every such generation into a hard validation failure.
+They are parsed and ignored.
+
+Existing plans keep their old `{ sets, reps: "8-12" }` shape — there is **no
+backfill**, because rewriting a past plan's numbers is rewriting history and
+plans get archived and regenerated naturally. `readExerciseDisplay()` reads both
+shapes and never throws; it has the most adversarial tests in the suite because
+it is what stands between dirty JSONB and a white screen.
+
+### 10. Exercise visuals: hand-drawn 2D + an orbitable 3D model
+
+`exercise-rig.tsx` + `exercise-rig.module.css` are a hand-drawn SVG figure with
+per-limb CSS keyframes; `exercise-model-3d.tsx` (react-three-fiber, dynamically
+imported so the ~900KB bundle never loads for a user who doesn't open a demo)
+is a jointed capsule figure driven by the same angles via
+`lib/coach/exercise-poses.ts`. Both are one animation per movement *pattern*
+rather than per exercise name — `lib/coach/exercise-animations.ts` maps the
+model's free-form names onto them via a curated alias table, the same approach
+as `exercise-library.ts` and for the same reason: showing a squat animation for
+a deadlift is worse than showing nothing.
+
+The demo modal falls back in tiers so it is never empty: 3D (when WebGL is
+available) → 2D animation → wger reference photo + steps → the neutral figure
+as a placeholder. When an animation is showing, the photo is suppressed — two
+visuals of the same exercise stacked reads as a bug.
+
+`/coach/exercise-preview` is the QA harness.
+
+### 11. The exercise set is running-focused, not a generic gym split
+
+Confirmed with the product owner after a screenshot showed the 3D plank
+rendering as a falling-superman pose instead of a supported hold: the set was
+narrowed from 12 generic gym exercises to 8 running-injury-prevention and
+strength movements (squat, lunge, calf raise, high knees, glute bridge,
+step-up, single-leg RDL, lateral band walk), grounded in physio/sports-
+medicine sources cited per exercise in `exercise-poses.ts`. Fitra is a running
+platform; a coach that taught bench-press-style lifts didn't reinforce that.
+
+**The plank bug was structural, not a tuning miss** — worth internalizing
+before adding another exercise. Every joint defaults to "hanging at the
+sides," which is only a correct rest pose for a *standing* body. `bodyPitch`
+pitches the whole rig into prone/supine for floor work, but nothing gave the
+arms a baseline shoulder rotation to bring them from "parallel to the spine"
+to "reaching down to support the body" — so they stayed parallel to the
+now-horizontal torso instead of perpendicular to it. Dropping all prone work
+(push-up, plank, mountain climber) removed the bug's entire category rather
+than working around it. `glute-bridge` is the one exercise that stays supine;
+its arm keyframes are set explicitly at every frame (ported from the 2D CSS's
+already-correct values) specifically to avoid this — see the BASELINE RULE
+comment at the top of `exercise-poses.ts` before adding any non-standing
+exercise in the future.
+
+Nutrition/meal planning is untouched — this was a workout-side change only.
+
 ### 6. Quota reset is UTC
 
 Daily quotas reset at UTC midnight = 8am Manila. Deliberate: a local-midnight

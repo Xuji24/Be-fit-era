@@ -81,6 +81,59 @@ describe("parsePlan — accepts valid output", () => {
 });
 
 // Each case below is a failure mode free-tier models actually produce.
+// Volume now comes from lib/coach/prescription.ts, but `details` is .strict()
+// and models keep emitting the old keys out of habit — so those keys must
+// still parse, or every such generation becomes a hard failure for no gain.
+describe("parsePlan — prescription-era compatibility", () => {
+  it("accepts the new per-exercise mode field", () => {
+    const plan = validPlan({
+      items: [
+        { itemType: "meal", dayIndex: 0, slot: "breakfast", title: "Oats", kcal: 350, proteinG: 12, carbsG: 55, fatG: 6 },
+        {
+          itemType: "workout",
+          dayIndex: 0,
+          slot: "am",
+          title: "Lower body",
+          details: { exercises: [{ name: "Plank", mode: "time", warmup: false }] },
+        },
+      ],
+    });
+    expect(parsePlan(JSON.stringify(plan)).ok).toBe(true);
+  });
+
+  it("still accepts legacy sets/reps a model volunteers", () => {
+    const plan = validPlan({
+      items: [
+        { itemType: "meal", dayIndex: 0, slot: "breakfast", title: "Oats", kcal: 350, proteinG: 12, carbsG: 55, fatG: 6 },
+        {
+          itemType: "workout",
+          dayIndex: 0,
+          slot: "am",
+          title: "Lower body",
+          details: { exercises: [{ name: "Squat", sets: 3, reps: "8-12", restSec: 60 }] },
+        },
+      ],
+    });
+    expect(parsePlan(JSON.stringify(plan)).ok).toBe(true);
+  });
+
+  it("rejects an unknown exercise key — .strict() still holds", () => {
+    const plan = validPlan({
+      items: [
+        { itemType: "meal", dayIndex: 0, slot: "breakfast", title: "Oats", kcal: 350, proteinG: 12, carbsG: 55, fatG: 6 },
+        {
+          itemType: "workout",
+          dayIndex: 0,
+          slot: "am",
+          title: "Lower body",
+          details: { exercises: [{ name: "Squat" }], tempo: "3-1-1" },
+        },
+      ],
+    });
+    expect(parsePlan(JSON.stringify(plan)).ok).toBe(false);
+  });
+});
+
 describe("parsePlan — rejects malformed output", () => {
   it("rejects a refusal with no JSON", () => {
     const result = parsePlan("I'm sorry, I can't create a meal plan.");

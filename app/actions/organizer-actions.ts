@@ -71,7 +71,7 @@ export async function createRace(
       error: "You do not have permission to create races.",
     };
 
-  const { allowed, retryAfterMs } = checkRateLimit(
+  const { allowed, retryAfterMs } = await checkRateLimit(
     `create-race:${user.id}`,
     10,
     60 * 60 * 1000,
@@ -196,7 +196,7 @@ export async function updateRace(
       error: "You do not have permission to update races.",
     };
 
-  const { allowed, retryAfterMs } = checkRateLimit(
+  const { allowed, retryAfterMs } = await checkRateLimit(
     `update-race:${user.id}`,
     20,
     60 * 60 * 1000,

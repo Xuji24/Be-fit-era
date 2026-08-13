@@ -50,6 +50,14 @@
 }
 
 :root {
+  /* Fitra orange. Introduced as a token because the literal #FF5733 is
+     hardcoded in ~15 components; new code reads the token so the eventual
+     sweep has somewhere to land. Not a sweep in itself — that's a separate,
+     reviewable change. */
+  --brand: #ff5733;
+  --brand-hover: #e84e2e;
+  --brand-ink: #ffffff;
+
   --radius: 0.625rem;
   --background: #FAFAF8;
   --foreground: #1A1A1A;
@@ -147,6 +155,89 @@
   }
 }
 
+/* ============================================================
+   Viewport-locked app shell
+   ============================================================
+   The coach chat needs a real chat surface: composer pinned to the bottom of
+   the viewport, message list scrolling inside itself. That needs the page to
+   be exactly the height left over after the navbar — but the navbar is
+   `relative` with three responsive heights, so any calc(100vh - Npx) drifts.
+
+   Rather than measuring it in JS (an observer re-deriving a number the layout
+   engine already computed), let flexbox subtract it: body becomes a flex
+   column and the page takes flex-1. Scoped behind :has() so a page opts in by
+   rendering [data-app-shell="locked"] and NO other page is affected — a
+   :has() selector matching nothing is inert, and browsers without :has()
+   simply fall through to the normal document-scroll layout.
+
+   100dvh, not 100vh: on iOS Safari `vh` resolves to the LARGE viewport (URL
+   bar retracted), so on load the composer would sit below the fold — exactly
+   the bug this fixes. dvh's usual re-layout jitter doesn't apply here because
+   the document can't scroll, so the URL bar never collapses. */
+html:has([data-app-shell="locked"]) {
+  overflow: hidden;
+}
+
+html:has([data-app-shell="locked"]) body {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* The footer has nothing to say on a locked page, and leaving it would make
+   the document scrollable by exactly its own height — re-creating "the whole
+   page scrolls", just with a smaller range. */
+html:has([data-app-shell="locked"]) > body > footer {
+  display: none;
+}
+
+/* ============================================================
+   Scrollbars
+   ============================================================
+   `custom-scrollbar` and `scrollbar-hide` were referenced in components long
+   before either was defined, so both were silently doing nothing. Defining
+   them here fixes those call sites and gives new scroll containers one
+   themed class instead of the arbitrary-variant chain copy-pasted inline. */
+@utility custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(0 0 0 / 0.15) transparent;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgb(0 0 0 / 0.12);
+    border-radius: 9999px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(0 0 0 / 0.22);
+  }
+}
+
+.dark .custom-scrollbar {
+  scrollbar-color: rgb(255 255 255 / 0.15) transparent;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgb(255 255 255 / 0.12);
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(255 255 255 / 0.22);
+}
+
+@utility scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* Login page animations */
 @keyframes fade-in {
   from {
@@ -239,4 +330,115 @@
 
 .animation-delay-500 {
   animation-delay: 500ms;
+}
+
+/* ============================================================
+   Loading states
+   ============================================================
+   Two tools, used for different jobs — mixing them up is the "irresponsible"
+   use this exists to prevent:
+   - `animate-pulse` (Tailwind default): a spinner, for short/indeterminate
+     waits with no known content shape (button submits, page-gate checks).
+   - `.skeleton-shimmer`: for waits with a KNOWN content shape that take long
+     enough to notice (>~500ms) — a directional sweep reads as "building
+     your content" instead of "something is dim". Give the shimmering block
+     the same dimensions as the real content so nothing reflows when it
+     swaps in. */
+@keyframes shimmer-sweep {
+  from { background-position: 100% 50%; }
+  to { background-position: 0% 50%; }
+}
+
+.skeleton-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    rgb(0 0 0 / 0.06) 25%,
+    rgb(0 0 0 / 0.12) 37%,
+    rgb(0 0 0 / 0.06) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer-sweep 1.8s ease-in-out infinite;
+}
+
+.dark .skeleton-shimmer {
+  background-image: linear-gradient(
+    90deg,
+    rgb(255 255 255 / 0.06) 25%,
+    rgb(255 255 255 / 0.14) 37%,
+    rgb(255 255 255 / 0.06) 63%
+  );
+}
+
+/* ============================================================
+   Shared hover-lift for clickable cards
+   ============================================================
+   Codifies the one hover treatment in the app that was actually designed
+   (why-join-us.tsx's feature cards) into a reusable class, so it stops
+   being a one-off. */
+@utility interactive-card {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 28px -16px rgb(255 87 51 / 0.25);
+    border-color: rgb(255 87 51 / 0.3);
+  }
+}
+
+/* ============================================================
+   Scroll reveal
+   ============================================================
+   Pairs with the `useReveal` hook (lib/hooks/use-reveal.ts): starts hidden
+   and offset, then the hook adds `.is-visible` once the element enters the
+   viewport. Reuses the auth pages' slide-up easing rather than inventing a
+   second entrance curve. */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   Bounce-confirm
+   ============================================================
+   A spring overshoot for the moment something completes — used on the
+   day-card workout checkmark. Retriggered by toggling the class off/on
+   (see day-card.tsx), not by re-mounting the element. */
+@keyframes bounce-confirm {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.28); }
+  100% { transform: scale(1); }
+}
+
+.animate-bounce-confirm {
+  animation: bounce-confirm 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================
+   Covers every animation introduced above: reveal stays visible with no
+   slide, shimmer/bounce stop moving but keep their static appearance so
+   loading state and confirmation are still legible without the motion. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .skeleton-shimmer,
+  .animate-bounce-confirm,
+  .animate-fade-in,
+  .animate-slide-in-left,
+  .animate-slide-in-right,
+  .animate-slide-up,
+  .animate-scale-in {
+    animation: none;
+  }
 }

@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { weekStartKey } from "@/lib/coach/weekly";
 import type { ActionResult } from "./coach-actions";
 
 /**
@@ -76,48 +77,104 @@ export async function deleteWorkoutLog(planItemId: string): Promise<ActionResult
 
 export interface AnalyticsInput {
   workoutDates: string[];
+  /** Aligned by index with workoutDates. Null entries are logs with no recorded duration. */
+  workoutMinutes: (number | null)[];
   foodDates: string[];
   scheduledWorkouts: number;
   goal: string;
+  /** Breakdown of scheduledWorkouts against the active plan's calendar — the adherence donut. */
+  adherence: { completed: number; missed: number; remaining: number };
+  /** Sum of the current ISO week's logged macros — the macro-split donut. */
+  weekMacros: { proteinG: number; carbsG: number; fatG: number };
 }
 
+const EMPTY_ANALYTICS_INPUT: AnalyticsInput = {
+  workoutDates: [],
+  workoutMinutes: [],
+  foodDates: [],
+  scheduledWorkouts: 0,
+  goal: "maintain",
+  adherence: { completed: 0, missed: 0, remaining: 0 },
+  weekMacros: { proteinG: 0, carbsG: 0, fatG: 0 },
+};
+
 /**
- * Raw activity data for the analytics dashboard. Returns dates only — the
- * arithmetic lives in lib/coach/analytics.ts so it stays pure and testable.
+ * Raw activity data for the analytics dashboard. Returns dates and totals only
+ * — the arithmetic that turns them into chart-ready shapes lives in
+ * lib/coach/analytics.ts and lib/coach/weekly.ts so it stays pure and testable.
  */
 export async function getActivityData(): Promise<AnalyticsInput> {
-  const empty: AnalyticsInput = { workoutDates: [], foodDates: [], scheduledWorkouts: 0, goal: "maintain" };
-
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return empty;
+  if (!user) return EMPTY_ANALYTICS_INPUT;
 
-  const [{ data: workouts }, { data: foods }, { data: profile }, { data: plan }] = await Promise.all([
-    supabase.from("coach_workout_logs").select("completed_on").eq("user_id", user.id),
-    supabase.from("coach_food_logs").select("logged_on").eq("user_id", user.id),
-    supabase.from("coach_profiles").select("goal").eq("user_id", user.id).maybeSingle(),
-    supabase.from("coach_plans").select("id").eq("user_id", user.id).eq("status", "active").maybeSingle(),
-  ]);
+  const weekStart = weekStartKey(new Date());
+
+  const [{ data: workouts }, { data: foods }, { data: weekFoods }, { data: profile }, { data: plan }] =
+    await Promise.all([
+      supabase.from("coach_workout_logs").select("completed_on, duration_min, plan_item_id").eq("user_id", user.id),
+      supabase.from("coach_food_logs").select("logged_on").eq("user_id", user.id),
+      supabase
+        .from("coach_food_logs")
+        .select("protein_g, carbs_g, fat_g")
+        .eq("user_id", user.id)
+        .gte("logged_on", weekStart),
+      supabase.from("coach_profiles").select("goal").eq("user_id", user.id).maybeSingle(),
+      supabase.from("coach_plans").select("id, starts_on").eq("user_id", user.id).eq("status", "active").maybeSingle(),
+    ]);
 
   // Adherence is measured against the workouts the active plan actually
-  // scheduled. No active plan means no denominator, so adherence stays null.
+  // scheduled, split into three buckets: done, due-but-skipped, and not due
+  // yet. No active plan means no calendar to measure against.
   let scheduledWorkouts = 0;
+  let adherence = { completed: 0, missed: 0, remaining: 0 };
   if (plan) {
-    const { count } = await supabase
+    const { data: items } = await supabase
       .from("coach_plan_items")
-      .select("id", { count: "exact", head: true })
+      .select("id, day_index")
       .eq("plan_id", plan.id)
       .eq("item_type", "workout");
-    scheduledWorkouts = count ?? 0;
+
+    scheduledWorkouts = items?.length ?? 0;
+
+    if (items && items.length > 0) {
+      const completedItemIds = new Set((workouts ?? []).map((w) => w.plan_item_id).filter((id): id is string => id !== null));
+      const elapsedDays = Math.floor(
+        (new Date().setHours(0, 0, 0, 0) - new Date(plan.starts_on).setHours(0, 0, 0, 0)) / 86_400_000
+      );
+
+      let completed = 0;
+      let missed = 0;
+      for (const item of items) {
+        const done = completedItemIds.has(item.id);
+        if (done) completed += 1;
+        // "Due" means the item's day has arrived. A future item that's already
+        // been completed ahead of schedule still counts as completed, not missed.
+        else if (item.day_index < elapsedDays) missed += 1;
+      }
+      adherence = { completed, missed, remaining: items.length - completed - missed };
+    }
   }
+
+  const weekMacros = (weekFoods ?? []).reduce(
+    (totals, f) => ({
+      proteinG: totals.proteinG + f.protein_g,
+      carbsG: totals.carbsG + f.carbs_g,
+      fatG: totals.fatG + f.fat_g,
+    }),
+    { proteinG: 0, carbsG: 0, fatG: 0 }
+  );
 
   return {
     workoutDates: (workouts ?? []).map((w) => w.completed_on),
+    workoutMinutes: (workouts ?? []).map((w) => w.duration_min),
     // De-duplicated: several meals on one day is still one active day.
     foodDates: [...new Set((foods ?? []).map((f) => f.logged_on))],
     scheduledWorkouts,
     goal: profile?.goal ?? "maintain",
+    adherence,
+    weekMacros,
   };
 }

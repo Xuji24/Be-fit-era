@@ -146,7 +146,7 @@ export default function CoachDashboardPage() {
                 <>
                   <Link
                     href="/coach/planner"
-                    className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4 flex flex-col items-center gap-2 text-center hover:border-[#FF5733]/30 transition-colors"
+                    className="interactive-card bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4 flex flex-col items-center gap-2 text-center"
                   >
                     <div className="w-9 h-9 rounded-lg bg-[#FF5733]/10 flex items-center justify-center shrink-0">
                       <CalendarDays className="w-4 h-4 text-[#FF5733]" />
@@ -155,7 +155,7 @@ export default function CoachDashboardPage() {
                   </Link>
                   <Link
                     href="/coach/tracker"
-                    className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4 flex flex-col items-center gap-2 text-center hover:border-[#FF5733]/30 transition-colors"
+                    className="interactive-card bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4 flex flex-col items-center gap-2 text-center"
                   >
                     <div className="w-9 h-9 rounded-lg bg-[#FF5733]/10 flex items-center justify-center shrink-0">
                       <ClipboardList className="w-4 h-4 text-[#FF5733]" />
@@ -166,7 +166,7 @@ export default function CoachDashboardPage() {
               )}
               <Link
                 href="/coach/progress"
-                className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4 flex flex-col items-center gap-2 text-center hover:border-[#FF5733]/30 transition-colors"
+                className="interactive-card bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4 flex flex-col items-center gap-2 text-center"
               >
                 <div className="w-9 h-9 rounded-lg bg-[#FF5733]/10 flex items-center justify-center shrink-0">
                   <TrendingUp className="w-4 h-4 text-[#FF5733]" />
@@ -175,7 +175,7 @@ export default function CoachDashboardPage() {
               </Link>
               <Link
                 href="/coach/chat"
-                className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4 flex flex-col items-center gap-2 text-center hover:border-[#FF5733]/30 transition-colors"
+                className="interactive-card bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4 flex flex-col items-center gap-2 text-center"
               >
                 <div className="w-9 h-9 rounded-lg bg-[#FF5733]/10 flex items-center justify-center shrink-0">
                   <MessageCircle className="w-4 h-4 text-[#FF5733]" />

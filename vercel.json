@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/update-races",
       "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cron/coach-proactive",
+      "schedule": "0 1 * * *"
     }
   ]
 }

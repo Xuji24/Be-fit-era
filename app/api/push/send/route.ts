@@ -2,11 +2,19 @@ import { NextResponse } from "next/server";
 import webpush from "web-push";
 import { createClient } from "@/lib/supabase/server";
 
-webpush.setVapidDetails(
-  process.env.VAPID_EMAIL ?? "mailto:admin@befitiera.com",
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "",
-  process.env.VAPID_PRIVATE_KEY ?? "",
-);
+// Configured lazily (not at module scope) so a build/static-analysis pass
+// with no VAPID env vars set doesn't crash evaluating this route — web-push
+// throws synchronously from setVapidDetails on an empty key.
+let vapidConfigured = false;
+function ensureVapidConfigured(): boolean {
+  if (vapidConfigured) return true;
+  const publicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+  const privateKey = process.env.VAPID_PRIVATE_KEY;
+  if (!publicKey || !privateKey) return false;
+  webpush.setVapidDetails(process.env.VAPID_EMAIL ?? "mailto:admin@befitiera.com", publicKey, privateKey);
+  vapidConfigured = true;
+  return true;
+}
 
 interface SendPushBody {
   /** Optional: target a specific user. If omitted, broadcast to all. */
@@ -36,6 +44,10 @@ function isServiceRequest(req: Request): boolean {
 }
 
 export async function POST(req: Request) {
+  if (!ensureVapidConfigured()) {
+    return NextResponse.json({ error: "Push notifications are not configured." }, { status: 503 });
+  }
+
   const supabase = await createClient();
   const serviceAuthorized = isServiceRequest(req);
 

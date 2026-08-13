@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { weekStartKeyOf } from "@/lib/coach/weekly";
 import type { ActionResult } from "./coach-actions";
 
 export interface WeightCheckInInput {
@@ -13,10 +14,17 @@ export interface WeightCheckInInput {
 }
 
 /**
- * Logs a weigh-in. height_cm is read from coach_profiles and copied onto the
- * row at insert time — see coach_weight_logs' table comment for why this
- * must not be a join: a later height correction must not rewrite past BMI.
- * Upserts on (user_id, logged_on) so re-logging the same day replaces intent.
+ * Logs a weigh-in for the week `input.date` falls in — not that exact date.
+ *
+ * Day-to-day weight is mostly water and food volume, not signal, so weigh-ins
+ * are weekly. This writes the week's Monday into `logged_on` rather than the
+ * day the user actually stepped on the scale, so the existing
+ * `UNIQUE (user_id, logged_on)` constraint enforces one weigh-in per week with
+ * no schema change — logging again mid-week upserts onto the same Monday.
+ *
+ * height_cm is read from coach_profiles and copied onto the row at insert
+ * time — see coach_weight_logs' table comment for why this must not be a
+ * join: a later height correction must not rewrite past BMI.
  */
 export async function logWeightCheckIn(input: WeightCheckInInput): Promise<ActionResult> {
   const supabase = await createClient();
@@ -38,7 +46,7 @@ export async function logWeightCheckIn(input: WeightCheckInInput): Promise<Actio
   const { error } = await supabase.from("coach_weight_logs").upsert(
     {
       user_id: user.id,
-      logged_on: input.date,
+      logged_on: weekStartKeyOf(input.date),
       weight_kg: input.weightKg,
       height_cm: profile.height_cm,
       body_fat_pct: input.bodyFatPct ?? null,

@@ -36,7 +36,7 @@ export async function submitContactForm(
   formData: FormData,
 ): Promise<ActionResult> {
   const ip = await getClientIp();
-  const { allowed, retryAfterMs } = checkRateLimit(`contact:${ip}`, 3);
+  const { allowed, retryAfterMs } = await checkRateLimit(`contact:${ip}`, 3);
   if (!allowed) {
     const mins = Math.ceil(retryAfterMs / 60000);
     return {
@@ -104,7 +104,7 @@ export async function registerForRace(
   input: RegistrationInput,
 ): Promise<ActionResult> {
   const ip = await getClientIp();
-  const { allowed, retryAfterMs } = checkRateLimit(`race-reg:${ip}`, 5);
+  const { allowed, retryAfterMs } = await checkRateLimit(`race-reg:${ip}`, 5);
   if (!allowed) {
     const mins = Math.ceil(retryAfterMs / 60000);
     return {
@@ -152,56 +152,45 @@ export async function registerForRace(
     return { success: false, error: "Invalid payment method." };
   }
 
-  // Check race exists
-  const { data: race, error: raceError } = await supabase
-    .from("races")
-    .select("id, registration_open")
-    .eq("id", input.raceId)
+  // register_for_race() does the race-exists, registration-open,
+  // capacity, and already-registered checks atomically in one transaction —
+  // see supabase/migrations/20260812000001_add_atomic_register_for_race.sql
+  // for why this can't be a separate check-then-insert in app code.
+  const { data: rpcData, error: rpcError } = await supabase
+    .rpc("register_for_race", {
+      p_race_id: input.raceId,
+      p_full_name: input.fullName.trim(),
+      p_email: input.email.trim(),
+      p_phone: input.phone.trim(),
+      p_shirt_size: input.shirtSize,
+      p_payment_method: input.paymentMethod,
+    })
     .single();
 
-  if (raceError || !race) {
-    return { success: false, error: "Race not found." };
-  }
-  if (!race.registration_open) {
-    return { success: false, error: "Registration is closed for this race." };
+  if (rpcError) {
+    return { success: false, error: "Registration failed. Please try again." };
   }
 
-  // Check if already registered
-  const { data: existing } = await supabase
-    .from("race_registrations")
-    .select("id")
-    .eq("user_id", user.id)
-    .eq("race_id", input.raceId)
-    .maybeSingle();
+  const errorMessages: Record<string, string> = {
+    unauthenticated: "You must be logged in to register for a race.",
+    race_not_found: "Race not found.",
+    registration_closed: "Registration is closed for this race.",
+    race_full: "This race has reached its participant limit.",
+    already_registered: "You are already registered for this race.",
+  };
 
-  if (existing) {
+  const { registration_id, error_code } = rpcData as {
+    registration_id: string | null;
+    error_code: string | null;
+  };
+
+  if (error_code) {
     return {
       success: false,
-      error: "You are already registered for this race.",
+      error: errorMessages[error_code] ?? "Registration failed. Please try again.",
     };
   }
-
-  // Insert registration
-  const { error: insertError } = await supabase
-    .from("race_registrations")
-    .insert({
-      user_id: user.id,
-      race_id: input.raceId,
-      full_name: input.fullName.trim(),
-      email: input.email.trim(),
-      phone: input.phone.trim(),
-      shirt_size: input.shirtSize,
-      payment_method: input.paymentMethod,
-      status: "upcoming",
-    });
-
-  if (insertError) {
-    if (insertError.code === "23505") {
-      return {
-        success: false,
-        error: "You are already registered for this race.",
-      };
-    }
+  if (!registration_id) {
     return { success: false, error: "Registration failed. Please try again." };
   }
 
@@ -253,7 +242,7 @@ export async function submitOrganizerApplication(
   if (!user)
     return { success: false, error: "You must be logged in to apply." };
 
-  const { allowed, retryAfterMs } = checkRateLimit(
+  const { allowed, retryAfterMs } = await checkRateLimit(
     `organizer-apply:${user.id}`,
     3,
     60 * 60 * 1000,

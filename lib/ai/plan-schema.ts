@@ -52,6 +52,15 @@ const workoutItemSchema = z.object({
         .array(
           z.object({
             name: z.string().trim().min(1).max(120),
+            // How this exercise's work is counted. The one prescription-shaped
+            // field the model is still asked for, because it knows the movement
+            // and we'd otherwise have to guess from its name.
+            mode: z.enum(["reps", "time"]).optional(),
+            // Volume fields are accepted but IGNORED — lib/coach/prescription.ts
+            // overwrites them deterministically before persistence. They stay in
+            // the schema because `details` is .strict() and models emit these
+            // keys out of habit; dropping them would turn those generations into
+            // hard validation failures for no gain.
             sets: z.number().int().positive().max(20).optional(),
             reps: z.string().max(40).optional(),
             durationMin: z.number().positive().max(600).optional(),

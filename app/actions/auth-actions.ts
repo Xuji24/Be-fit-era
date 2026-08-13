@@ -32,7 +32,7 @@ export type AuthResult = {
  */
 export async function signIn(formData: FormData): Promise<AuthResult> {
   const ip = await getClientIp();
-  const { allowed, retryAfterMs } = checkRateLimit(`signIn:${ip}`, 5);
+  const { allowed, retryAfterMs } = await checkRateLimit(`signIn:${ip}`, 5);
   if (!allowed) {
     const mins = Math.ceil(retryAfterMs / 60000);
     return {
@@ -69,7 +69,7 @@ export async function signIn(formData: FormData): Promise<AuthResult> {
  */
 export async function signUp(formData: FormData): Promise<AuthResult> {
   const ip = await getClientIp();
-  const { allowed, retryAfterMs } = checkRateLimit(`signUp:${ip}`, 3);
+  const { allowed, retryAfterMs } = await checkRateLimit(`signUp:${ip}`, 3);
   if (!allowed) {
     const mins = Math.ceil(retryAfterMs / 60000);
     return {
@@ -123,7 +123,7 @@ export async function signUp(formData: FormData): Promise<AuthResult> {
  */
 export async function forgotPassword(formData: FormData): Promise<AuthResult> {
   const ip = await getClientIp();
-  const { allowed, retryAfterMs } = checkRateLimit(`forgotPw:${ip}`, 3);
+  const { allowed, retryAfterMs } = await checkRateLimit(`forgotPw:${ip}`, 3);
   if (!allowed) {
     const mins = Math.ceil(retryAfterMs / 60000);
     return {
@@ -162,7 +162,7 @@ export async function forgotPassword(formData: FormData): Promise<AuthResult> {
  */
 export async function resetPassword(formData: FormData): Promise<AuthResult> {
   const ip = await getClientIp();
-  const { allowed, retryAfterMs } = checkRateLimit(`resetPw:${ip}`, 5);
+  const { allowed, retryAfterMs } = await checkRateLimit(`resetPw:${ip}`, 5);
   if (!allowed) {
     const mins = Math.ceil(retryAfterMs / 60000);
     return {
@@ -230,7 +230,7 @@ export async function signInWithGoogle(): Promise<AuthResult> {
  */
 export async function changePassword(formData: FormData): Promise<AuthResult> {
   const ip = await getClientIp();
-  const { allowed, retryAfterMs } = checkRateLimit(`changePw:${ip}`, 5);
+  const { allowed, retryAfterMs } = await checkRateLimit(`changePw:${ip}`, 5);
   if (!allowed) {
     const mins = Math.ceil(retryAfterMs / 60000);
     return {

@@ -4,6 +4,7 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import { chat, type ChatMessage } from "@/lib/ai/provider";
 import { getCoachAccess } from "@/app/actions/coach-actions";
 import { consumeQuota, refundQuota, exhaustedMessage } from "@/lib/coach/quota";
+import { searchKnowledge, type KnowledgeMatch } from "@/lib/coach/knowledge";
 
 const MAX_MESSAGE_LENGTH = 1000;
 const HISTORY_WINDOW = 12; // recent turns kept as context, oldest dropped first
@@ -14,6 +15,15 @@ const HISTORY_WINDOW = 12; // recent turns kept as context, oldest dropped first
  * left to the model's default verbosity.
  */
 const SYSTEM_PROMPT = `You are Fitra's AI coach chat. Answer in as few words as possible — 1-3 short sentences unless the user explicitly asks for detail. No filler ("Great question!", "I'd be happy to help"), no repeating the question back, no disclaimers unless safety actually requires one. Use plain, everyday words — explain like the person has no fitness or nutrition background. If they ask to change their plan, tell them to use the "Regenerate my plan" button instead of trying to edit it through chat.`;
+
+function buildKnowledgeContext(matches: KnowledgeMatch[]): ChatMessage | null {
+  if (matches.length === 0) return null;
+  const blocks = matches.map((m) => `### ${m.title}\n${m.content}`).join("\n\n");
+  return {
+    role: "system",
+    content: `Reference material — ground your answer in this where relevant, but do not recite article titles or say "according to" in your reply; the app shows sources separately.\n\n${blocks}`,
+  };
+}
 
 /**
  * POST /api/coach/chat
@@ -44,7 +54,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Chat hits a real LLM per message — rate limit tighter than most routes.
-  const { allowed, retryAfterMs } = checkRateLimit(`coach-chat:${user.id}`, 20, 5 * 60 * 1000);
+  const { allowed, retryAfterMs } = await checkRateLimit(`coach-chat:${user.id}`, 20, 5 * 60 * 1000);
   if (!allowed) {
     const mins = Math.ceil(retryAfterMs / 60000);
     return NextResponse.json({ error: `Too many messages. Try again in ${mins} min.` }, { status: 429 });
@@ -88,13 +98,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Failed to save your message." }, { status: 500 });
   }
 
+  // Retrieval failure must never block the chat reply — searchKnowledge()
+  // already swallows its own errors and returns [] rather than throwing.
+  const knowledgeMatches = await searchKnowledge(supabase, message);
+  const knowledgeContext = buildKnowledgeContext(knowledgeMatches);
+
   let reply: string;
   try {
     // Chat stays on the default fast model at every tier — only plan
     // generation is upgraded on Pro. See lib/coach/tiers.ts.
-    const result = await chat([{ role: "system", content: SYSTEM_PROMPT }, ...history, { role: "user", content: message }], {
-      temperature: 0.5,
-    });
+    const promptMessages: ChatMessage[] = [{ role: "system", content: SYSTEM_PROMPT }];
+    if (knowledgeContext) promptMessages.push(knowledgeContext);
+    promptMessages.push(...history, { role: "user", content: message });
+
+    const result = await chat(promptMessages, { temperature: 0.5 });
     reply = result.content.trim();
   } catch {
     // No reply was delivered, so the message shouldn't count against them.
@@ -104,5 +121,6 @@ export async function POST(request: NextRequest) {
 
   await supabase.from("coach_messages").insert({ user_id: user.id, role: "assistant", content: reply });
 
-  return NextResponse.json({ reply });
+  const sources = knowledgeMatches.map((m) => ({ slug: m.slug, title: m.title }));
+  return NextResponse.json({ reply, sources });
 }

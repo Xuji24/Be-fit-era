@@ -13,6 +13,19 @@ export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
   const [userRole, setUserRole] = useState<string>("runner");
   const [loading, setLoading] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    // Condenses to a glass surface once there's page content to distinguish
+    // it from — flat and blend-in at the very top, where it's the first
+    // thing on the page anyway.
+    function onScroll() {
+      setScrolled(window.scrollY > 24);
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     const supabase = createClient();
@@ -50,7 +63,13 @@ export default function Navbar() {
   const closeMobileMenu = () => setIsOpen(false);
 
   return (
-    <nav className="w-full bg-background px-4 sm:px-6 lg:p-8 py-3 sm:py-4 flex items-center justify-between lg:justify-start gap-4 lg:gap-10 relative">
+    <nav
+      className={`w-full sticky top-0 z-50 px-4 sm:px-6 lg:p-8 py-3 sm:py-4 flex items-center justify-between lg:justify-start gap-4 lg:gap-10 transition-[background-color,box-shadow,border-color,backdrop-filter] duration-300 ${
+        scrolled
+          ? "bg-background/75 backdrop-blur-md border-b border-border shadow-sm"
+          : "bg-background border-b border-transparent"
+      }`}
+    >
       <div className="w-40 sm:w-24 lg:w-52 lg:ml-10 shrink-0 absolute left-4 lg:left-0">
         <Logo />
       </div>
@@ -140,9 +159,11 @@ export default function Navbar() {
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile Menu Dropdown. max-h + scroll because on a viewport-locked
+          page (the coach chat) the document can't scroll, so a dropdown taller
+          than the remaining viewport would have unreachable links. */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 bg-[#1A1A1A] dark:bg-[#0D0D0D] lg:hidden flex flex-col px-4 py-4 space-y-3 border-t border-[#FF5733]/20 z-50">
+        <div className="absolute top-full left-0 right-0 max-h-[calc(100dvh-100%)] overflow-y-auto overscroll-contain custom-scrollbar bg-[#1A1A1A]/85 dark:bg-[#0D0D0D]/85 backdrop-blur-xl lg:hidden flex flex-col px-4 py-4 space-y-3 border-t border-[#FF5733]/20 shadow-2xl z-50">
           <Link
             href="/"
             onClick={closeMobileMenu}

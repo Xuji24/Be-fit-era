@@ -1,96 +1,158 @@
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import { findExercisePose, sampleFrame } from "@/lib/coach/exercise-poses";
+import { addVec } from "@/lib/coach/rig-kinematics";
+import {
+  makeProjector,
+  fitTransform,
+  buildSegments,
+  boxRect,
+  floorY,
+  VIEW_W,
+  VIEW_H,
+} from "@/lib/coach/rig-projection";
+
 /**
- * Sketch-style figure rig for exercise demonstrations, drawn with actual
- * body volume (rounded head, torso, capsule limbs) rather than bare
- * centerline strokes — closer to a rough figure-drawing sketch than a
- * stick figure. One SVG, drawn once, with each limb as an independently
- * transformable <g> group. Exercises animate by rotating/translating these
- * groups via CSS keyframes (see exercise-rig.module.css) — the rig itself
- * never changes, only which animationId class is applied to it.
+ * One id per movement PATTERN, not per exercise name — a goblet squat and an
+ * air squat read identically to someone trying to picture the movement, so
+ * they share an animation. lib/coach/exercise-animations.ts owns the mapping
+ * from the model's free-form exercise names onto these ids.
  *
- * Joint pivot points (where a limb's <g transform-origin> sits) follow the
- * reference sketch: shoulder, elbow, hip, knee — so a rotation reads as a
- * bend at the right place instead of the whole limb swinging from its tip.
- * Group structure and pivot coordinates are unchanged from the stick-figure
- * version, so exercise-rig.module.css's keyframes apply as-is.
+ * Deliberately narrow and running-focused (knee/leg/calf/hamstring injury
+ * prevention and strength work) rather than a generic gym set — see the
+ * header comment in lib/coach/exercise-poses.ts for why.
  */
-
-import styles from "./exercise-rig.module.css";
-
-export type ExerciseAnimationId = "squat" | "pushup" | "plank" | "lunge";
+export type ExerciseAnimationId =
+  | "squat"
+  | "lunge"
+  | "calf-raise"
+  | "high-knees"
+  | "glute-bridge"
+  | "step-up"
+  | "single-leg-rdl"
+  | "lateral-band-walk"
+  | "kettlebell-swing";
 
 interface ExerciseRigProps {
-  animationId: ExerciseAnimationId;
+  /** Omit to render the neutral standing figure — the last-resort placeholder
+   *  when an exercise has neither an animation nor a reference photo. */
+  animationId?: ExerciseAnimationId;
   className?: string;
 }
 
+/**
+ * The 2D demonstration: the same figure and the same movement as the 3D view,
+ * projected flat.
+ *
+ * It is DERIVED from the pose data now. Previously this was a hand-drawn SVG
+ * animated by ~490 lines of CSS keyframes that restated the 3D joint angles by
+ * hand — two copies of the same movement, which drifted apart and had to be
+ * re-synced by eye whenever either changed. Both views now run through
+ * lib/coach/rig-kinematics.ts, so that class of divergence is impossible and
+ * the 2D fallback inherited every accuracy fix for free.
+ */
 export default function ExerciseRig({ animationId, className = "" }: ExerciseRigProps) {
+  // The neutral placeholder is the squat's standing keyframe, so even the
+  // "no animation" figure is a real, correctly-proportioned pose.
+  const pose = findExercisePose(animationId ?? "squat")!;
+  const animated = animationId !== undefined;
+
+  const reducedMotion = useMemo(
+    () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    []
+  );
+
+  const projector = useMemo(() => makeProjector(pose.camera.position), [pose]);
+  const fit = useMemo(() => fitTransform(pose, projector), [pose, projector]);
+
+  const [progress, setProgress] = useState(0);
+  const raf = useRef<number | undefined>(undefined);
+
+  useEffect(() => {
+    if (!animated || reducedMotion) return;
+
+    const start = performance.now();
+    const tick = (now: number) => {
+      setProgress((((now - start) / 1000) % pose.durationSec) / pose.durationSec);
+      raf.current = requestAnimationFrame(tick);
+    };
+    raf.current = requestAnimationFrame(tick);
+    return () => {
+      if (raf.current !== undefined) cancelAnimationFrame(raf.current);
+    };
+  }, [animated, reducedMotion, pose]);
+
+  // A still should show the exercise's working end, not an arbitrary midpoint.
+  const t = animated ? (reducedMotion ? pose.keyframes[1]?.t ?? 0.5 : progress) : 0;
+  const frame = sampleFrame(pose, t);
+  const segments = buildSegments(frame.skeleton, frame.root, projector, fit);
+
+  const ground = floorY(fit);
+  const box = animated && pose.prop?.kind === "box" ? boxRect(pose.prop, projector, fit) : null;
+
+  const band =
+    animated && pose.prop?.kind === "band"
+      ? (["footL", "footR"] as const).map((b) => {
+          const [x, y] = projector.project(addVec(frame.root, frame.skeleton[b].p));
+          return [x * fit.scale + fit.offsetX, y * fit.scale + fit.offsetY] as const;
+        })
+      : null;
+
+  // Held between both hands, so its position is the midpoint of the two
+  // wrists (the forearm's TIP, not its joint) rather than a fixed prop —
+  // same "derive, don't author" rule the root position follows.
+  const kettlebell =
+    animated && pose.prop?.kind === "kettlebell"
+      ? (() => {
+          const [lx, ly] = projector.project(addVec(frame.root, frame.skeleton.forearmL.tip));
+          const [rx, ry] = projector.project(addVec(frame.root, frame.skeleton.forearmR.tip));
+          return [
+            ((lx + rx) / 2) * fit.scale + fit.offsetX,
+            ((ly + ry) / 2) * fit.scale + fit.offsetY,
+          ] as const;
+        })()
+      : null;
+
   return (
-    <svg
-      viewBox="0 0 200 260"
-      className={className}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <g className={`${styles["exercise-rig"]} ${styles[animationId]}`} fill="currentColor" fillOpacity="0.06">
-        {/* Torso — wide rounded shape with a slight waist taper. The head is
-            nested INSIDE this group (not a sibling) so a torso lean carries
-            the head with it — an earlier pass left the head as a sibling,
-            which detached it from the body during any torso rotation. */}
-        <g className={styles["rig-torso"]} style={{ transformOrigin: "100px 90px" }}>
-          <path d="M78 46 Q74 58 76 74 Q73 88 78 100 Q100 108 122 100 Q127 88 124 74 Q126 58 122 46 Q112 40 100 40 Q88 40 78 46 Z" />
+    <svg viewBox={`0 0 ${VIEW_W} ${VIEW_H}`} className={className} fill="none">
+      {/* Ground line — the reference that makes rising and sinking legible. */}
+      <line
+        x1={7} y1={ground} x2={VIEW_W - 7} y2={ground}
+        stroke="currentColor" strokeOpacity="0.22" strokeWidth="1.5" strokeLinecap="round"
+      />
 
-          {/* Head — rounded, with a center-part hairline like the reference sketch */}
-          <g className={styles["rig-head"]}>
-            <ellipse cx="100" cy="26" rx="18" ry="20" />
-            <path d="M100 8 L99 44" opacity="0.45" fill="none" />
-            <path d="M84 22 Q100 18 116 22" opacity="0.45" fill="none" />
-          </g>
+      {box && (
+        <rect
+          x={box.x} y={box.y} width={box.width} height={box.height}
+          rx="3" fill="currentColor" fillOpacity="0.1"
+          stroke="currentColor" strokeOpacity="0.35" strokeWidth="1.5"
+        />
+      )}
 
-          {/* Left arm: shoulder -> elbow, drawn as a tapered capsule */}
-          <g className={styles["rig-arm-left"]} style={{ transformOrigin: "80px 52px" }}>
-            <path d="M80 52 Q68 58 62 70 Q58 78 60 86 Q68 88 74 84 Q76 74 80 64 Q82 56 80 52 Z" />
-            <g className={styles["rig-forearm-left"]} style={{ transformOrigin: "62px 80px" }}>
-              <path d="M62 80 Q52 88 42 98 Q38 102 40 106 Q46 108 50 104 Q58 96 66 88 Q66 82 62 80 Z" />
-              {/* fingers */}
-              <path d="M40 105 L32 100 M38 108 L30 108 M39 111 L32 116" opacity="0.55" fill="none" />
-            </g>
-          </g>
+      {segments.map((s) =>
+        s.kind === "head" ? (
+          <circle key={s.key} cx={s.x1} cy={s.y1} r={s.radius} fill="currentColor" />
+        ) : (
+          <line
+            key={s.key}
+            x1={s.x1} y1={s.y1} x2={s.x2} y2={s.y2}
+            stroke="currentColor" strokeWidth={s.width} strokeLinecap="round"
+          />
+        )
+      )}
 
-          {/* Right arm: mirrored */}
-          <g className={styles["rig-arm-right"]} style={{ transformOrigin: "120px 52px" }}>
-            <path d="M120 52 Q132 58 138 70 Q142 78 140 86 Q132 88 126 84 Q124 74 120 64 Q118 56 120 52 Z" />
-            <g className={styles["rig-forearm-right"]} style={{ transformOrigin: "138px 80px" }}>
-              <path d="M138 80 Q148 88 158 98 Q162 102 160 106 Q154 108 150 104 Q142 96 134 88 Q134 82 138 80 Z" />
-              <path d="M160 105 L168 100 M162 108 L170 108 M161 111 L168 116" opacity="0.55" fill="none" />
-            </g>
-          </g>
-        </g>
+      {band && (
+        <line
+          x1={band[0][0]} y1={band[0][1]} x2={band[1][0]} y2={band[1][1]}
+          stroke="currentColor" strokeOpacity="0.45" strokeWidth="4"
+          strokeLinecap="round" strokeDasharray="6 4"
+        />
+      )}
 
-        {/* Hips — rounded, where legs pivot; separate group so torso lean and
-            hip hinge move independently */}
-        <g className={styles["rig-hips"]} style={{ transformOrigin: "100px 102px" }}>
-          <path d="M76 98 Q100 112 124 98 Q128 112 120 122 Q100 128 80 122 Q72 112 76 98 Z" />
-
-          <g className={styles["rig-leg-left"]} style={{ transformOrigin: "88px 122px" }}>
-            <path d="M88 122 Q78 132 76 150 Q74 164 78 176 Q86 178 92 174 Q92 158 90 142 Q92 130 88 122 Z" />
-            <g className={styles["rig-shin-left"]} style={{ transformOrigin: "84px 174px" }}>
-              <path d="M84 174 Q78 190 76 208 Q74 218 78 224 Q86 226 92 222 Q92 206 90 190 Q90 180 84 174 Z" />
-              <path d="M76 223 Q64 226 60 232 L70 234 L84 232 L92 226 Q88 224 76 223 Z" opacity="0.7" />
-            </g>
-          </g>
-
-          <g className={styles["rig-leg-right"]} style={{ transformOrigin: "112px 122px" }}>
-            <path d="M112 122 Q122 132 124 150 Q126 164 122 176 Q114 178 108 174 Q108 158 110 142 Q108 130 112 122 Z" />
-            <g className={styles["rig-shin-right"]} style={{ transformOrigin: "116px 174px" }}>
-              <path d="M116 174 Q122 190 124 208 Q126 218 122 224 Q114 226 108 222 Q108 206 110 190 Q110 180 116 174 Z" />
-              <path d="M124 223 Q136 226 140 232 L130 234 L116 232 L108 226 Q112 224 124 223 Z" opacity="0.7" />
-            </g>
-          </g>
-        </g>
-      </g>
+      {kettlebell && (
+        <circle cx={kettlebell[0]} cy={kettlebell[1]} r={fit.scale * 0.075} fill="currentColor" fillOpacity="0.55" />
+      )}
     </svg>
   );
 }

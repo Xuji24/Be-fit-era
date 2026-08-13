@@ -11,7 +11,14 @@ import {
 import { generatePlan as generatePlanFromAi, type ChatMessage } from "@/lib/ai/provider";
 import { allExerciseNames } from "@/lib/ai/plan-schema";
 import { findEquipmentViolations, describeViolationsForRetry } from "@/lib/coach/equipment-guardrail";
+import { ANIMATION_VOCABULARY_SIZE, describeAnimationVocabularyForPrompt } from "@/lib/coach/exercise-animations";
 import { tierOf, type CoachTier } from "@/lib/coach/tiers";
+import {
+  applyPrescriptions,
+  exercisesPerSession,
+  parseExperienceLevel,
+  parseGoal,
+} from "@/lib/coach/prescription";
 import { consumeQuota, peekQuota, refundQuota, exhaustedMessage, type QuotaState } from "@/lib/coach/quota";
 
 export type ActionResult = {
@@ -329,17 +336,21 @@ export async function generatePlanForUser(): Promise<ActionResult & { planId?: s
   "weeks": number,
   "items": [
     { "itemType":"meal", "dayIndex":0-6, "slot":"breakfast"|"lunch"|"dinner"|"snack", "title":string, "kcal":number, "proteinG":number, "carbsG":number, "fatG":number, "details":{"ingredients":[{"name":string,"grams":number}]} },
-    { "itemType":"workout", "dayIndex":0-6, "slot":"am"|"pm", "title":string, "details":{"exercises":[{"name":string,"sets":number,"reps":string,"warmup":boolean}]} }
+    { "itemType":"workout", "dayIndex":0-6, "slot":"am"|"pm", "title":string, "details":{"exercises":[{"name":string,"mode":"reps"|"time","warmup":boolean}]} }
   ],
   "healthTips": [string]
 }
 Cover all 7 days (dayIndex 0-6). Each day needs breakfast, lunch, and dinner, and each meal's macros must sum close to the daily targets given.
 
-Training frequency: schedule workouts on exactly the number of training days the user gives you — the remaining days are rest days with meals but no workout. Size each session to fit the stated session length.
+Training frequency: schedule workouts on exactly the number of training days the user gives you — the remaining days are rest days with meals but no workout. Since you no longer set sets or reps, fit the session length by adjusting how MANY exercises a session contains — the user message tells you the target count. Every exercise in a session must be a DIFFERENT movement from this vocabulary — never list the same exercise twice in one session's "exercises" array, even under a slightly different name (e.g. "Squat" and "Bodyweight squat" count as the same exercise). The target count already accounts for the vocabulary size, so you should never need to repeat one to reach it; if you truly run out of distinct movements that fit the day's focus, use fewer exercises rather than repeat.
 
-Equipment constraint: every exercise you list must be doable with ONLY the equipment the user has available and in their stated training setting — do not suggest machines, weights, or accessories they don't have. Start each workout with 2-3 warm-up movements (marked "warmup": true in their exercise entry) appropriate to that day's main exercises before the working sets.
+Equipment constraint: every exercise you list must be doable with ONLY the equipment the user has available and in their stated training setting — do not suggest machines, weights, or accessories they don't have. Each vocabulary entry below notes what it needs beyond bodyweight, if anything. Start each workout with 2-3 warm-up movements (marked "warmup": true in their exercise entry) appropriate to that day's main exercises before the working sets.
 
-Experience constraint: match exercise complexity and volume to the user's stated experience level. Beginners get simple, low-skill movements and conservative volume.
+This coach is scoped to running-support conditioning, not general gym training — Fitra is a running platform, and every workout you build should read as "what keeps a runner training injury-free and strong," not a generic push/pull/legs split. Draw your exercises from this vocabulary (use these names or close variants so they render correctly in the app): ${describeAnimationVocabularyForPrompt()}. Order each session as: 1-2 warm-up movements (high knees or bodyweight squats work well), then the strength/stability work for that day (squat, lunge, step-up, single-leg RDL cover quad/hamstring/glute strength; calf raise covers calf/Achilles; glute bridge, lateral band walk, and kettlebell swing cover hip stability, posterior-chain power, and injury prevention). Do not invent exercises outside this vocabulary or reach for upper-body/gym-machine movements (bench press, shoulder press, rows, pull-ups) — they are out of scope for this coach.
+
+Exercise prescription: do NOT specify sets, reps, rest, or duration — the app assigns those deterministically from the user's experience level and goal, and anything you write for them is discarded. Your job is choosing the right exercises from the vocabulary above and ordering them sensibly. Every exercise needs a "mode": use "time" for anything measured by how long it is held or performed, and "reps" for anything counted in repetitions — for this vocabulary specifically, only high knees is "time" (it's paced like running in place); everything else, including lateral band walks (counted in steps), is "reps".
+
+Experience constraint: match exercise complexity and selection to the user's stated experience level. Beginners get simple, low-skill movements. Training volume is set by the app — do not adjust it yourself.
 
 Limitations: if the user reports an injury or limitation, do not prescribe any movement that loads it. Work around it and say so in the summary.
 
@@ -355,7 +366,7 @@ Reply with ONLY the JSON object — no prose, no markdown fences.`,
         profile.body_shape ? ` Self-described current build: ${profile.body_shape}.` : ""
       }${
         profile.target_body_shape ? ` Build they want: ${profile.target_body_shape}.` : ""
-      } Experience level: ${profile.experience_level ?? "beginner"}. Trains ${profile.training_days_per_week ?? 3} day(s) per week, about ${profile.session_minutes ?? 45} minutes per session, setting: ${profile.workout_setting ?? "home"}.${
+      } Experience level: ${profile.experience_level ?? "beginner"}. Trains ${profile.training_days_per_week ?? 3} day(s) per week, about ${profile.session_minutes ?? 45} minutes per session, setting: ${profile.workout_setting ?? "home"}. Include about ${Math.min(exercisesPerSession(profile.session_minutes ?? 45), ANIMATION_VOCABULARY_SIZE)} exercises per session, including 2-3 warm-ups.${
         profile.limitations ? ` Injuries or limitations to work around: ${profile.limitations}.` : ""
       }${
         profile.dietary_restrictions?.length ? ` Dietary restrictions: ${profile.dietary_restrictions.join(", ")}.` : ""
@@ -403,6 +414,15 @@ Reply with ONLY the JSON object — no prose, no markdown fences.`,
     return { success: false, error: "The AI coach is unavailable right now. Please try again shortly." };
   }
 
+  // Volume is assigned here, not by the model — same profile, same numbers,
+  // every time. Runs AFTER the equipment guardrail (whose corrective retry can
+  // replace the whole plan, which would otherwise discard this work) and
+  // BEFORE persistence, since details goes straight through to JSONB below.
+  const plan = applyPrescriptions(generated.plan, {
+    experienceLevel: parseExperienceLevel(profile.experience_level),
+    goal: parseGoal(profile.goal),
+  });
+
   const { data: currentActive } = await supabase
     .from("coach_plans")
     .select("id, version")
@@ -425,9 +445,9 @@ Reply with ONLY the JSON object — no prose, no markdown fences.`,
       user_id: user.id,
       version: nextVersion,
       starts_on: new Date().toISOString().slice(0, 10),
-      weeks: generated.plan.weeks,
-      summary: generated.plan.summary,
-      health_tips: generated.plan.healthTips ?? [],
+      weeks: plan.weeks,
+      summary: plan.summary,
+      health_tips: plan.healthTips ?? [],
       generated_by: generated.generatedBy,
     })
     .select("id")
@@ -435,7 +455,7 @@ Reply with ONLY the JSON object — no prose, no markdown fences.`,
 
   if (planError || !newPlan) return { success: false, error: "Failed to save the generated plan." };
 
-  const rows = generated.plan.items.map((item) =>
+  const rows = plan.items.map((item) =>
     item.itemType === "meal"
       ? {
           plan_id: newPlan.id,

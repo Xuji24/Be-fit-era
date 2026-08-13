@@ -137,7 +137,7 @@ export default function TrackerPage() {
 
   return (
     <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212]">
-      <CoachHero icon={ClipboardList} title="Calorie Tracker" />
+      <CoachHero icon={ClipboardList} title="Calorie Tracker" maxWidthClassName="max-w-6xl" />
 
       <div className="max-w-6xl mx-auto px-6 pb-16 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">

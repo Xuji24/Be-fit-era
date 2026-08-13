@@ -1,32 +1,37 @@
-// In-memory sliding window rate limiter
-const store = new Map<string, number[]>();
+import { createClient } from "@/lib/supabase/server";
 
-// Cleanup stale entries every 5 minutes
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, timestamps] of store) {
-    const filtered = timestamps.filter((t) => now - t < 15 * 60 * 1000);
-    if (filtered.length === 0) store.delete(key);
-    else store.set(key, filtered);
-  }
-}, 5 * 60 * 1000);
-
-export function checkRateLimit(
+/**
+ * Fixed-window rate limiter backed by check_rate_limit() in Postgres — see
+ * supabase/migrations/20260812000002_create_rate_limit_hits.sql. Replaces a
+ * plain in-memory Map, which only held a limit within one warm serverless
+ * instance and didn't sync across concurrent instances on Vercel.
+ *
+ * Fails open on infra errors: a rate limiter that blocks all traffic when
+ * the DB hiccups is worse than one that occasionally under-throttles. This
+ * is a defense-in-depth throttle, not the sole guard against abuse.
+ */
+export async function checkRateLimit(
   key: string,
   maxAttempts: number,
   windowMs: number = 15 * 60 * 1000
-): { allowed: boolean; retryAfterMs: number } {
-  const now = Date.now();
-  const timestamps = store.get(key) ?? [];
-  const windowStart = now - windowMs;
-  const recent = timestamps.filter((t) => t > windowStart);
+): Promise<{ allowed: boolean; retryAfterMs: number }> {
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .rpc("check_rate_limit", {
+        p_key: key,
+        p_max_attempts: maxAttempts,
+        p_window_ms: windowMs,
+      })
+      .single();
 
-  if (recent.length >= maxAttempts) {
-    const oldest = recent[0];
-    return { allowed: false, retryAfterMs: oldest + windowMs - now };
+    if (error || !data) {
+      return { allowed: true, retryAfterMs: 0 };
+    }
+
+    const row = data as { allowed: boolean; retry_after_ms: number };
+    return { allowed: row.allowed, retryAfterMs: Number(row.retry_after_ms) };
+  } catch {
+    return { allowed: true, retryAfterMs: 0 };
   }
-
-  recent.push(now);
-  store.set(key, recent);
-  return { allowed: true, retryAfterMs: 0 };
 }

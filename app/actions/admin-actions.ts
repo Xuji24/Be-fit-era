@@ -756,7 +756,7 @@ export async function createSponsor(input: {
   const { supabase, userId } = await requireAdmin();
 
   const ip = await getClientIp();
-  const { allowed } = checkRateLimit(`admin-sponsor:${ip}`, 20);
+  const { allowed } = await checkRateLimit(`admin-sponsor:${ip}`, 20);
   if (!allowed) return { success: false, error: "Too many requests." };
 
   if (!input.name.trim()) return { success: false, error: "Sponsor name is required." };

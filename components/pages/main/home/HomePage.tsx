@@ -3,6 +3,7 @@ import WhyJoinUs from "./component/why-join-us";
 import Community from "./component/community";
 import Sponsor from "./component/sponsor";
 import CTASection from "./component/cta-section";
+import Reveal from "@/components/reveal";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function HomePage() {
@@ -15,9 +16,15 @@ export default async function HomePage() {
   return (
     <div>
       <HeroSection isLoggedIn={isLoggedIn} />
-      <WhyJoinUs />
-      <Community />
-      <Sponsor />
+      <Reveal>
+        <WhyJoinUs />
+      </Reveal>
+      <Reveal>
+        <Community />
+      </Reveal>
+      <Reveal>
+        <Sponsor />
+      </Reveal>
       <CTASection isLoggedIn={isLoggedIn} />
     </div>
   );

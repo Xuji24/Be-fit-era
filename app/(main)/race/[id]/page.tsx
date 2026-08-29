@@ -10,7 +10,7 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.befitra.app";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fitra.vercel.app";
 
 export function generateStaticParams() {
   return racesData.map((race) => ({ id: race.id }));
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const race = racesData.find((r) => r.id === id);
 
   if (!race) {
-    return { title: "Race Not Found | Fitra" };
+    return { title: "Race Not Found" };
   }
 
   const pageUrl = `${siteUrl}/race/${race.id}`;
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }).toString()}`;
 
   return {
-    title: `${race.title} | Fitra`,
+    title: race.title,
     description: race.description,
     openGraph: {
       title: race.title,

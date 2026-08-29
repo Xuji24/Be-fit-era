@@ -4,23 +4,28 @@ import { sponsorsData } from "@/data/sponsors-data";
 
 export default async function Sponsor() {
   let sponsors: { id: string; name: string; logo_url: string }[] = [];
+  let fetchFailed = false;
 
   try {
     const supabase = await createClient();
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("sponsors")
       .select("id, name, logo_url")
       .eq("active", true)
       .order("display_order");
-    if (data && data.length > 0) {
-      sponsors = data;
+    if (error) {
+      fetchFailed = true;
+    } else {
+      sponsors = data ?? [];
     }
   } catch {
-    // Supabase fetch failed — fall back to static data
+    fetchFailed = true;
   }
 
-  const useFallback = sponsors.length === 0;
-  if (useFallback) {
+  // Only fall back to static data if the fetch itself failed — an empty
+  // result means the admin has no active sponsors, and the section
+  // should simply be hidden.
+  if (fetchFailed) {
     sponsors = sponsorsData.map((s) => ({
       id: String(s.id),
       name: s.name,

@@ -80,6 +80,15 @@ export async function POST(req: Request) {
       appUrl: APP_URL,
     });
 
+    // Recorded so the expire-stale-payments cron can look up this session's
+    // live status if the user never completes checkout.
+    await supabase
+      .from("race_registrations")
+      .update({ paymongo_session_id: session.id })
+      .eq("user_id", user.id)
+      .eq("race_id", raceId)
+      .eq("payment_status", "pending");
+
     return NextResponse.json({ url: session.checkoutUrl, sessionId: session.id });
   } catch (error: unknown) {
     console.error("[checkout] Error:", error);

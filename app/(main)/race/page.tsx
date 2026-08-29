@@ -1,7 +1,27 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import RacePage from "@/components/pages/main/race/RacePage";
 import { racesData } from "@/data/races-data";
 import type { RaceEvent } from "@/utils/types/race-types";
+
+export const metadata: Metadata = {
+  title: "Find Your Next Race",
+  description:
+    "Browse upcoming running events across the Philippines — marathons, fun runs, and trail races. Filter by category, location, and date, then register in a few taps.",
+  openGraph: {
+    title: "Find Your Next Race | Fitra",
+    description:
+      "Browse upcoming running events across the Philippines — marathons, fun runs, and trail races.",
+    url: "/race",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Find Your Next Race | Fitra",
+    description:
+      "Browse upcoming running events across the Philippines — marathons, fun runs, and trail races.",
+  },
+};
 
 export default async function Race() {
   const supabase = await createClient();

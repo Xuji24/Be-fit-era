@@ -89,7 +89,7 @@ export async function submitContactForm(
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const VALID_SHIRT_SIZES = ["S", "M", "L", "XL", "2XL"] as const;
-const VALID_PAYMENT_METHODS = ["gcash", "card", "bank"] as const;
+const VALID_PAYMENT_METHODS = ["gcash", "paymaya", "qrph"] as const;
 
 interface RegistrationInput {
   raceId: string;
@@ -217,6 +217,7 @@ export async function checkRaceRegistration(
     .select("id")
     .eq("user_id", user.id)
     .eq("race_id", raceId)
+    .neq("status", "cancelled")
     .maybeSingle();
 
   return { registered: !!data };

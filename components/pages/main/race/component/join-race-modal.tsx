@@ -17,8 +17,8 @@ interface Props {
 const shirtSizes = ["S", "M", "L", "XL", "2XL"];
 const paymentMethods = [
   { id: "gcash", label: "GCash" },
-  { id: "card", label: "Credit / Debit Card" },
-  { id: "bank", label: "Bank Transfer" },
+  { id: "paymaya", label: "Maya" },
+  { id: "qrph", label: "QR Ph" },
 ];
 
 interface FormData {
@@ -141,11 +141,11 @@ export default function JoinRaceModal({
     }
 
     // For paid races using any online method, redirect to PayMongo checkout
-    // (card, gcash, bank — PayMongo handles all of them via a single checkout URL)
+    // (gcash, paymaya, qrph — PayMongo handles all of them via a single checkout URL)
     const isPaidOnlinePayment =
       race.registrationFee != null &&
       race.registrationFee > 0 &&
-      ["card", "gcash", "bank"].includes(form.paymentMethod);
+      ["gcash", "paymaya", "qrph"].includes(form.paymentMethod);
 
     if (isPaidOnlinePayment) {
       const checkoutRes = await fetch("/api/checkout", {

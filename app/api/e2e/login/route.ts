@@ -3,9 +3,16 @@ import { createClient } from "@supabase/supabase-js";
 import { createServerClient } from "@supabase/ssr";
 
 // Test-only route: bypasses hCaptcha for E2E authenticated tests.
-// Disabled in production.
+// Gated on a secret rather than NODE_ENV, because `next build && next start`
+// (what CI's Playwright webServer runs) always sets NODE_ENV=production.
+// Fails closed by default: with no E2E_BYPASS_SECRET configured, this always
+// 404s. NEVER set E2E_BYPASS_SECRET in Vercel's project environment
+// variables — it must only exist as a GitHub Actions secret, so this route
+// stays unreachable on the real deployment no matter what NODE_ENV is.
 export async function POST(request: NextRequest) {
-  if (process.env.NODE_ENV === "production") {
+  const bypassSecret = process.env.E2E_BYPASS_SECRET;
+  const headerSecret = request.headers.get("x-e2e-bypass-secret");
+  if (!bypassSecret || headerSecret !== bypassSecret) {
     return NextResponse.json({ error: "Not available" }, { status: 404 });
   }
 

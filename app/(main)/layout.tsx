@@ -37,10 +37,32 @@ const merriweatherSans = Merriweather_Sans({
   weight: ["400", "500", "600", "700"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://fitra.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Fitra",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Fitra",
+    template: "%s | Fitra",
+  },
   description:
     "An event running app for runners to organize/join events and track their running progress.",
+  openGraph: {
+    title: "Fitra",
+    description:
+      "An event running app for runners to organize/join events and track their running progress.",
+    siteName: "Fitra",
+    url: siteUrl,
+    type: "website",
+    images: [{ url: "/fitra.png", width: 1200, height: 630, alt: "Fitra" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fitra",
+    description:
+      "An event running app for runners to organize/join events and track their running progress.",
+    images: ["/fitra.png"],
+  },
 };
 
 export default function RootLayout({

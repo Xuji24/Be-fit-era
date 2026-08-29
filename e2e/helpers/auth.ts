@@ -28,6 +28,7 @@ export async function loginAs(page: Page, role: keyof typeof TEST_USERS) {
   // in the response — Playwright's context picks them up automatically.
   const res = await page.request.post("/api/e2e/login", {
     data: { email: user.email, password: user.password },
+    headers: { "x-e2e-bypass-secret": process.env.E2E_BYPASS_SECRET ?? "" },
   });
 
   if (!res.ok()) {

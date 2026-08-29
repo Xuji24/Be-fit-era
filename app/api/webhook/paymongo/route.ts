@@ -13,20 +13,30 @@
  *
  * Switching to live: just swap PAYMONGO_SECRET_KEY=sk_live_... and
  * PAYMONGO_WEBHOOK_SECRET to the live webhook secret. No code changes needed.
+ *
+ * Note: PayMongo has no "checkout_session.payment.failed" event — checkout
+ * sessions only ever report `.paid`. Abandoned/failed/timed-out payments are
+ * reconciled separately by app/api/cron/expire-stale-payments/route.ts,
+ * which polls PayMongo directly instead of waiting on a webhook that will
+ * never arrive.
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { createClient as createSupabaseClient, SupabaseClient } from "@supabase/supabase-js";
 import { verifyWebhookSignature, getCheckoutSession } from "@/lib/paymongo";
-import { createClient } from "@/lib/supabase/server";
 import { isPaidTier } from "@/lib/coach/tiers";
+import {
+  fulfillRaceRegistrationPayment,
+  fulfillCoachSubscriptionPayment,
+} from "@/lib/payments/fulfillment";
 
 // PayMongo sends raw JSON — we must read the raw body to verify the signature
 export const runtime = "nodejs";
 
-// The webhook has no user session and coach_subscriptions has no authenticated
-// UPDATE policy (by design — see the create-tables migration), so granting a
-// tier requires the service role, same as app/api/cron/update-races/route.ts.
+// The webhook has no user session, and both race_registrations and
+// coach_subscriptions require an authenticated session matching user_id for
+// UPDATE under RLS — so every write here goes through the service role,
+// same as app/api/cron/update-races/route.ts.
 function getSupabaseAdmin(): SupabaseClient {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -92,8 +102,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true });
   }
 
+  const supabaseAdmin = getSupabaseAdmin();
+
   if (metadata?.kind === "coach_subscription") {
-    return handleCoachSubscriptionPaid(checkoutSessionId, metadata);
+    return handleCoachSubscriptionPaid(supabaseAdmin, checkoutSessionId, metadata);
   }
 
   const raceId: string | undefined = metadata?.race_id;
@@ -112,11 +124,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing billing email" }, { status: 400 });
   }
 
-  // Use service-role client — webhook runs outside a user session
-  const supabase = await createClient();
-
-  // Look up the user by email
-  const { data: profile } = await supabase
+  // Look up the user by email (profiles SELECT is public, but we're already
+  // on the service-role client for the update below, so just reuse it here)
+  const { data: profile } = await supabaseAdmin
     .from("profiles")
     .select("id")
     .eq("email", billingEmail)
@@ -127,16 +137,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "User not found" }, { status: 400 });
   }
 
-  // Mark the registration as paid
-  const { error: updateError } = await supabase
-    .from("race_registrations")
-    .update({
-      payment_status: "paid",
-      paymongo_session_id: checkoutSessionId,
-    })
-    .eq("user_id", profile.id)
-    .eq("race_id", raceId)
-    .neq("payment_status", "paid"); // idempotent — skip if already marked
+  const { error: updateError, updated } = await fulfillRaceRegistrationPayment(supabaseAdmin, {
+    userId: profile.id,
+    raceId,
+    checkoutSessionId,
+  });
 
   if (updateError) {
     console.error("[webhook/paymongo] Failed to update registration:", updateError);
@@ -147,9 +152,11 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  console.log(
-    `[webhook/paymongo] Payment confirmed — race ${raceId}, user ${profile.id}`,
-  );
+  if (updated) {
+    console.log(
+      `[webhook/paymongo] Payment confirmed — race ${raceId}, user ${profile.id}`,
+    );
+  }
 
   return NextResponse.json({ received: true });
 }
@@ -162,6 +169,7 @@ export async function POST(req: NextRequest) {
  * keyed by user_id everywhere else.
  */
 async function handleCoachSubscriptionPaid(
+  supabaseAdmin: SupabaseClient,
   checkoutSessionId: string,
   metadata: Record<string, string>,
 ): Promise<NextResponse> {
@@ -175,27 +183,11 @@ async function handleCoachSubscriptionPaid(
     return NextResponse.json({ error: "Invalid subscription metadata" }, { status: 400 });
   }
 
-  const supabaseAdmin = getSupabaseAdmin();
-
-  const currentPeriodEnd = new Date();
-  currentPeriodEnd.setUTCMonth(currentPeriodEnd.getUTCMonth() + 1);
-
-  // Idempotent against PayMongo redelivering the same event: only apply the
-  // update if this checkout session hasn't already been recorded, so a retry
-  // doesn't re-extend current_period_end by another month. `.or()` treats a
-  // NULL paymongo_session_id (brand-new subscription) as eligible too, since
-  // `<> checkoutSessionId` alone would exclude NULL rows in SQL.
-  const { data: updated, error: updateError } = await supabaseAdmin
-    .from("coach_subscriptions")
-    .update({
-      status: "active",
-      tier,
-      current_period_end: currentPeriodEnd.toISOString(),
-      paymongo_session_id: checkoutSessionId,
-    })
-    .eq("user_id", userId)
-    .or(`paymongo_session_id.is.null,paymongo_session_id.neq.${checkoutSessionId}`)
-    .select("user_id");
+  const { error: updateError, updated } = await fulfillCoachSubscriptionPayment(supabaseAdmin, {
+    userId,
+    tier,
+    checkoutSessionId,
+  });
 
   if (updateError) {
     console.error("[webhook/paymongo] Failed to update coach subscription:", updateError);
@@ -203,7 +195,7 @@ async function handleCoachSubscriptionPaid(
     return NextResponse.json({ error: "Database update failed" }, { status: 500 });
   }
 
-  if (!updated || updated.length === 0) {
+  if (!updated) {
     console.log(
       `[webhook/paymongo] Session ${checkoutSessionId} already applied for user ${userId} — skipping duplicate delivery`,
     );

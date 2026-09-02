@@ -4,8 +4,9 @@
  * PayMongo has no "checkout_session.payment.failed" event, so an abandoned,
  * failed, or timed-out checkout is otherwise invisible to this app. This
  * cron reconciles stale 'pending' payments directly against PayMongo's live
- * checkout session status, running every 15 minutes (see vercel.json — QR Ph
- * codes can expire in as little as ~10-30 minutes).
+ * checkout session status. Runs once daily (see vercel.json — Vercel Hobby
+ * plan caps cron frequency at once per day), so a stale payment may sit
+ * unreconciled for up to ~24h before cleanup.
  *
  * Race registrations: a stale pending row still counts against a race's
  * capacity (register_for_race() only excludes status='cancelled', not

@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Trophy, Activity, Award, Users } from "lucide-react";
+import { Home, Trophy, Activity, Award, Users, Bot } from "lucide-react";
 
 const TABS = [
   { href: "/", label: "Home", icon: Home, exact: true },
   { href: "/race", label: "Race", icon: Trophy, exact: false },
   { href: "/activities", label: "Activities", icon: Activity, exact: false },
+  { href: "/coach", label: "Coach", icon: Bot, exact: false },
   { href: "/leaderboard", label: "Ranks", icon: Award, exact: false },
   { href: "/community", label: "Community", icon: Users, exact: false },
 ] as const;

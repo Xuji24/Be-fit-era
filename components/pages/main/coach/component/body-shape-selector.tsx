@@ -39,12 +39,12 @@ function Silhouette({ shape, sex, selected }: SilhouetteProps) {
   const waist = sex === "female" ? p.waist * 0.95 : p.waist;
 
   const cx = 50;
-  const fill = selected ? "#FF5733" : "currentColor";
+  const fill = selected ? "var(--brand)" : "currentColor";
 
   return (
     <svg
       viewBox="0 0 100 150"
-      className={`w-full h-auto ${selected ? "" : "text-[#1A1A1A]/25 dark:text-white/25"}`}
+      className={`w-full h-auto ${selected ? "" : "text-foreground/25"}`}
       aria-hidden="true"
       focusable="false"
     >
@@ -112,8 +112,8 @@ export default function BodyShapeSelector({ value, onChange, sex, legend }: Body
               aria-label={LABELS[shape]}
               className={`rounded-xl px-2 pt-3 pb-2 flex flex-col items-center gap-2 transition-colors cursor-pointer ${
                 selected
-                  ? "bg-[#FF5733]/10 ring-2 ring-[#FF5733]"
-                  : "bg-[#F5F5F0] dark:bg-[#2A2A2E] ring-1 ring-transparent hover:ring-[#FF5733]/30"
+                  ? "bg-[var(--brand)]/15 ring-2 ring-[var(--brand)]"
+                  : "bg-[var(--surface-muted)] dark:bg-[#2A2A2E] ring-1 ring-transparent hover:ring-[var(--brand)]/30"
               }`}
             >
               <div className="w-full max-w-14">
@@ -121,7 +121,7 @@ export default function BodyShapeSelector({ value, onChange, sex, legend }: Body
               </div>
               <span
                 className={`text-xs font-semibold font-raleway ${
-                  selected ? "text-[#FF5733]" : "text-[#1A1A1A]/60 dark:text-white/60"
+                  selected ? "text-[var(--brand-hover)]" : "text-foreground/60"
                 }`}
               >
                 {LABELS[shape]}

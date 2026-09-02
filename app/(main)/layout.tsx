@@ -11,6 +11,7 @@ import Footer from "@/components/seraui/footer";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import ScrollToTop from "@/components/scroll-to-top";
+import { MobileBottomNav, MobileBottomNavSpacer } from "@/components/mobile-bottom-nav";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -84,7 +85,9 @@ export default function RootLayout({
         >
           <Navbar />
           {children}
+          <MobileBottomNavSpacer />
           <Footer />
+          <MobileBottomNav />
           <ScrollToTop />
           <Toaster position="top-right" richColors closeButton />
         </ThemeProvider>

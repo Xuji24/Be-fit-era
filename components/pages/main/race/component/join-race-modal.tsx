@@ -234,7 +234,7 @@ export default function JoinRaceModal({
                     value={form.fullName}
                     onChange={(e) => handleChange("fullName", e.target.value)}
                     placeholder="Juan Dela Cruz"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-gray-400 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-gray-400 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
                   />
                 </div>
                 {errors.fullName && (
@@ -257,7 +257,7 @@ export default function JoinRaceModal({
                     value={form.email}
                     onChange={(e) => handleChange("email", e.target.value)}
                     placeholder="your@email.com"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-gray-400 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-gray-400 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
                   />
                 </div>
                 {errors.email && (
@@ -288,7 +288,7 @@ export default function JoinRaceModal({
                     }
                     maxLength={16}
                     placeholder="0917 123 4567"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-gray-400 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-gray-400 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
                   />
                 </div>
                 {errors.phone && (
@@ -312,8 +312,8 @@ export default function JoinRaceModal({
                       onClick={() => handleChange("shirtSize", size)}
                       className={`flex-1 py-2.5 rounded-lg text-sm font-raleway font-bold transition-all cursor-pointer ${
                         form.shirtSize === size
-                          ? "bg-[#FF5733] text-white shadow-md shadow-[#FF5733]/25"
-                          : "bg-[#F5F5F0] dark:bg-[#2A2A2E] text-foreground hover:bg-gray-200 dark:hover:bg-[#3A3A3E]"
+                          ? "bg-[var(--brand)] text-[var(--brand-ink)] shadow-md shadow-[var(--brand)]/25"
+                          : "bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-foreground hover:bg-gray-200 dark:hover:bg-[#3A3A3E]"
                       }`}
                     >
                       {size}
@@ -341,19 +341,19 @@ export default function JoinRaceModal({
                       onClick={() => handleChange("paymentMethod", method.id)}
                       className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-merriweather-sans transition-all cursor-pointer text-left ${
                         form.paymentMethod === method.id
-                          ? "bg-[#FF5733]/10 border-2 border-[#FF5733] text-foreground"
-                          : "bg-[#F5F5F0] dark:bg-[#2A2A2E] border-2 border-transparent text-foreground hover:border-gray-200 dark:hover:border-white/10"
+                          ? "bg-[var(--brand)]/15 border-2 border-[var(--brand)] text-foreground"
+                          : "bg-[var(--surface-muted)] dark:bg-[#2A2A2E] border-2 border-transparent text-foreground hover:border-gray-200 dark:hover:border-white/10"
                       }`}
                     >
                       <div
                         className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 ${
                           form.paymentMethod === method.id
-                            ? "border-[#FF5733]"
+                            ? "border-[var(--brand)]"
                             : "border-gray-300 dark:border-white/20"
                         }`}
                       >
                         {form.paymentMethod === method.id && (
-                          <div className="w-2 h-2 rounded-full bg-[#FF5733]" />
+                          <div className="w-2 h-2 rounded-full bg-[var(--brand)]" />
                         )}
                       </div>
                       {method.label}
@@ -371,7 +371,7 @@ export default function JoinRaceModal({
               <Button
                 type="button"
                 onClick={handleReview}
-                className="w-full py-4 rounded-xl bg-[#FF5733] text-white font-raleway font-bold text-base hover:bg-[#E84E2E] hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer mt-2"
+                className="w-full py-4 rounded-xl bg-[var(--brand)] text-[var(--brand-ink)] font-raleway font-bold text-base hover:bg-[var(--brand-hover)] hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer mt-2"
               >
                 Review Registration
               </Button>
@@ -379,7 +379,7 @@ export default function JoinRaceModal({
           ) : (
             /* Confirmation Step */
             <div className="space-y-5">
-              <div className="bg-[#F5F5F0] dark:bg-[#2A2A2E] rounded-xl p-5 space-y-3">
+              <div className="bg-[var(--surface-muted)] dark:bg-[#2A2A2E] rounded-xl p-5 space-y-3">
                 <h3 className="font-raleway font-bold text-sm text-foreground mb-3">
                   Registration Summary
                 </h3>
@@ -462,7 +462,7 @@ export default function JoinRaceModal({
                   type="button"
                   onClick={handleSubmit}
                   disabled={submitting}
-                  className="flex-2 py-4 rounded-xl bg-[#FF5733] text-white font-raleway font-bold text-base hover:bg-[#E84E2E] hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-2 py-4 rounded-xl bg-[var(--brand)] text-[var(--brand-ink)] font-raleway font-bold text-base hover:bg-[var(--brand-hover)] hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {submitting ? (
                     <Loader2 className="w-5 h-5 animate-spin" />

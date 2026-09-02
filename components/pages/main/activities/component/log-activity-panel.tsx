@@ -212,14 +212,14 @@ const LogActivityPanel = ({
               >
                 <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" />
               </svg>
-              <h2 id="log-activity-title" className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">
+              <h2 id="log-activity-title" className="text-lg font-bold text-foreground font-raleway">
                 Log Distance via Strava
               </h2>
             </div>
             <button
               title="Close"
               onClick={onClose}
-              className="w-8 h-8 rounded-full flex items-center justify-center text-[#1A1A1A]/40 dark:text-white/40 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-foreground/40 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -232,10 +232,10 @@ const LogActivityPanel = ({
             <div className="w-14 h-14 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-3">
               <Check className="w-7 h-7 text-emerald-500" />
             </div>
-            <p className="font-semibold text-[#1A1A1A] dark:text-white font-raleway">
+            <p className="font-semibold text-foreground font-raleway">
               Distance Logged!
             </p>
-            <p className="text-sm text-[#1A1A1A]/40 dark:text-white/30 mt-1 font-merriweather-sans">
+            <p className="text-sm text-foreground/40 mt-1 font-merriweather-sans">
               +{successDistance} km imported from Strava
             </p>
           </div>
@@ -245,7 +245,7 @@ const LogActivityPanel = ({
         {!success && stravaConnected === null && (
           <div className="p-10 text-center">
             <Loader2 className="w-6 h-6 animate-spin text-[#FC4C02] mx-auto mb-3" />
-            <p className="text-sm text-[#1A1A1A]/50 dark:text-white/40 font-merriweather-sans">
+            <p className="text-sm text-foreground/50 font-merriweather-sans">
               Checking Strava connection...
             </p>
           </div>
@@ -264,10 +264,10 @@ const LogActivityPanel = ({
                   <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" />
                 </svg>
               </div>
-              <h3 className="font-raleway font-bold text-base text-[#1A1A1A] dark:text-white mb-1">
+              <h3 className="font-raleway font-bold text-base text-foreground mb-1">
                 Connect to Strava
               </h3>
-              <p className="font-merriweather-sans text-sm text-[#1A1A1A]/50 dark:text-white/40 mb-5 max-w-xs mx-auto">
+              <p className="font-merriweather-sans text-sm text-foreground/50 mb-5 max-w-xs mx-auto">
                 Link your Strava account to import activities and log distances
                 to your races automatically.
               </p>
@@ -320,7 +320,7 @@ const LogActivityPanel = ({
 
             {activities.length === 0 ? (
               <div className="text-center py-6">
-                <p className="text-sm text-[#1A1A1A]/50 dark:text-white/40 font-merriweather-sans">
+                <p className="text-sm text-foreground/50 font-merriweather-sans">
                   No recent activities found on Strava.
                 </p>
               </div>
@@ -335,7 +335,7 @@ const LogActivityPanel = ({
                       className={`w-full text-left p-3 rounded-xl border transition-all cursor-pointer ${
                         activity.imported
                           ? "border-emerald-200 dark:border-emerald-800/30 bg-emerald-50 dark:bg-emerald-900/10 opacity-60"
-                          : "border-black/5 dark:border-white/5 bg-[#F5F5F0] dark:bg-[#2A2A2E] hover:border-[#FC4C02]/30 hover:bg-[#FC4C02]/5"
+                          : "border-black/5 dark:border-white/5 bg-[var(--surface-muted)] dark:bg-[#2A2A2E] hover:border-[#FC4C02]/30 hover:bg-[#FC4C02]/5"
                       }`}
                     >
                       <div className="flex items-start justify-between gap-3">
@@ -344,10 +344,10 @@ const LogActivityPanel = ({
                             <span
                               className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide ${
                                 activity.type === "run"
-                                  ? "bg-[#FF5733]/10 text-[#FF5733]"
+                                  ? "bg-[var(--brand)]/15 text-[var(--brand-hover)]"
                                   : activity.type === "cycle"
                                     ? "bg-blue-500/10 text-blue-500"
-                                    : "bg-[#FFB800]/10 text-[#FFB800]"
+                                    : "bg-amber-500/10 text-amber-500"
                               }`}
                             >
                               {activity.stravaType}
@@ -358,10 +358,10 @@ const LogActivityPanel = ({
                               </span>
                             )}
                           </div>
-                          <p className="font-raleway font-semibold text-sm text-[#1A1A1A] dark:text-white truncate">
+                          <p className="font-raleway font-semibold text-sm text-foreground truncate">
                             {activity.name}
                           </p>
-                          <p className="font-merriweather-sans text-xs text-[#1A1A1A]/40 dark:text-white/30 mt-0.5">
+                          <p className="font-merriweather-sans text-xs text-foreground/40 mt-0.5">
                             {formatDate(activity.startDate)} ·{" "}
                             {activity.averagePace}
                           </p>
@@ -378,10 +378,10 @@ const LogActivityPanel = ({
                           </a>
                         </div>
                         <div className="text-right shrink-0">
-                          <p className="font-raleway font-bold text-sm text-[#1A1A1A] dark:text-white">
+                          <p className="font-raleway font-bold text-sm text-foreground">
                             {activity.distance.toFixed(1)} km
                           </p>
-                          <p className="font-merriweather-sans text-xs text-[#1A1A1A]/40 dark:text-white/30">
+                          <p className="font-merriweather-sans text-xs text-foreground/40">
                             {formatDuration(activity.movingTime)}
                           </p>
                         </div>
@@ -399,7 +399,7 @@ const LogActivityPanel = ({
                   >
                     <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" />
                   </svg>
-                  <span className="text-[10px] text-[#1A1A1A]/30 dark:text-white/20 font-merriweather-sans">
+                  <span className="text-[10px] text-foreground/30 font-merriweather-sans">
                     Powered by Strava
                   </span>
                 </div>
@@ -421,10 +421,10 @@ const LogActivityPanel = ({
                 <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169" />
               </svg>
               <div className="flex-1 min-w-0">
-                <p className="font-raleway font-semibold text-sm text-[#1A1A1A] dark:text-white truncate">
+                <p className="font-raleway font-semibold text-sm text-foreground truncate">
                   {selectedActivity.name}
                 </p>
-                <p className="font-merriweather-sans text-xs text-[#1A1A1A]/60 dark:text-white/50">
+                <p className="font-merriweather-sans text-xs text-foreground/60">
                   {selectedActivity.distance.toFixed(1)} km ·{" "}
                   {formatDuration(selectedActivity.movingTime)} ·{" "}
                   {selectedActivity.averagePace}
@@ -443,7 +443,7 @@ const LogActivityPanel = ({
                 type="button"
                 title="Deselect activity"
                 onClick={() => setSelectedActivity(null)}
-                className="text-[#1A1A1A]/30 dark:text-white/30 hover:text-[#1A1A1A] dark:hover:text-white cursor-pointer"
+                className="text-foreground/30 hover:text-foreground cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -451,27 +451,27 @@ const LogActivityPanel = ({
 
             {/* Activity Details */}
             <div className="grid grid-cols-3 gap-3">
-              <div className="bg-[#F5F5F0] dark:bg-[#2A2A2E] rounded-xl p-3 text-center">
-                <p className="font-raleway font-bold text-base text-[#FF5733]">
+              <div className="bg-[var(--surface-muted)] dark:bg-[#2A2A2E] rounded-xl p-3 text-center">
+                <p className="font-raleway font-bold text-base text-[var(--brand-hover)]">
                   {selectedActivity.distance.toFixed(1)}
                 </p>
-                <p className="font-merriweather-sans text-[10px] text-[#1A1A1A]/40 dark:text-white/30 uppercase tracking-wide">
+                <p className="font-merriweather-sans text-[10px] text-foreground/40 uppercase tracking-wide">
                   km
                 </p>
               </div>
-              <div className="bg-[#F5F5F0] dark:bg-[#2A2A2E] rounded-xl p-3 text-center">
-                <p className="font-raleway font-bold text-base text-[#1A1A1A] dark:text-white">
+              <div className="bg-[var(--surface-muted)] dark:bg-[#2A2A2E] rounded-xl p-3 text-center">
+                <p className="font-raleway font-bold text-base text-foreground">
                   {formatDuration(selectedActivity.movingTime)}
                 </p>
-                <p className="font-merriweather-sans text-[10px] text-[#1A1A1A]/40 dark:text-white/30 uppercase tracking-wide">
+                <p className="font-merriweather-sans text-[10px] text-foreground/40 uppercase tracking-wide">
                   Duration
                 </p>
               </div>
-              <div className="bg-[#F5F5F0] dark:bg-[#2A2A2E] rounded-xl p-3 text-center">
-                <p className="font-raleway font-bold text-base text-[#1A1A1A] dark:text-white">
+              <div className="bg-[var(--surface-muted)] dark:bg-[#2A2A2E] rounded-xl p-3 text-center">
+                <p className="font-raleway font-bold text-base text-foreground">
                   {selectedActivity.elevationGain}m
                 </p>
-                <p className="font-merriweather-sans text-[10px] text-[#1A1A1A]/40 dark:text-white/30 uppercase tracking-wide">
+                <p className="font-merriweather-sans text-[10px] text-foreground/40 uppercase tracking-wide">
                   Elevation
                 </p>
               </div>
@@ -479,7 +479,7 @@ const LogActivityPanel = ({
 
             {/* Race Select */}
             <div>
-              <label className="block text-xs font-medium text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider">
+              <label className="block text-xs font-medium text-foreground/60 mb-1.5 uppercase tracking-wider">
                 Assign to Race
               </label>
               <CustomSelect
@@ -496,7 +496,7 @@ const LogActivityPanel = ({
             <button
               onClick={handleImport}
               disabled={submitting || !raceId}
-              className="w-full py-3 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] disabled:opacity-50 text-white text-sm font-semibold transition-colors cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] disabled:opacity-50 text-[var(--brand-ink)] text-sm font-semibold transition-colors cursor-pointer flex items-center justify-center gap-2"
             >
               {submitting ? (
                 <>

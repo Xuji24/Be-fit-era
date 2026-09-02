@@ -27,12 +27,12 @@ export default function MacroBar({ label, consumed, target, unit, compact = fals
   return (
     <div>
       <div className="flex items-baseline justify-between mb-1.5 gap-2">
-        <p className={`${labelSize} font-semibold text-[#1A1A1A]/60 dark:text-white/60 font-merriweather-sans`}>
+        <p className={`${labelSize} font-semibold text-foreground/60 font-merriweather-sans`}>
           {label}
         </p>
         <p
           className={`${labelSize} font-merriweather-sans tabular-nums shrink-0 ${
-            over ? "text-[#FF5733] font-semibold" : "text-[#1A1A1A]/40 dark:text-white/40"
+            over ? "text-[var(--brand-hover)] font-semibold" : "text-foreground/40"
           }`}
         >
           {consumed}
@@ -40,9 +40,9 @@ export default function MacroBar({ label, consumed, target, unit, compact = fals
           {unit && ` ${unit}`}
         </p>
       </div>
-      <div className="h-1.5 rounded-full bg-[#1A1A1A]/5 dark:bg-white/10 overflow-hidden">
+      <div className="h-1.5 rounded-full bg-foreground/5 dark:bg-white/10 overflow-hidden">
         <div
-          className={`h-full rounded-full transition-all ${over ? "bg-[#FF5733]" : "bg-[#FF5733]/70"}`}
+          className={`h-full rounded-full transition-all ${over ? "bg-[var(--brand-hover)]" : "bg-[var(--brand)]/70"}`}
           style={{ width: `${pct}%` }}
           role="progressbar"
           aria-valuenow={consumed}

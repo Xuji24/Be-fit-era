@@ -40,17 +40,22 @@ const RaceProgressOverview = ({ joinedRaces, weeklyData }: Props) => {
   else if (progress >= 25) milestone = "Quarter done!";
   else milestone = "Just getting started";
 
-  const chartData = [{ value: progress, fill: "#FF5733" }];
+  // Recharts fill needs a literal color, not a CSS var() — kept in sync
+  // with --brand in app/globals.css by hand.
+  const chartData = [{ value: progress, fill: "#FFB366" }];
 
   return (
-    <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl p-6 border border-black/5 dark:border-white/5">
-      <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway mb-1">
-        Race Progress
-      </h2>
-      <p className="text-xs text-[#1A1A1A]/40 dark:text-white/30 mb-5">
-        {featured.title}
-      </p>
+    <div>
+      <div className="mb-5">
+        <h2 className="text-lg font-bold text-foreground font-raleway">
+          Race Progress
+        </h2>
+        <p className="text-xs text-foreground/40 mt-0.5">
+          {featured.title}
+        </p>
+      </div>
 
+      <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl p-6 border border-black/5 dark:border-white/5">
       {/* Radial progress ring */}
       <div className="flex flex-col items-center">
         <div className="w-44 h-44 relative">
@@ -82,55 +87,56 @@ const RaceProgressOverview = ({ joinedRaces, weeklyData }: Props) => {
 
           {/* Center text */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-3xl font-bold text-[#FF5733] font-raleway">
+            <span className="text-3xl font-bold text-[var(--brand-hover)] font-raleway">
               {Math.round(progress)}%
             </span>
-            <span className="text-[10px] text-[#1A1A1A]/40 dark:text-white/30 uppercase tracking-wider">
+            <span className="text-[10px] text-foreground/40 uppercase tracking-wider">
               complete
             </span>
           </div>
         </div>
 
         {/* Milestone badge */}
-        <div className="mt-3 px-3 py-1 rounded-full bg-[#FFB800]/10 text-[#FFB800] text-xs font-semibold">
+        <div className="mt-3 px-3 py-1 rounded-full bg-[var(--brand)]/12 text-[var(--brand-hover)] text-xs font-semibold">
           {milestone}
         </div>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-3 mt-6">
-        <div className="bg-[#F5F5F0] dark:bg-[#2A2A2E] rounded-xl p-3 text-center">
-          <p className="text-lg font-bold text-[#1A1A1A] dark:text-white">
+        <div className="bg-[var(--surface-muted)] dark:bg-[#2A2A2E] rounded-xl p-3 text-center">
+          <p className="text-lg font-bold text-foreground">
             {featured.loggedDistance} km
           </p>
-          <p className="text-[10px] text-[#1A1A1A]/40 dark:text-white/30 uppercase tracking-wider">
+          <p className="text-[10px] text-foreground/40 uppercase tracking-wider">
             Logged
           </p>
         </div>
-        <div className="bg-[#F5F5F0] dark:bg-[#2A2A2E] rounded-xl p-3 text-center">
-          <p className="text-lg font-bold text-[#1A1A1A] dark:text-white">
+        <div className="bg-[var(--surface-muted)] dark:bg-[#2A2A2E] rounded-xl p-3 text-center">
+          <p className="text-lg font-bold text-foreground">
             {remaining > 0 ? `${remaining} km` : "Done!"}
           </p>
-          <p className="text-[10px] text-[#1A1A1A]/40 dark:text-white/30 uppercase tracking-wider">
+          <p className="text-[10px] text-foreground/40 uppercase tracking-wider">
             Remaining
           </p>
         </div>
-        <div className="bg-[#F5F5F0] dark:bg-[#2A2A2E] rounded-xl p-3 text-center">
-          <p className="text-lg font-bold text-[#1A1A1A] dark:text-white">
+        <div className="bg-[var(--surface-muted)] dark:bg-[#2A2A2E] rounded-xl p-3 text-center">
+          <p className="text-lg font-bold text-foreground">
             {avgPerDay.toFixed(1)} km
           </p>
-          <p className="text-[10px] text-[#1A1A1A]/40 dark:text-white/30 uppercase tracking-wider">
+          <p className="text-[10px] text-foreground/40 uppercase tracking-wider">
             Avg / Day
           </p>
         </div>
-        <div className="bg-[#F5F5F0] dark:bg-[#2A2A2E] rounded-xl p-3 text-center">
-          <p className="text-lg font-bold text-[#1A1A1A] dark:text-white">
+        <div className="bg-[var(--surface-muted)] dark:bg-[#2A2A2E] rounded-xl p-3 text-center">
+          <p className="text-lg font-bold text-foreground">
             {daysToFinish === Infinity ? "—" : `~${daysToFinish}d`}
           </p>
-          <p className="text-[10px] text-[#1A1A1A]/40 dark:text-white/30 uppercase tracking-wider">
+          <p className="text-[10px] text-foreground/40 uppercase tracking-wider">
             Est. Finish
           </p>
         </div>
+      </div>
       </div>
     </div>
   );

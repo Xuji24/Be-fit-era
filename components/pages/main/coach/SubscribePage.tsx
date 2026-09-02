@@ -72,8 +72,8 @@ export default function SubscribePage() {
 
   if (loading || !access) {
     return (
-      <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212] flex items-center justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-[#FF5733]" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--brand-hover)]" />
       </div>
     );
   }
@@ -81,7 +81,7 @@ export default function SubscribePage() {
   const subtitle = subscribeSubtitle(access);
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212]">
+    <div className="min-h-screen bg-background">
       <CoachHero
         icon={Sparkles}
         title="Choose your coach"
@@ -90,7 +90,7 @@ export default function SubscribePage() {
       />
 
       <div className="max-w-5xl mx-auto px-6 pb-16">
-        <p className="text-sm text-[#1A1A1A]/60 dark:text-white/60 font-merriweather-sans">{subtitle}</p>
+        <p className="text-sm text-foreground/60 font-merriweather-sans">{subtitle}</p>
 
         {/* items-stretch (grid default) so all three cards share a height and
             their CTAs line up, regardless of feature-list length. */}
@@ -110,7 +110,7 @@ export default function SubscribePage() {
           ))}
         </div>
 
-        <p className="mt-8 text-center text-xs text-[#1A1A1A]/45 dark:text-white/45 font-merriweather-sans">
+        <p className="mt-8 text-center text-xs text-foreground/45 font-merriweather-sans">
           Payments are processed by PayMongo via GCash, Maya, or QR Ph. Each purchase covers one month of access.
         </p>
       </div>

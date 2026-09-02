@@ -43,13 +43,13 @@ export default function HistoryPanel({ open, onClose, title, children }: History
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="absolute inset-y-0 right-0 w-full max-w-sm bg-[#FAFAF8] dark:bg-[#121212] shadow-xl flex flex-col"
+        className="absolute inset-y-0 right-0 w-full max-w-sm bg-background shadow-xl flex flex-col"
       >
         <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-black/5 dark:border-white/5">
-          <h2 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway">{title}</h2>
+          <h2 className="text-sm font-semibold text-foreground font-raleway">{title}</h2>
           <button
             onClick={onClose}
-            className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-[#1A1A1A]/40 dark:text-white/40 hover:text-[#FF5733] hover:bg-[#FF5733]/10 transition-colors cursor-pointer"
+            className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-foreground/40 hover:text-[var(--brand-hover)] hover:bg-[var(--brand)]/10 transition-colors cursor-pointer"
             aria-label="Close history"
           >
             <X className="w-4 h-4" />

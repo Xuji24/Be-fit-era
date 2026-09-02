@@ -208,7 +208,7 @@ export default function ShareRacePopover({
 
           <button
             onClick={handleCopyLink}
-            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm font-merriweather-sans text-foreground hover:bg-gray-200 dark:hover:bg-[#3A3A3E] transition-colors cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm font-merriweather-sans text-foreground hover:bg-gray-200 dark:hover:bg-[#3A3A3E] transition-colors cursor-pointer"
           >
             {copied ? (
               <>

@@ -216,7 +216,9 @@ interface ExerciseModel3DProps {
 export default function ExerciseModel3D({
   animationId,
   className = "",
-  color = "#FF5733",
+  // Three.js material colors need a literal value, not a CSS var() — keep
+  // this in sync with --brand in app/globals.css by hand.
+  color = "#FFB366",
 }: ExerciseModel3DProps) {
   const pose = findExercisePose(animationId);
   const progressRef = useRef(0);

@@ -6,20 +6,20 @@ import Link from "next/link";
 // nested html/body trees.
 export default function AdminNotFound() {
   return (
-    <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="text-center max-w-md">
-        <span className="text-[100px] font-raleway font-bold leading-none text-[#FF5733]/10 select-none">
+        <span className="text-[100px] font-raleway font-bold leading-none text-[var(--brand)]/10 select-none">
           404
         </span>
-        <h1 className="font-raleway font-bold text-2xl text-[#1A1A1A] dark:text-white mb-3 -mt-6">
+        <h1 className="font-raleway font-bold text-2xl text-foreground mb-3 -mt-6">
           Page not found
         </h1>
-        <p className="text-sm text-[#1A1A1A]/50 dark:text-white/40 mb-8">
+        <p className="text-sm text-foreground/50 mb-8">
           This admin page doesn&apos;t exist or has been moved.
         </p>
         <Link
           href="/admin"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] text-white text-sm font-semibold font-raleway transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-[var(--brand-ink)] text-sm font-semibold font-raleway transition-colors"
         >
           Back to Admin Dashboard
         </Link>

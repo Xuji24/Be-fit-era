@@ -16,18 +16,20 @@
  */
 
 /** Brand orange. Duplicated from the --brand token because SVG attrs can't read CSS vars. */
-export const CHART_BRAND = "#FF5733";
+export const CHART_BRAND = "#FFB366";
 
 /**
  * Categorical series colours. Ordered so the first three read as distinct at a
  * glance for the macro split (protein / carbs / fat), which is the densest use.
  */
-export const CHART_SERIES = ["#FF5733", "#3B82F6", "#FFB800", "#10B981", "#8B5CF6"] as const;
+export const CHART_SERIES = ["#FFB366", "#3B82F6", "#FFA64D", "#10B981", "#8B5CF6"] as const;
 
-/** Semantic colours for state, kept separate from the categorical ramp. */
+/** Semantic colours for state, kept separate from the categorical ramp — and
+ *  from the brand palette, so a future brand refresh can't accidentally
+ *  change what "pending" means. */
 export const CHART_STATUS = {
   done: "#10B981",
-  pending: "#FFB800",
+  pending: "#F59E0B",
   missed: "#EF4444",
   neutral: "rgba(128,128,128,0.25)",
 } as const;

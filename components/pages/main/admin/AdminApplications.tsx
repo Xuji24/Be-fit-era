@@ -15,7 +15,7 @@ interface Props {
 }
 
 const statusColors: Record<string, string> = {
-  pending: "bg-[#FFB800]/10 text-[#FFB800]",
+  pending: "bg-amber-500/10 text-amber-500",
   approved: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
   rejected: "bg-red-500/10 text-red-500",
 };
@@ -82,7 +82,7 @@ export default function AdminApplicationsPage({
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">
+        <h2 className="text-lg font-bold text-foreground font-raleway">
           Organizer Applications ({total})
         </h2>
         <CustomSelect
@@ -107,7 +107,7 @@ export default function AdminApplicationsPage({
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-raleway font-bold text-sm text-[#1A1A1A] dark:text-white">
+                  <h3 className="font-raleway font-bold text-sm text-foreground">
                     {app.organization_name}
                   </h3>
                   <span
@@ -116,7 +116,7 @@ export default function AdminApplicationsPage({
                     {app.status}
                   </span>
                 </div>
-                <p className="text-xs text-[#1A1A1A]/50 dark:text-white/40">
+                <p className="text-xs text-foreground/50">
                   Applied by {app.applicant_name} &middot;{" "}
                   {new Date(app.created_at).toLocaleDateString("en-US", {
                     month: "short",
@@ -151,16 +151,16 @@ export default function AdminApplicationsPage({
             </div>
 
             {/* Details */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-[#1A1A1A]/60 dark:text-white/40">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-foreground/60">
               <div>
-                <span className="font-semibold text-[#1A1A1A]/40 dark:text-white/30">
+                <span className="font-semibold text-foreground/40">
                   Email:
                 </span>{" "}
                 {app.contact_email}
               </div>
               {app.contact_phone && (
                 <div>
-                  <span className="font-semibold text-[#1A1A1A]/40 dark:text-white/30">
+                  <span className="font-semibold text-foreground/40">
                     Phone:
                   </span>{" "}
                   {app.contact_phone}
@@ -168,7 +168,7 @@ export default function AdminApplicationsPage({
               )}
               {app.description && (
                 <div className="col-span-full">
-                  <span className="font-semibold text-[#1A1A1A]/40 dark:text-white/30">
+                  <span className="font-semibold text-foreground/40">
                     Description:
                   </span>{" "}
                   {app.description}
@@ -176,7 +176,7 @@ export default function AdminApplicationsPage({
               )}
               {app.document_urls.length > 0 && (
                 <div className="col-span-full">
-                  <span className="font-semibold text-[#1A1A1A]/40 dark:text-white/30">
+                  <span className="font-semibold text-foreground/40">
                     Documents:
                   </span>{" "}
                   {app.document_urls.map((url, i) => (
@@ -185,7 +185,7 @@ export default function AdminApplicationsPage({
                       href={url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 mr-3 text-[#FF5733] hover:underline"
+                      className="inline-flex items-center gap-1 mr-3 text-[var(--brand-hover)] hover:underline"
                     >
                       Doc {i + 1}
                       <ExternalLink className="w-3 h-3" />
@@ -213,7 +213,7 @@ export default function AdminApplicationsPage({
                   placeholder="Reason for rejection..."
                   value={rejectReason}
                   onChange={(e) => setRejectReason(e.target.value)}
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-red-500 outline-none transition-all font-merriweather-sans"
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-red-500 outline-none transition-all font-merriweather-sans"
                 />
                 <button
                   onClick={() => handleReject(app.id)}
@@ -227,7 +227,7 @@ export default function AdminApplicationsPage({
           </div>
         ))}
         {filtered.length === 0 && (
-          <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 p-10 text-center text-[#1A1A1A]/40 dark:text-white/30">
+          <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 p-10 text-center text-foreground/40">
             <FileCheck className="w-8 h-8 mx-auto mb-2 opacity-30" />
             No applications found.
           </div>

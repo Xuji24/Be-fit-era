@@ -35,7 +35,7 @@ export default function RaceCard({ race }: RaceCardProps) {
   return (
     <Link
       href={`/race/${race.id}`}
-      className="flex flex-col sm:flex-row bg-white dark:bg-[#1C1C1E] rounded-xl shadow-sm border border-gray-100 dark:border-white/8 overflow-hidden hover:shadow-md hover:shadow-[#FF5733]/5 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group"
+      className="flex flex-col sm:flex-row bg-white dark:bg-[#1C1C1E] rounded-xl shadow-sm border border-gray-100 dark:border-white/8 overflow-hidden hover:shadow-md hover:shadow-[var(--brand)]/10 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group"
     >
       {/* Image */}
       <div className="relative w-full sm:w-48 h-48 sm:h-auto shrink-0">
@@ -61,7 +61,7 @@ export default function RaceCard({ race }: RaceCardProps) {
       <div className="flex-1 p-4 sm:p-5 flex flex-col justify-between">
         <div>
           {/* Title & Organizer */}
-          <h3 className="font-raleway font-bold text-lg text-foreground mb-1 group-hover:text-[#FF5733] transition-colors">
+          <h3 className="font-raleway font-bold text-lg text-foreground mb-1 group-hover:text-[var(--brand-hover)] transition-colors">
             {race.title}
           </h3>
           <p className="font-merriweather-sans text-xs text-gray-500 dark:text-gray-400 mb-3">
@@ -77,19 +77,19 @@ export default function RaceCard({ race }: RaceCardProps) {
         {/* Meta Info */}
         <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-gray-500 dark:text-gray-400 font-merriweather-sans">
           <span className="flex items-center gap-1">
-            <CalendarDays size={14} className="text-[#FF5733]" />
+            <CalendarDays size={14} className="text-[var(--brand-hover)]" />
             {race.date}
           </span>
           <span className="flex items-center gap-1">
-            <MapPin size={14} className="text-[#FF5733]" />
+            <MapPin size={14} className="text-[var(--brand-hover)]" />
             {race.location}
           </span>
           <span className="flex items-center gap-1">
-            <Users size={14} className="text-[#FF5733]" />
+            <Users size={14} className="text-[var(--brand-hover)]" />
             {race.participants}/{race.maxParticipants}
           </span>
           <span className="flex items-center gap-1">
-            <Clock size={14} className="text-[#FF5733]" />
+            <Clock size={14} className="text-[var(--brand-hover)]" />
             Deadline: {race.registrationDeadline}
           </span>
         </div>

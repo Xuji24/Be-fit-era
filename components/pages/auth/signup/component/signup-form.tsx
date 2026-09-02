@@ -195,7 +195,7 @@ export default function SignUpForm() {
         <Button
           type="submit"
           disabled={isPending}
-          className="w-full py-5 rounded-xl bg-[#FF5733] text-white font-raleway font-bold text-base hover:bg-[#E84E2E] hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-5 rounded-xl bg-[var(--brand)] text-[var(--brand-ink)] font-raleway font-bold text-base hover:bg-[var(--brand-hover)] hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "Sign Up"}
         </Button>
@@ -204,7 +204,7 @@ export default function SignUpForm() {
       {/* Divider */}
       <div className="flex items-center gap-3 animate-fade-in animation-delay-300">
         <div className="flex-1 h-px bg-black/5 dark:bg-white/5" />
-        <span className="text-xs text-[#1A1A1A]/40 dark:text-white/30 font-merriweather-sans whitespace-nowrap">
+        <span className="text-xs text-foreground/40 dark:text-foreground/30 font-merriweather-sans whitespace-nowrap">
           Or Sign Up With
         </span>
         <div className="flex-1 h-px bg-black/5 dark:bg-white/5" />
@@ -217,7 +217,7 @@ export default function SignUpForm() {
           disabled={isPending}
           onClick={handleGoogleSignUp}
           variant="outline"
-          className="w-full py-4 rounded-xl border border-black/5 dark:border-white/5 bg-[#F5F5F0] dark:bg-[#1C1C1E] hover:bg-[#EBEBEB] dark:hover:bg-[#2A2A2E] text-[#1A1A1A] dark:text-white font-raleway font-semibold text-sm gap-3 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer disabled:opacity-50"
+          className="w-full py-4 rounded-xl border border-black/5 dark:border-white/5 bg-[var(--surface-muted)] dark:bg-[#1C1C1E] hover:bg-[#EBEBEB] dark:hover:bg-[#2A2A2E] text-foreground font-raleway font-semibold text-sm gap-3 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer disabled:opacity-50"
         >
           <Image src="/icons/google.svg" alt="Google" width={20} height={20} />
           Google
@@ -225,11 +225,11 @@ export default function SignUpForm() {
       </div>
 
       {/* Login Link */}
-      <p className="text-center text-sm text-[#1A1A1A]/50 dark:text-white/40 font-merriweather-sans animate-fade-in animation-delay-500">
+      <p className="text-center text-sm text-foreground/50 dark:text-foreground/40 font-merriweather-sans animate-fade-in animation-delay-500">
         Already have an account?{" "}
         <Link
           href="/login"
-          className="font-raleway font-semibold text-[#FF5733] hover:text-[#FFB800] transition-colors"
+          className="font-raleway font-semibold text-[var(--brand)] hover:text-[var(--brand-hover)] transition-colors"
         >
           Login Here.
         </Link>

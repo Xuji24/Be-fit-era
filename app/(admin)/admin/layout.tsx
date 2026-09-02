@@ -31,14 +31,14 @@ export default async function AdminLayout({
   const email = user.email || "";
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212]">
+    <div className="min-h-screen bg-background">
       {/* Admin Topbar */}
       <header className="sticky top-0 z-50 bg-[#1A1A1A] dark:bg-[#0D0D0D] border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/admin" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#FF5733] flex items-center justify-center">
-                <span className="text-white text-sm font-bold font-raleway">
+              <div className="w-8 h-8 rounded-lg bg-[var(--brand)] flex items-center justify-center">
+                <span className="text-[var(--brand-ink)] text-sm font-bold font-raleway">
                   F
                 </span>
               </div>
@@ -69,11 +69,11 @@ export default async function AdminLayout({
       {/* Admin Hero */}
       <section className="relative bg-[#1A1A1A] dark:bg-[#0D0D0D] pt-8 pb-8 md:pt-10 md:pb-10">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-100 bg-[#FF5733]/5 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-100 bg-[var(--brand)]/8 rounded-full blur-3xl" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="font-raleway text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight">
-            Admin <span className="text-[#FF5733]">Dashboard</span>
+            Admin <span className="text-[var(--brand)]">Dashboard</span>
           </h1>
           <p className="mt-2 text-white/50 text-sm max-w-lg">
             Manage users, races, registrations, and platform settings.

@@ -12,7 +12,7 @@ export default function HistoryButton({ onClick, label = "History" }: HistoryBut
   return (
     <button
       onClick={onClick}
-      className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-[#1A1A1A]/40 dark:text-white/40 hover:text-[#FF5733] hover:bg-[#FF5733]/10 transition-colors cursor-pointer"
+      className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-foreground/40 hover:text-[var(--brand-hover)] hover:bg-[var(--brand)]/10 transition-colors cursor-pointer"
       aria-label={label}
       title={label}
     >

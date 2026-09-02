@@ -28,11 +28,11 @@ export default function LocationMap({
         <MapMarker longitude={lng} latitude={lat}>
           <MarkerContent>
             {approximate ? (
-              <span className="block size-16 rounded-full bg-[#FF5733]/20 ring-2 ring-[#FF5733]/50" />
+              <span className="block size-16 rounded-full bg-[var(--brand)]/20 ring-2 ring-[var(--brand)]/50" />
             ) : (
               <MapPin
                 size={32}
-                className="text-[#FF5733] fill-[#FF5733]/25 drop-shadow-sm"
+                className="text-[var(--brand-hover)] fill-[var(--brand)]/25 drop-shadow-sm"
               />
             )}
           </MarkerContent>

@@ -38,8 +38,8 @@ export default async function LeaderboardPage() {
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative bg-[#1A1A1A] dark:bg-[#0D0D0D] rounded-2xl overflow-hidden pt-8 px-4 sm:px-6">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute -top-20 -right-20 w-80 h-80 bg-[#FF5733]/10 rounded-full blur-3xl" />
-              <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-[#FFB800]/8 rounded-full blur-2xl" />
+              <div className="absolute -top-20 -right-20 w-80 h-80 bg-[var(--brand)]/12 rounded-full blur-3xl" />
+              <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-[var(--brand-soft)]/10 rounded-full blur-2xl" />
             </div>
             <div className="relative">
               <LeaderboardPodium topThree={topThree} />

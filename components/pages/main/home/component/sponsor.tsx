@@ -36,7 +36,7 @@ export default async function Sponsor() {
   if (sponsors.length === 0) return null;
 
   return (
-    <div className="w-full bg-[#F2F2EF] dark:bg-[#1C1C1E] py-14 sm:py-16 md:py-20 px-4 sm:px-6 md:px-10 lg:px-16">
+    <div className="w-full bg-[var(--surface-muted)] dark:bg-[#1C1C1E] py-14 sm:py-16 md:py-20 px-4 sm:px-6 md:px-10 lg:px-16">
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-10 sm:mb-12">

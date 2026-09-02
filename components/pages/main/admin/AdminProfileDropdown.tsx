@@ -56,7 +56,7 @@ export default function AdminProfileDropdown({
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2 px-2 py-1 rounded-full hover:bg-white/5 transition-colors cursor-pointer"
       >
-        <div className="w-7 h-7 rounded-full bg-[#FF5733] flex items-center justify-center text-white text-xs font-bold font-raleway">
+        <div className="w-7 h-7 rounded-full bg-[var(--brand)] flex items-center justify-center text-[var(--brand-ink)] text-xs font-bold font-raleway">
           {initial}
         </div>
         <span className="text-xs text-white/60 font-medium hidden sm:block">
@@ -72,10 +72,10 @@ export default function AdminProfileDropdown({
       {open && (
         <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-[#1C1C1E] rounded-xl border border-black/5 dark:border-white/10 shadow-xl overflow-hidden z-50">
           <div className="px-4 py-3 border-b border-black/5 dark:border-white/5">
-            <p className="font-raleway font-semibold text-sm text-[#1A1A1A] dark:text-white truncate">
+            <p className="font-raleway font-semibold text-sm text-foreground truncate">
               {displayName}
             </p>
-            <p className="font-merriweather-sans text-xs text-[#1A1A1A]/40 dark:text-white/30 truncate mt-0.5">
+            <p className="font-merriweather-sans text-xs text-foreground/40 truncate mt-0.5">
               {email}
             </p>
           </div>
@@ -84,9 +84,9 @@ export default function AdminProfileDropdown({
             <Link
               href="/admin/settings"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-4 py-2.5 text-sm font-merriweather-sans text-[#1A1A1A] dark:text-white hover:bg-[#FF5733]/5 dark:hover:bg-[#FF5733]/10 transition-colors"
+              className="flex items-center gap-3 px-4 py-2.5 text-sm font-merriweather-sans text-foreground hover:bg-[var(--brand)]/10 transition-colors"
             >
-              <Settings className="w-4 h-4 text-[#1A1A1A]/40 dark:text-white/40" />
+              <Settings className="w-4 h-4 text-foreground/40" />
               Settings
             </Link>
           </div>

@@ -17,19 +17,19 @@ function StatTile({ icon, label, value, sub, estimate }: StatTileProps) {
     <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4 flex flex-col gap-1.5">
       <div className="flex items-center gap-2">
         {icon}
-        <p className="text-[10px] font-semibold text-[#1A1A1A]/40 dark:text-white/40 uppercase tracking-wider font-raleway">
+        <p className="text-[10px] font-semibold text-foreground/40 uppercase tracking-wider font-raleway">
           {label}
         </p>
       </div>
 
       <div className="flex items-baseline gap-2 flex-wrap">
-        <p className="text-xl font-bold text-[#1A1A1A] dark:text-white font-raleway">{value}</p>
+        <p className="text-xl font-bold text-foreground font-raleway">{value}</p>
         {estimate && (
           <span
             className={`px-1.5 py-0.5 rounded text-[10px] font-semibold font-raleway ${
               estimate.basis === "measured"
-                ? "bg-[#FF5733]/10 text-[#FF5733]"
-                : "bg-[#1A1A1A]/5 dark:bg-white/10 text-[#1A1A1A]/50 dark:text-white/50"
+                ? "bg-[var(--brand)]/15 text-[var(--brand-hover)]"
+                : "bg-foreground/5 dark:bg-white/10 text-foreground/50"
             }`}
           >
             {estimate.basis === "measured" ? "Measured" : "Estimate"}
@@ -38,10 +38,10 @@ function StatTile({ icon, label, value, sub, estimate }: StatTileProps) {
       </div>
 
       {sub && (
-        <p className="text-xs text-[#1A1A1A]/50 dark:text-white/50 font-merriweather-sans">{sub}</p>
+        <p className="text-xs text-foreground/50 font-merriweather-sans">{sub}</p>
       )}
       {estimate && (
-        <p className="text-[11px] leading-snug text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans">
+        <p className="text-[11px] leading-snug text-foreground/40 font-merriweather-sans">
           {estimate.explanation}
         </p>
       )}
@@ -69,8 +69,8 @@ export default function AnalyticsPanel({ summary }: AnalyticsPanelProps) {
   if (!hasAnyActivity) {
     return (
       <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-6 text-center">
-        <Activity className="w-6 h-6 text-[#FF5733] mx-auto mb-2" />
-        <p className="text-sm text-[#1A1A1A]/60 dark:text-white/60 font-merriweather-sans">
+        <Activity className="w-6 h-6 text-[var(--brand-hover)] mx-auto mb-2" />
+        <p className="text-sm text-foreground/60 font-merriweather-sans">
           Log a workout or a meal and your stats will show up here.
         </p>
       </div>
@@ -81,14 +81,14 @@ export default function AnalyticsPanel({ summary }: AnalyticsPanelProps) {
     <div className="space-y-3">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <StatTile
-          icon={<Flame className="w-3.5 h-3.5 text-[#FF5733]" />}
+          icon={<Flame className="w-3.5 h-3.5 text-[var(--brand-hover)]" />}
           label="Current streak"
           value={`${summary.currentStreakDays} day${summary.currentStreakDays === 1 ? "" : "s"}`}
           sub={summary.longestStreakDays > 0 ? `Best: ${summary.longestStreakDays} days` : undefined}
         />
 
         <StatTile
-          icon={<CalendarClock className="w-3.5 h-3.5 text-[#FF5733]" />}
+          icon={<CalendarClock className="w-3.5 h-3.5 text-[var(--brand-hover)]" />}
           label="Last workout"
           value={summary.daysSinceLastWorkout === null ? "None yet" : dayLabel(summary.daysSinceLastWorkout)}
           sub={
@@ -99,7 +99,7 @@ export default function AnalyticsPanel({ summary }: AnalyticsPanelProps) {
         />
 
         <StatTile
-          icon={<Target className="w-3.5 h-3.5 text-[#FF5733]" />}
+          icon={<Target className="w-3.5 h-3.5 text-[var(--brand-hover)]" />}
           label="Plan adherence"
           value={summary.adherencePct === null ? "—" : `${summary.adherencePct}%`}
           sub={summary.adherencePct === null ? "No active plan" : "Of scheduled workouts"}
@@ -108,9 +108,9 @@ export default function AnalyticsPanel({ summary }: AnalyticsPanelProps) {
         <StatTile
           icon={
             summary.weightChangeKg !== null && summary.weightChangeKg < 0 ? (
-              <TrendingDown className="w-3.5 h-3.5 text-[#FF5733]" />
+              <TrendingDown className="w-3.5 h-3.5 text-[var(--brand-hover)]" />
             ) : (
-              <TrendingUp className="w-3.5 h-3.5 text-[#FF5733]" />
+              <TrendingUp className="w-3.5 h-3.5 text-[var(--brand-hover)]" />
             )
           }
           label="Weight change"
@@ -127,7 +127,7 @@ export default function AnalyticsPanel({ summary }: AnalyticsPanelProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {summary.muscleGain && (
             <StatTile
-              icon={<Activity className="w-3.5 h-3.5 text-[#FF5733]" />}
+              icon={<Activity className="w-3.5 h-3.5 text-[var(--brand-hover)]" />}
               label="Lean mass change"
               value={signed(summary.muscleGain.pct)}
               estimate={summary.muscleGain}
@@ -135,7 +135,7 @@ export default function AnalyticsPanel({ summary }: AnalyticsPanelProps) {
           )}
           {summary.fatChange && (
             <StatTile
-              icon={<Activity className="w-3.5 h-3.5 text-[#FF5733]" />}
+              icon={<Activity className="w-3.5 h-3.5 text-[var(--brand-hover)]" />}
               label="Body fat change"
               value={signed(summary.fatChange.pct)}
               estimate={summary.fatChange}
@@ -145,9 +145,9 @@ export default function AnalyticsPanel({ summary }: AnalyticsPanelProps) {
       )}
 
       {(summary.muscleGain?.basis === "estimated" || summary.fatChange?.basis === "estimated") && (
-        <div className="flex gap-2.5 px-4 py-3 rounded-xl bg-[#1A1A1A]/[0.03] dark:bg-white/5">
-          <Info className="w-4 h-4 text-[#1A1A1A]/40 dark:text-white/40 shrink-0 mt-0.5" />
-          <p className="text-xs leading-relaxed text-[#1A1A1A]/50 dark:text-white/50 font-merriweather-sans">
+        <div className="flex gap-2.5 px-4 py-3 rounded-xl bg-foreground/[0.03] dark:bg-white/5">
+          <Info className="w-4 h-4 text-foreground/40 shrink-0 mt-0.5" />
+          <p className="text-xs leading-relaxed text-foreground/50 font-merriweather-sans">
             Body composition figures are modelled from your weight trend and training adherence — this app
             cannot measure body fat directly. Add a body fat % when you log a weigh-in and these become
             measured values.

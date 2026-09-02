@@ -30,14 +30,14 @@ export default function LocationField({
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
-        <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 uppercase tracking-wider font-merriweather-sans">
+        <label className="block text-xs font-semibold text-foreground/60 uppercase tracking-wider font-merriweather-sans">
           Location
         </label>
         {coords && (
           <button
             type="button"
             onClick={() => onCoordsChange(null)}
-            className="text-xs text-[#FF5733] hover:underline font-merriweather-sans"
+            className="text-xs text-[var(--brand-hover)] hover:underline font-merriweather-sans"
           >
             Clear pin
           </button>
@@ -58,7 +58,7 @@ export default function LocationField({
         />
       </div>
 
-      <p className="mt-1.5 text-xs text-[#1A1A1A]/40 dark:text-white/30 font-merriweather-sans">
+      <p className="mt-1.5 text-xs text-foreground/40 font-merriweather-sans">
         {coords
           ? `Pinned at ${coords.lat.toFixed(5)}, ${coords.lng.toFixed(5)} — click the map to adjust.`
           : "Search an address or click the map to pin the exact start line."}

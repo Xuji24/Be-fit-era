@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
             top: 0,
             bottom: 0,
             width: 8,
-            backgroundColor: "#FF5733",
+            backgroundColor: "#FFB366",
             display: "flex",
           }}
         />
@@ -160,10 +160,10 @@ export async function GET(request: NextRequest) {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#FF5733",
+                    backgroundColor: "#FFB366",
                     padding: "10px 20px",
                     borderRadius: 10,
-                    color: "#FFFFFF",
+                    color: "#1E1E1E",
                     fontSize: 22,
                     fontWeight: 700,
                   }}
@@ -181,8 +181,8 @@ export async function GET(request: NextRequest) {
             </div>
             <div
               style={{
-                backgroundColor: "#FF5733",
-                color: "#FFFFFF",
+                backgroundColor: "#FFB366",
+                color: "#1E1E1E",
                 padding: "12px 32px",
                 borderRadius: 10,
                 fontSize: 20,

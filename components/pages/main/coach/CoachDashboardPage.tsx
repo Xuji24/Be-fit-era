@@ -88,18 +88,18 @@ export default function CoachDashboardPage() {
 
   if (loading || !access) {
     return (
-      <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212] flex items-center justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-[#FF5733]" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--brand)]" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212]">
+    <div className="min-h-screen bg-background">
       <CoachHero icon={Dumbbell} title="AI Coach" backHref="/" maxWidthClassName="max-w-6xl" />
 
       <div className="max-w-6xl mx-auto px-6 pb-16 space-y-6">
-        <p className="max-w-3xl mx-auto text-sm text-[#1A1A1A]/60 dark:text-white/60 font-merriweather-sans">
+        <p className="max-w-3xl mx-auto text-sm text-foreground/60 font-merriweather-sans">
           {isPending ? (
             "Building your week of workouts and meals…"
           ) : (
@@ -127,14 +127,14 @@ export default function CoachDashboardPage() {
         ) : (
           <>
             {(access.outOfPlans || access.outOfChat) && (
-              <div className="max-w-3xl mx-auto bg-[#FF5733]/5 border border-[#FF5733]/25 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-                <Sparkles className="w-5 h-5 text-[#FF5733] shrink-0" />
-                <p className="flex-1 text-sm text-[#1A1A1A]/80 dark:text-white/80 font-merriweather-sans">
+              <div className="max-w-3xl mx-auto bg-[var(--brand)]/8 border border-[var(--brand)]/30 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                <Sparkles className="w-5 h-5 text-[var(--brand-hover)] shrink-0" />
+                <p className="flex-1 text-sm text-foreground/80 font-merriweather-sans">
                   {quotaBannerText(access)}
                 </p>
                 <Link
                   href="/coach/subscribe"
-                  className="px-5 py-2.5 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] text-white text-sm font-semibold font-raleway transition-colors shrink-0 text-center"
+                  className="px-5 py-2.5 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-[var(--brand-ink)] text-sm font-semibold font-raleway transition-colors shrink-0 text-center"
                 >
                   {access.tier === "free" ? "See plans" : "Upgrade"}
                 </Link>
@@ -148,19 +148,19 @@ export default function CoachDashboardPage() {
                     href="/coach/planner"
                     className="interactive-card bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4 flex flex-col items-center gap-2 text-center"
                   >
-                    <div className="w-9 h-9 rounded-lg bg-[#FF5733]/10 flex items-center justify-center shrink-0">
-                      <CalendarDays className="w-4 h-4 text-[#FF5733]" />
+                    <div className="w-9 h-9 rounded-lg bg-[var(--brand)]/15 flex items-center justify-center shrink-0">
+                      <CalendarDays className="w-4 h-4 text-[var(--brand-hover)]" />
                     </div>
-                    <span className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway">Planner</span>
+                    <span className="text-sm font-semibold text-foreground font-raleway">Planner</span>
                   </Link>
                   <Link
                     href="/coach/tracker"
                     className="interactive-card bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4 flex flex-col items-center gap-2 text-center"
                   >
-                    <div className="w-9 h-9 rounded-lg bg-[#FF5733]/10 flex items-center justify-center shrink-0">
-                      <ClipboardList className="w-4 h-4 text-[#FF5733]" />
+                    <div className="w-9 h-9 rounded-lg bg-[var(--brand)]/15 flex items-center justify-center shrink-0">
+                      <ClipboardList className="w-4 h-4 text-[var(--brand-hover)]" />
                     </div>
-                    <span className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway">Tracker</span>
+                    <span className="text-sm font-semibold text-foreground font-raleway">Tracker</span>
                   </Link>
                 </>
               )}
@@ -168,28 +168,28 @@ export default function CoachDashboardPage() {
                 href="/coach/progress"
                 className="interactive-card bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4 flex flex-col items-center gap-2 text-center"
               >
-                <div className="w-9 h-9 rounded-lg bg-[#FF5733]/10 flex items-center justify-center shrink-0">
-                  <TrendingUp className="w-4 h-4 text-[#FF5733]" />
+                <div className="w-9 h-9 rounded-lg bg-[var(--brand)]/15 flex items-center justify-center shrink-0">
+                  <TrendingUp className="w-4 h-4 text-[var(--brand-hover)]" />
                 </div>
-                <span className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway">Progress</span>
+                <span className="text-sm font-semibold text-foreground font-raleway">Progress</span>
               </Link>
               <Link
                 href="/coach/chat"
                 className="interactive-card bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4 flex flex-col items-center gap-2 text-center"
               >
-                <div className="w-9 h-9 rounded-lg bg-[#FF5733]/10 flex items-center justify-center shrink-0">
-                  <MessageCircle className="w-4 h-4 text-[#FF5733]" />
+                <div className="w-9 h-9 rounded-lg bg-[var(--brand)]/15 flex items-center justify-center shrink-0">
+                  <MessageCircle className="w-4 h-4 text-[var(--brand-hover)]" />
                 </div>
-                <span className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway">Ask Coach</span>
+                <span className="text-sm font-semibold text-foreground font-raleway">Ask Coach</span>
               </Link>
             </div>
 
             <div className="max-w-3xl mx-auto bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm overflow-hidden p-6 sm:p-8 text-center space-y-4">
-              <Sparkles className="w-8 h-8 text-[#FF5733] mx-auto" />
-              <h2 className="text-lg font-semibold text-[#1A1A1A] dark:text-white font-raleway">
+              <Sparkles className="w-8 h-8 text-[var(--brand-hover)] mx-auto" />
+              <h2 className="text-lg font-semibold text-foreground font-raleway">
                 {hasActivePlan ? "Regenerate your plan" : "Generate your plan"}
               </h2>
-              <p className="text-sm text-[#1A1A1A]/60 dark:text-white/60 font-merriweather-sans">
+              <p className="text-sm text-foreground/60 font-merriweather-sans">
                 {access.outOfPlans
                   ? access.tier === "free"
                     ? "You've used all your free plan generations. Subscribe to generate more."
@@ -199,7 +199,7 @@ export default function CoachDashboardPage() {
               <button
                 onClick={handleGeneratePlan}
                 disabled={!access.hasAccess || access.outOfPlans}
-                className="px-8 py-3 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] disabled:opacity-50 text-white text-sm font-semibold font-raleway transition-colors cursor-pointer inline-flex items-center justify-center gap-2"
+                className="px-8 py-3 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] disabled:opacity-50 text-[var(--brand-ink)] text-sm font-semibold font-raleway transition-colors cursor-pointer inline-flex items-center justify-center gap-2"
               >
                 {hasActivePlan ? "Regenerate my plan" : "Generate my plan"}
               </button>

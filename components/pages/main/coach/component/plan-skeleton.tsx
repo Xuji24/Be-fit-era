@@ -6,7 +6,7 @@ function SkeletonDayCard() {
     <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm overflow-hidden">
       <div className="px-5 py-4 border-b border-black/5 dark:border-white/5 flex items-center justify-between">
         <div className="space-y-1.5">
-          <div className="h-2.5 w-14 rounded bg-[#FF5733]/20 skeleton-shimmer" />
+          <div className="h-2.5 w-14 rounded bg-[var(--brand)]/25 skeleton-shimmer" />
           <div className="h-3 w-24 rounded skeleton-shimmer" />
         </div>
         <div className="h-2.5 w-16 rounded skeleton-shimmer" />

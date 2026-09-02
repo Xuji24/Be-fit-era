@@ -48,7 +48,7 @@ export default function DotGridBackground({
   dotSize = 3,
   gap = 26,
   baseColor = "rgba(255,255,255,0.14)",
-  activeColor = "#FF5733",
+  activeColor = "#FFB366",
   proximity = 120,
   shockRadius = 200,
   shockStrength = 4,

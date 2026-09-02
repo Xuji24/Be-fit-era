@@ -203,9 +203,9 @@ export default function ChatPage() {
     return (
       <div
         data-app-shell="locked"
-        className="flex-1 min-h-0 bg-[#FAFAF8] dark:bg-[#121212] flex items-center justify-center"
+        className="flex-1 min-h-0 bg-background flex items-center justify-center"
       >
-        <Loader2 className="w-6 h-6 animate-spin text-[#FF5733]" />
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--brand-hover)]" />
       </div>
     );
   }
@@ -219,7 +219,7 @@ export default function ChatPage() {
        below its content, which is what makes an inner scrollbox not scroll. */
     <div
       data-app-shell="locked"
-      className="flex-1 min-h-0 flex flex-col bg-[#FAFAF8] dark:bg-[#121212]"
+      className="flex-1 min-h-0 flex flex-col bg-background"
     >
       <CoachHero
         icon={MessageCircle}
@@ -229,7 +229,7 @@ export default function ChatPage() {
           access ? (
             // The sidebar carrying this number is hidden below lg, so the one
             // figure that actually gates the user surfaces here instead.
-            <span className="shrink-0 text-xs font-merriweather-sans text-[#1A1A1A]/50 dark:text-white/50 lg:hidden">
+            <span className="shrink-0 text-xs font-merriweather-sans text-foreground/50 lg:hidden">
               {access.chatQuota.remaining}/{access.chatQuota.limit} left
             </span>
           ) : undefined
@@ -246,10 +246,10 @@ export default function ChatPage() {
             aria-live="polite"
             aria-relevant="additions"
             aria-label="Conversation"
-            className="flex-1 min-h-0 overflow-y-auto overscroll-contain custom-scrollbar space-y-3 py-2 pr-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF5733]/40 rounded-lg"
+            className="flex-1 min-h-0 overflow-y-auto overscroll-contain custom-scrollbar space-y-3 py-2 pr-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand)]/40 rounded-lg"
           >
             {messages.length === 0 && (
-              <p className="text-sm text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans text-center py-8">
+              <p className="text-sm text-foreground/40 font-merriweather-sans text-center py-8">
                 Ask about your plan, food, or workouts.
               </p>
             )}
@@ -258,8 +258,8 @@ export default function ChatPage() {
             ))}
             {isSending && (
               <div className="flex justify-start">
-                <div className="bg-[#F5F5F0] dark:bg-[#2A2A2E] px-3.5 py-2 rounded-2xl rounded-bl-md">
-                  <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1A1A1A]/40 dark:text-white/40" />
+                <div className="bg-[var(--surface-muted)] dark:bg-[#2A2A2E] px-3.5 py-2 rounded-2xl rounded-bl-md">
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-foreground/40" />
                   <span className="sr-only">Coach is typing…</span>
                 </div>
               </div>
@@ -273,7 +273,7 @@ export default function ChatPage() {
             {showJump && (
               <button
                 onClick={jumpToLatest}
-                className="absolute -top-11 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-[#2A2A2E] border border-black/5 dark:border-white/10 shadow-sm text-xs font-semibold font-raleway text-[#1A1A1A]/70 dark:text-white/70 hover:text-[#FF5733] transition-colors cursor-pointer"
+                className="absolute -top-11 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-[#2A2A2E] border border-black/5 dark:border-white/10 shadow-sm text-xs font-semibold font-raleway text-foreground/70 hover:text-[var(--brand-hover)] transition-colors cursor-pointer"
               >
                 <ArrowDown className="w-3 h-3" />
                 Jump to latest
@@ -281,14 +281,14 @@ export default function ChatPage() {
             )}
             {outOfChat ? (
               <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-4 text-center space-y-3">
-                <p className="text-sm text-[#1A1A1A]/70 dark:text-white/70 font-merriweather-sans">
+                <p className="text-sm text-foreground/70 font-merriweather-sans">
                   {tier === "free"
                     ? "You've used all your free coach messages. Your plan, tracker, and progress still work."
                     : "You've used all your coach messages for today. They reset tomorrow."}
                 </p>
                 <Link
                   href="/coach/subscribe"
-                  className="inline-flex px-6 py-2.5 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] text-white text-sm font-semibold font-raleway transition-colors"
+                  className="inline-flex px-6 py-2.5 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-[var(--brand-ink)] text-sm font-semibold font-raleway transition-colors"
                 >
                   {tier === "free" ? "Subscribe to continue" : "Upgrade for more"}
                 </Link>
@@ -310,12 +310,12 @@ export default function ChatPage() {
                   }
                   maxLength={1000}
                   disabled={isSending || isPending}
-                  className="flex-1 px-3.5 py-2.5 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans disabled:opacity-50"
+                  className="flex-1 px-3.5 py-2.5 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans disabled:opacity-50"
                 />
                 <button
                   type="submit"
                   disabled={isSending || isPending || !input.trim()}
-                  className="shrink-0 w-10 h-10 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] disabled:opacity-50 text-white flex items-center justify-center transition-colors cursor-pointer"
+                  className="shrink-0 w-10 h-10 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] disabled:opacity-50 text-[var(--brand-ink)] flex items-center justify-center transition-colors cursor-pointer"
                   aria-label="Send"
                 >
                   <Send className="w-4 h-4" />
@@ -332,32 +332,32 @@ export default function ChatPage() {
         <aside className="hidden lg:flex lg:col-span-1 min-h-0 flex-col gap-4 overflow-y-auto overscroll-contain custom-scrollbar pr-1">
           {access && (
             <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-5 space-y-3">
-              <h2 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway">
+              <h2 className="text-sm font-semibold text-foreground font-raleway">
                 Your coach status
               </h2>
               <div className="flex items-center justify-between text-sm font-merriweather-sans">
-                <span className="text-[#1A1A1A]/50 dark:text-white/50">Plan</span>
-                <span className="text-[#1A1A1A] dark:text-white font-semibold capitalize">
+                <span className="text-foreground/50">Plan</span>
+                <span className="text-foreground font-semibold capitalize">
                   {access.tier === "free" ? "Free trial" : access.tier}
                 </span>
               </div>
               {access.status === "trialing" && access.trialDaysLeft !== null && (
                 <div className="flex items-center justify-between text-sm font-merriweather-sans">
-                  <span className="text-[#1A1A1A]/50 dark:text-white/50">Trial ends</span>
-                  <span className="text-[#1A1A1A] dark:text-white font-semibold">
+                  <span className="text-foreground/50">Trial ends</span>
+                  <span className="text-foreground font-semibold">
                     {access.trialDaysLeft === 0 ? "Today" : `${access.trialDaysLeft}d left`}
                   </span>
                 </div>
               )}
               <div className="flex items-center justify-between text-sm font-merriweather-sans">
-                <span className="text-[#1A1A1A]/50 dark:text-white/50">Messages left</span>
-                <span className="text-[#1A1A1A] dark:text-white font-semibold">
+                <span className="text-foreground/50">Messages left</span>
+                <span className="text-foreground font-semibold">
                   {access.chatQuota.remaining} / {access.chatQuota.limit}
                 </span>
               </div>
               <div className="flex items-center justify-between text-sm font-merriweather-sans">
-                <span className="text-[#1A1A1A]/50 dark:text-white/50">Plans left</span>
-                <span className="text-[#1A1A1A] dark:text-white font-semibold">
+                <span className="text-foreground/50">Plans left</span>
+                <span className="text-foreground font-semibold">
                   {access.planQuota.remaining} / {access.planQuota.limit}
                 </span>
               </div>
@@ -365,24 +365,24 @@ export default function ChatPage() {
           )}
 
           <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-5 space-y-2">
-            <h2 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway mb-1">
+            <h2 className="text-sm font-semibold text-foreground font-raleway mb-1">
               Quick links
             </h2>
             <Link
               href="/coach/planner"
-              className="block text-sm text-[#1A1A1A]/70 dark:text-white/70 hover:text-[#FF5733] font-merriweather-sans transition-colors"
+              className="block text-sm text-foreground/70 hover:text-[var(--brand-hover)] font-merriweather-sans transition-colors"
             >
               View your plan
             </Link>
             <Link
               href="/coach/tracker"
-              className="block text-sm text-[#1A1A1A]/70 dark:text-white/70 hover:text-[#FF5733] font-merriweather-sans transition-colors"
+              className="block text-sm text-foreground/70 hover:text-[var(--brand-hover)] font-merriweather-sans transition-colors"
             >
               Log today&apos;s food
             </Link>
             <Link
               href="/coach/progress"
-              className="block text-sm text-[#1A1A1A]/70 dark:text-white/70 hover:text-[#FF5733] font-merriweather-sans transition-colors"
+              className="block text-sm text-foreground/70 hover:text-[var(--brand-hover)] font-merriweather-sans transition-colors"
             >
               Check your progress
             </Link>

@@ -34,7 +34,7 @@ export default function Pagination({ currentPage, totalPages, basePath }: Pagina
       <button
         onClick={() => goToPage(currentPage - 1)}
         disabled={currentPage <= 1}
-        className="p-2 rounded-lg text-sm disabled:opacity-30 hover:bg-[#F5F5F0] dark:hover:bg-[#2A2A2E] transition-colors"
+        className="p-2 rounded-lg text-sm disabled:opacity-30 hover:bg-[var(--surface-muted)] dark:hover:bg-[#2A2A2E] transition-colors"
         aria-label="Previous page"
       >
         <ChevronLeft size={16} />
@@ -44,7 +44,7 @@ export default function Pagination({ currentPage, totalPages, basePath }: Pagina
         <>
           <button
             onClick={() => goToPage(1)}
-            className="w-8 h-8 rounded-lg text-sm hover:bg-[#F5F5F0] dark:hover:bg-[#2A2A2E] transition-colors"
+            className="w-8 h-8 rounded-lg text-sm hover:bg-[var(--surface-muted)] dark:hover:bg-[#2A2A2E] transition-colors"
           >
             1
           </button>
@@ -58,8 +58,8 @@ export default function Pagination({ currentPage, totalPages, basePath }: Pagina
           onClick={() => goToPage(p)}
           className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
             p === currentPage
-              ? "bg-[#FF5733] text-white"
-              : "hover:bg-[#F5F5F0] dark:hover:bg-[#2A2A2E]"
+              ? "bg-[var(--brand)] text-[var(--brand-ink)]"
+              : "hover:bg-[var(--surface-muted)] dark:hover:bg-[#2A2A2E]"
           }`}
         >
           {p}
@@ -71,7 +71,7 @@ export default function Pagination({ currentPage, totalPages, basePath }: Pagina
           {end < totalPages - 1 && <span className="px-1 text-muted text-xs">…</span>}
           <button
             onClick={() => goToPage(totalPages)}
-            className="w-8 h-8 rounded-lg text-sm hover:bg-[#F5F5F0] dark:hover:bg-[#2A2A2E] transition-colors"
+            className="w-8 h-8 rounded-lg text-sm hover:bg-[var(--surface-muted)] dark:hover:bg-[#2A2A2E] transition-colors"
           >
             {totalPages}
           </button>
@@ -81,7 +81,7 @@ export default function Pagination({ currentPage, totalPages, basePath }: Pagina
       <button
         onClick={() => goToPage(currentPage + 1)}
         disabled={currentPage >= totalPages}
-        className="p-2 rounded-lg text-sm disabled:opacity-30 hover:bg-[#F5F5F0] dark:hover:bg-[#2A2A2E] transition-colors"
+        className="p-2 rounded-lg text-sm disabled:opacity-30 hover:bg-[var(--surface-muted)] dark:hover:bg-[#2A2A2E] transition-colors"
         aria-label="Next page"
       >
         <ChevronRight size={16} />

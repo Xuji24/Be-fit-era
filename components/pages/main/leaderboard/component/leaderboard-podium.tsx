@@ -70,10 +70,10 @@ function PodiumColumn({
       </div>
 
       {/* Name & Username */}
-      <p className={`font-raleway font-bold text-sm sm:text-base text-white ${isChampion ? "text-base sm:text-lg" : ""}`}>
+      <p className={`font-raleway font-bold text-sm sm:text-base text-white max-w-24 sm:max-w-32 truncate text-center ${isChampion ? "text-base sm:text-lg" : ""}`}>
         {entry.user}
       </p>
-      <p className="font-merriweather-sans text-xs text-gray-400 dark:text-gray-300 mb-3">
+      <p className="font-merriweather-sans text-xs text-gray-400 dark:text-gray-300 mb-3 max-w-24 sm:max-w-32 truncate text-center">
         {entry.username}
       </p>
 

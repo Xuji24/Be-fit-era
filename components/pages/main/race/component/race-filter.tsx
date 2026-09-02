@@ -34,8 +34,8 @@ export default function RaceFilter({
             className={`px-4 py-2 rounded-full text-sm font-raleway font-bold transition-all duration-200 cursor-pointer
               ${
                 selectedCategory === category
-                  ? "bg-[#FF5733] text-white shadow-md shadow-[#FF5733]/25"
-                  : "bg-white dark:bg-[#1C1C1E] text-foreground border border-gray-200 dark:border-white/10 hover:border-[#FF5733]/40 dark:hover:border-[#FF5733]/40 hover:bg-gray-50 dark:hover:bg-[#2A2A2E]"
+                  ? "bg-[var(--brand)] text-[var(--brand-ink)] shadow-md shadow-[var(--brand)]/25"
+                  : "bg-white dark:bg-[#1C1C1E] text-foreground border border-gray-200 dark:border-white/10 hover:border-[var(--brand)]/40 hover:bg-gray-50 dark:hover:bg-[#2A2A2E]"
               }`}
           >
             {category}
@@ -51,7 +51,7 @@ export default function RaceFilter({
           placeholder="Search races..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full px-4 py-2.5 pl-10 rounded-lg border border-gray-200 dark:border-white/10 text-sm font-merriweather-sans text-foreground placeholder:text-gray-400 bg-white dark:bg-[#1C1C1E] focus:outline-none focus:ring-2 focus:ring-[#FF5733] focus:border-transparent transition-all"
+          className="w-full px-4 py-2.5 pl-10 rounded-lg border border-gray-200 dark:border-white/10 text-sm font-merriweather-sans text-foreground placeholder:text-gray-400 bg-white dark:bg-[#1C1C1E] focus:outline-none focus:ring-2 focus:ring-[var(--brand)] focus:border-transparent transition-all"
         />
         <svg
           className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"

@@ -20,7 +20,7 @@ export default function BmiTrendChart({ weeks }: BmiTrendChartProps) {
   if (weeks.length === 0) {
     return (
       <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-6 text-center">
-        <p className="text-sm text-[#1A1A1A]/50 dark:text-white/50 font-merriweather-sans">
+        <p className="text-sm text-foreground/50 font-merriweather-sans">
           Log this week&apos;s weigh-in to start tracking your BMI over time.
         </p>
       </div>
@@ -33,9 +33,9 @@ export default function BmiTrendChart({ weeks }: BmiTrendChartProps) {
   return (
     <div className={`bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-6 ${CHART_COLOR_SCHEME_CLASS}`}>
       <div className="flex items-baseline justify-between mb-4">
-        <h3 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway">Weekly BMI trend</h3>
+        <h3 className="text-sm font-semibold text-foreground font-raleway">Weekly BMI trend</h3>
         {latest.bmi !== null && (
-          <p className="text-sm font-semibold text-[#FF5733] font-raleway capitalize">
+          <p className="text-sm font-semibold text-[var(--brand-hover)] font-raleway capitalize">
             {latest.bmi} · {bmiCategory(latest.bmi)}
           </p>
         )}

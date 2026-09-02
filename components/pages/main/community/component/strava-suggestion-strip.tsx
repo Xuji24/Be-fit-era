@@ -77,13 +77,13 @@ export default function StravaSuggestionStrip({
               disabled={disabled || pendingId !== null}
               onClick={() => onSelect(activity)}
               title={`${activity.name} — ${activity.distance}km`}
-              className="relative shrink-0 w-24 rounded-lg border border-gray-200 dark:border-zinc-700 p-1.5 hover:border-[#FF5733] transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed group"
+              className="relative shrink-0 w-24 rounded-lg border border-gray-200 dark:border-zinc-700 p-1.5 hover:border-[var(--brand)] transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed group"
             >
               <svg viewBox="0 0 100 100" className="w-full h-14" aria-hidden="true">
                 <path
                   d={path}
                   fill="none"
-                  stroke="#FF5733"
+                  stroke="var(--brand)"
                   strokeWidth="4"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -98,7 +98,7 @@ export default function StravaSuggestionStrip({
 
               {isPending && (
                 <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-white/70 dark:bg-zinc-900/70">
-                  <Loader2 className="w-4 h-4 animate-spin text-[#FF5733]" />
+                  <Loader2 className="w-4 h-4 animate-spin text-[var(--brand-hover)]" />
                 </div>
               )}
             </button>

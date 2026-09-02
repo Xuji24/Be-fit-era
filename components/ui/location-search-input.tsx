@@ -120,12 +120,12 @@ export default function LocationSearchInput({
         aria-expanded={open}
         aria-controls={listboxId}
         aria-autocomplete="list"
-        className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+        className="w-full px-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
       />
       {loading && (
         <Loader2
           size={16}
-          className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-[#FF5733]"
+          className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-[var(--brand-hover)]"
         />
       )}
       {open && (
@@ -140,10 +140,10 @@ export default function LocationSearchInput({
                 type="button"
                 onMouseEnter={() => setActiveIndex(i)}
                 onClick={() => choose(s)}
-                className={`w-full text-left px-4 py-2.5 text-sm font-merriweather-sans text-[#1A1A1A] dark:text-white transition-colors ${
+                className={`w-full text-left px-4 py-2.5 text-sm font-merriweather-sans text-foreground transition-colors ${
                   i === activeIndex
-                    ? "bg-[#FF5733]/10"
-                    : "hover:bg-[#FF5733]/10"
+                    ? "bg-[var(--brand)]/10"
+                    : "hover:bg-[var(--brand)]/10"
                 }`}
               >
                 {s.label}

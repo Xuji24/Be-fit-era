@@ -128,12 +128,12 @@ export default function AdminSponsorsPage({
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">
+        <h2 className="text-lg font-bold text-foreground font-raleway">
           Sponsors ({total})
         </h2>
         <button
           onClick={() => setShowCreate(!showCreate)}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] text-white text-sm font-semibold transition-colors cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-[var(--brand-ink)] text-sm font-semibold transition-colors cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Add Sponsor
@@ -142,8 +142,8 @@ export default function AdminSponsorsPage({
 
       {/* Create Form */}
       {showCreate && (
-        <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-[#FF5733]/20 p-5 mb-6">
-          <h3 className="text-sm font-bold text-[#1A1A1A] dark:text-white mb-4">
+        <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-[var(--brand)]/20 p-5 mb-6">
+          <h3 className="text-sm font-bold text-foreground mb-4">
             New Sponsor
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -152,7 +152,7 @@ export default function AdminSponsorsPage({
               placeholder="Sponsor name *"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              className="px-4 py-2.5 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+              className="px-4 py-2.5 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
             />
             <div className="flex items-center gap-3">
               <input
@@ -174,7 +174,7 @@ export default function AdminSponsorsPage({
                   <button
                     type="button"
                     onClick={clearLogoSelection}
-                    className="p-1.5 rounded-lg hover:bg-red-500/10 text-[#1A1A1A]/40 dark:text-white/30 hover:text-red-500 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg hover:bg-red-500/10 text-foreground/40 hover:text-red-500 transition-colors cursor-pointer"
                     title="Remove"
                   >
                     <X className="w-4 h-4" />
@@ -183,7 +183,7 @@ export default function AdminSponsorsPage({
               ) : (
                 <label
                   htmlFor="sponsor-logo-input"
-                  className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A]/50 dark:text-white/30 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-merriweather-sans"
+                  className="flex-1 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground/50 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors font-merriweather-sans"
                 >
                   <Upload className="w-4 h-4" />
                   Upload logo image
@@ -195,27 +195,27 @@ export default function AdminSponsorsPage({
               placeholder="Website URL"
               value={newWebsiteUrl}
               onChange={(e) => setNewWebsiteUrl(e.target.value)}
-              className="px-4 py-2.5 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+              className="px-4 py-2.5 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
             />
             <input
               type="number"
               placeholder="Display order"
               value={newOrder}
               onChange={(e) => setNewOrder(Number(e.target.value))}
-              className="px-4 py-2.5 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+              className="px-4 py-2.5 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
             />
           </div>
           <div className="flex justify-end gap-2 mt-4">
             <button
               onClick={() => setShowCreate(false)}
-              className="px-4 py-2 rounded-xl text-sm font-semibold text-[#1A1A1A]/60 dark:text-white/40 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl text-sm font-semibold text-foreground/60 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               onClick={handleCreate}
               disabled={creating}
-              className="px-4 py-2 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] text-white text-sm font-semibold transition-colors cursor-pointer disabled:opacity-50"
+              className="px-4 py-2 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-[var(--brand-ink)] text-sm font-semibold transition-colors cursor-pointer disabled:opacity-50"
             >
               {creating ? "Creating..." : "Create"}
             </button>
@@ -229,19 +229,19 @@ export default function AdminSponsorsPage({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-black/5 dark:border-white/5">
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]/50 dark:text-white/40">
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-foreground/50">
                   Order
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]/50 dark:text-white/40">
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-foreground/50">
                   Name
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]/50 dark:text-white/40">
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-foreground/50">
                   Logo
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]/50 dark:text-white/40">
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-foreground/50">
                   Status
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]/50 dark:text-white/40">
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-foreground/50">
                   Actions
                 </th>
               </tr>
@@ -252,15 +252,15 @@ export default function AdminSponsorsPage({
                   key={sponsor.id}
                   className="hover:bg-black/2 dark:hover:bg-white/2"
                 >
-                  <td className="px-5 py-3 text-[#1A1A1A]/60 dark:text-white/40">
+                  <td className="px-5 py-3 text-foreground/60">
                     {sponsor.display_order}
                   </td>
                   <td className="px-5 py-3">
-                    <p className="font-semibold text-[#1A1A1A] dark:text-white">
+                    <p className="font-semibold text-foreground">
                       {sponsor.name}
                     </p>
                     {sponsor.website_url && (
-                      <p className="text-[10px] text-[#1A1A1A]/40 dark:text-white/30 truncate">
+                      <p className="text-[10px] text-foreground/40 truncate">
                         {sponsor.website_url}
                       </p>
                     )}
@@ -274,7 +274,7 @@ export default function AdminSponsorsPage({
                         className="w-10 h-10 rounded-lg object-contain bg-white border border-black/5"
                       />
                     ) : (
-                      <span className="text-[#1A1A1A]/40 dark:text-white/30 text-xs">
+                      <span className="text-foreground/40 text-xs">
                         —
                       </span>
                     )}
@@ -296,12 +296,12 @@ export default function AdminSponsorsPage({
                         {sponsor.active ? (
                           <ToggleRight className="w-5 h-5 text-emerald-500" />
                         ) : (
-                          <ToggleLeft className="w-5 h-5 text-[#1A1A1A]/30 dark:text-white/30" />
+                          <ToggleLeft className="w-5 h-5 text-foreground/30" />
                         )}
                       </button>
                       <button
                         onClick={() => handleDelete(sponsor.id)}
-                        className="p-1.5 rounded-lg hover:bg-red-500/10 text-[#1A1A1A]/30 dark:text-white/30 hover:text-red-500 transition-colors cursor-pointer"
+                        className="p-1.5 rounded-lg hover:bg-red-500/10 text-foreground/30 hover:text-red-500 transition-colors cursor-pointer"
                         title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -314,7 +314,7 @@ export default function AdminSponsorsPage({
                 <tr>
                   <td
                     colSpan={5}
-                    className="px-5 py-10 text-center text-[#1A1A1A]/40 dark:text-white/30"
+                    className="px-5 py-10 text-center text-foreground/40"
                   >
                     <Handshake className="w-8 h-8 mx-auto mb-2 opacity-30" />
                     No sponsors yet.

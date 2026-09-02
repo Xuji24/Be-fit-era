@@ -105,14 +105,14 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#FF5733]" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[var(--brand-hover)]" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212]">
+    <div className="min-h-screen bg-background">
       <PageHeader
         icon={Shield}
         title="Settings"
@@ -128,14 +128,14 @@ export default function SettingsPage() {
             {/* Card Header */}
             <div className="p-6 sm:p-8 border-b border-black/5 dark:border-white/5">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#FF5733]/10 flex items-center justify-center">
-                  <Lock className="w-5 h-5 text-[#FF5733]" />
+                <div className="w-10 h-10 rounded-xl bg-[var(--brand)]/15 flex items-center justify-center">
+                  <Lock className="w-5 h-5 text-[var(--brand-hover)]" />
                 </div>
                 <div>
-                  <h2 className="font-raleway font-bold text-base text-[#1A1A1A] dark:text-white">
+                  <h2 className="font-raleway font-bold text-base text-foreground">
                     Change Password
                   </h2>
-                  <p className="font-merriweather-sans text-xs text-[#1A1A1A]/40 dark:text-white/30">
+                  <p className="font-merriweather-sans text-xs text-foreground/40">
                     Update your password to keep your account secure
                   </p>
                 </div>
@@ -147,23 +147,23 @@ export default function SettingsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {/* Current Password - full width */}
                 <div className="md:col-span-2">
-                  <label htmlFor="current-password" className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+                  <label htmlFor="current-password" className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                     Current Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
+                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30" />
                     <input
                       id="current-password"
                       type={showCurrent ? "text" : "password"}
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
                       placeholder="Enter current password"
-                      className="w-full pl-10 pr-11 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                      className="w-full pl-10 pr-11 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
                     />
                     <button
                       type="button"
                       onClick={() => setShowCurrent(!showCurrent)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#1A1A1A]/30 dark:text-white/20 hover:text-[#1A1A1A]/60 dark:hover:text-white/40 transition-colors cursor-pointer"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-foreground/30 hover:text-foreground/60 transition-colors cursor-pointer"
                     >
                       {showCurrent ? (
                         <EyeOff className="w-4 h-4" />
@@ -176,23 +176,23 @@ export default function SettingsPage() {
 
                 {/* New Password */}
                 <div>
-                  <label htmlFor="new-password" className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+                  <label htmlFor="new-password" className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                     New Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
+                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30" />
                     <input
                       id="new-password"
                       type={showNew ? "text" : "password"}
                       value={newPassword}
                       onChange={(e) => { setNewPassword(e.target.value); setSamePasswordError(false); }}
                       placeholder="Enter new password"
-                      className="w-full pl-10 pr-11 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                      className="w-full pl-10 pr-11 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
                     />
                     <button
                       type="button"
                       onClick={() => setShowNew(!showNew)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#1A1A1A]/30 dark:text-white/20 hover:text-[#1A1A1A]/60 dark:hover:text-white/40 transition-colors cursor-pointer"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-foreground/30 hover:text-foreground/60 transition-colors cursor-pointer"
                     >
                       {showNew ? (
                         <EyeOff className="w-4 h-4" />
@@ -205,23 +205,23 @@ export default function SettingsPage() {
 
                 {/* Confirm New Password */}
                 <div>
-                  <label htmlFor="confirm-password" className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+                  <label htmlFor="confirm-password" className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                     Confirm New Password
                   </label>
                   <div className="relative">
-                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
+                    <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30" />
                     <input
                       id="confirm-password"
                       type={showConfirm ? "text" : "password"}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Confirm new password"
-                      className="w-full pl-10 pr-11 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                      className="w-full pl-10 pr-11 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirm(!showConfirm)}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#1A1A1A]/30 dark:text-white/20 hover:text-[#1A1A1A]/60 dark:hover:text-white/40 transition-colors cursor-pointer"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 text-foreground/30 hover:text-foreground/60 transition-colors cursor-pointer"
                     >
                       {showConfirm ? (
                         <EyeOff className="w-4 h-4" />
@@ -244,7 +244,7 @@ export default function SettingsPage() {
                   <button
                     onClick={handlePasswordChange}
                     disabled={isPending}
-                    className="w-full sm:w-auto px-8 py-3 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] disabled:opacity-50 text-white text-sm font-semibold font-raleway transition-colors cursor-pointer flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto px-8 py-3 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] disabled:opacity-50 text-[var(--brand-ink)] text-sm font-semibold font-raleway transition-colors cursor-pointer flex items-center justify-center gap-2"
                   >
                     {isPending ? (
                       <>

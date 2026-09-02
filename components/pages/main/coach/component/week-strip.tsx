@@ -43,10 +43,10 @@ export default function WeekStrip({ days }: WeekStripProps) {
         const bar = allDone
           ? "bg-emerald-500"
           : isRest
-            ? "bg-[#1A1A1A]/15 dark:bg-white/15"
+            ? "bg-foreground/15"
             : isEmpty
-              ? "bg-[#1A1A1A]/8 dark:bg-white/8"
-              : "bg-[#FF5733]";
+              ? "bg-foreground/8"
+              : "bg-[var(--brand)]";
 
         return (
           <div
@@ -57,7 +57,7 @@ export default function WeekStrip({ days }: WeekStripProps) {
           >
             <span
               className={`text-[10px] font-semibold font-raleway uppercase tracking-wider ${
-                day.isToday ? "text-[#FF5733]" : "text-[#1A1A1A]/35 dark:text-white/35"
+                day.isToday ? "text-[var(--brand-hover)]" : "text-foreground/35"
               }`}
             >
               {day.initial}

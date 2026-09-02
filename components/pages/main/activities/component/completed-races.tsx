@@ -9,7 +9,7 @@ const CompletedRaces = ({ races }: { races: CompletedRace[] }) => {
   return (
     <div>
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">
+        <h2 className="text-lg font-bold text-foreground font-raleway">
           Completed Races
         </h2>
         <span className="text-xs text-emerald-500 font-medium">
@@ -33,9 +33,9 @@ const CompletedRaces = ({ races }: { races: CompletedRace[] }) => {
               />
               <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
               {/* Medal icon */}
-              <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#FFB800]/20 flex items-center justify-center">
+              <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center">
                 <svg
-                  className="w-4 h-4 text-[#FFB800]"
+                  className="w-4 h-4 text-amber-500"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -55,27 +55,27 @@ const CompletedRaces = ({ races }: { races: CompletedRace[] }) => {
 
             {/* Content */}
             <div className="p-4">
-              <h3 className="font-semibold text-sm text-[#1A1A1A] dark:text-white truncate mb-1">
+              <h3 className="font-semibold text-sm text-foreground truncate mb-1">
                 {race.title}
               </h3>
-              <p className="text-xs text-[#1A1A1A]/40 dark:text-white/30 mb-3">
+              <p className="text-xs text-foreground/40 mb-3">
                 Completed {race.completedDate}
               </p>
 
               <div className="flex justify-between text-xs">
                 <div>
-                  <span className="text-[#1A1A1A]/40 dark:text-white/30">
+                  <span className="text-foreground/40">
                     Distance
                   </span>
-                  <p className="font-semibold text-[#1A1A1A] dark:text-white">
+                  <p className="font-semibold text-foreground">
                     {race.totalDistance} km
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="text-[#1A1A1A]/40 dark:text-white/30">
+                  <span className="text-foreground/40">
                     Entries
                   </span>
-                  <p className="font-semibold text-[#1A1A1A] dark:text-white">
+                  <p className="font-semibold text-foreground">
                     {race.totalEntries}
                   </p>
                 </div>

@@ -68,7 +68,7 @@ export default function RaceRecentActivities({ raceDbId }: Props) {
   return (
     <div className="space-y-4 shadow-sm border border-gray-100 dark:border-zinc-800 rounded-xl bg-white dark:bg-zinc-900 p-6">
       <h3 className="text-xl font-bold flex items-center gap-2 mb-4">
-        <ActivityIcon className="w-5 h-5 text-sera-orange" />
+        <ActivityIcon className="w-5 h-5 text-[var(--brand-hover)]" />
         Live Feed
       </h3>
       
@@ -105,7 +105,7 @@ export default function RaceRecentActivities({ raceDbId }: Props) {
               
               <div className="mt-2 bg-gray-50 dark:bg-zinc-800/80 p-3 rounded-lg flex items-center gap-3">
                 <div className="flex-1">
-                  <p className="text-sm font-semibold capitalize text-sera-orange">
+                  <p className="text-sm font-semibold capitalize text-[var(--brand-hover)]">
                     {activity.activity_type}
                   </p>
                   <p className="text-2xl font-bold font-mono tracking-tight dark:text-white">
@@ -139,7 +139,7 @@ export default function RaceRecentActivities({ raceDbId }: Props) {
               placeholder="E.g. Pace is faster than a motorcycle..."
               value={flagReason}
               onChange={(e) => setFlagReason(e.target.value)}
-              className="w-full rounded-md border border-gray-300 dark:border-zinc-700 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-sera-orange mb-4 min-h-25"
+              className="w-full rounded-md border border-gray-300 dark:border-zinc-700 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--brand)] mb-4 min-h-25"
             />
             <div className="flex justify-end gap-3">
               <Button variant="outline" onClick={() => setSelectedActivity(null)}>Cancel</Button>

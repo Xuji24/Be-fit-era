@@ -108,8 +108,8 @@ export default function PlannerPage() {
 
   if (loading || !plan) {
     return (
-      <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212] flex items-center justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-[#FF5733]" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--brand-hover)]" />
       </div>
     );
   }
@@ -157,7 +157,7 @@ export default function PlannerPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212]">
+    <div className="min-h-screen bg-background">
       <CoachHero
         icon={CalendarDays}
         title="Your Plan"
@@ -167,14 +167,14 @@ export default function PlannerPage() {
 
       <div className="max-w-6xl mx-auto px-6 pb-16 space-y-6">
         {plan.summary && (
-          <p className="text-sm text-[#1A1A1A]/60 dark:text-white/60 font-merriweather-sans">{plan.summary}</p>
+          <p className="text-sm text-foreground/60 font-merriweather-sans">{plan.summary}</p>
         )}
 
         {plan.healthTips.length > 0 && (
           <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-5 sm:p-6">
             <div className="flex items-center gap-2 mb-3">
-              <Lightbulb className="w-4 h-4 text-[#FFB800]" />
-              <h2 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway">
+              <Lightbulb className="w-4 h-4 text-[var(--brand-hover)]" />
+              <h2 className="text-sm font-semibold text-foreground font-raleway">
                 Tips for your goal
               </h2>
             </div>
@@ -182,14 +182,14 @@ export default function PlannerPage() {
               {plan.healthTips.map((tip, i) => (
                 <li
                   key={i}
-                  className="text-sm text-[#1A1A1A]/70 dark:text-white/70 font-merriweather-sans flex gap-2.5"
+                  className="text-sm text-foreground/70 font-merriweather-sans flex gap-2.5"
                 >
-                  <span className="text-[#FF5733] shrink-0">·</span>
+                  <span className="text-[var(--brand-hover)] shrink-0">·</span>
                   {tip}
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-xs text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans">
+            <p className="mt-3 text-xs text-foreground/40 font-merriweather-sans">
               General wellness guidance, not medical advice.
             </p>
           </div>
@@ -201,12 +201,12 @@ export default function PlannerPage() {
           <div
             role="tablist"
             aria-label="Plan weeks"
-            className="relative flex gap-1 overflow-x-auto scrollbar-hide -mx-1 px-1 py-1 bg-[#F5F5F0] dark:bg-[#2A2A2E] rounded-xl w-fit"
+            className="relative flex gap-1 overflow-x-auto scrollbar-hide -mx-1 px-1 py-1 bg-[var(--surface-muted)] dark:bg-[#2A2A2E] rounded-xl w-fit"
           >
             {weekPill && (
               <span
                 aria-hidden="true"
-                className="absolute top-1 h-[calc(100%-8px)] rounded-lg bg-[#FF5733] transition-[transform,width] duration-300 ease-[cubic-bezier(0.65,0,0.35,1)]"
+                className="absolute top-1 h-[calc(100%-8px)] rounded-lg bg-[var(--brand)] transition-[transform,width] duration-300 ease-[cubic-bezier(0.65,0,0.35,1)]"
                 style={{ width: weekPill.width, transform: `translateX(${weekPill.left}px)` }}
               />
             )}
@@ -224,12 +224,12 @@ export default function PlannerPage() {
                   onClick={() => setActiveWeek(week)}
                   className={`relative z-10 shrink-0 px-4 py-2 rounded-lg text-sm font-semibold font-raleway transition-colors cursor-pointer ${
                     selected
-                      ? "text-white"
-                      : "text-[#1A1A1A]/60 dark:text-white/60 hover:text-[#FF5733]"
+                      ? "text-[var(--brand-ink)]"
+                      : "text-foreground/60 hover:text-[var(--brand-hover)]"
                   }`}
                 >
                   Week {week + 1}
-                  {isCurrent && !selected && <span className="ml-1.5 text-[#FF5733]">•</span>}
+                  {isCurrent && !selected && <span className="ml-1.5 text-[var(--brand-hover)]">•</span>}
                 </button>
               );
             })}

@@ -99,7 +99,7 @@ export default function ProfilePage() {
   if (loading) {
     return (
       <div className="min-h-screen relative flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#FF5733]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[var(--brand-hover)]" />
       </div>
     );
   }
@@ -124,17 +124,17 @@ export default function ProfilePage() {
           {/* Profile Card */}
           <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm overflow-hidden">
             {/* Avatar Header */}
-            <div className="bg-linear-to-r from-[#FF5733] to-[#FFB800] p-6 sm:p-8 flex items-center gap-4">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/30 flex items-center justify-center text-white text-2xl sm:text-3xl font-bold font-raleway">
+            <div className="bg-linear-to-r from-[var(--brand)] to-[var(--brand-soft)] p-6 sm:p-8 flex items-center gap-4">
+              <div className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/30 backdrop-blur-sm border-2 border-white/40 flex items-center justify-center text-[var(--brand-ink)] text-2xl sm:text-3xl font-bold font-raleway">
                 {initial}
               </div>
-              <div>
-                <h2 className="font-raleway font-bold text-lg sm:text-xl text-white">
+              <div className="min-w-0 flex-1">
+                <h2 className="font-raleway font-bold text-lg sm:text-xl text-[var(--brand-ink)] truncate">
                   {profile.firstName || profile.lastName
                     ? `${profile.firstName} ${profile.lastName}`.trim()
                     : "Set your name"}
                 </h2>
-                <p className="font-merriweather-sans text-sm text-white/70">
+                <p className="font-merriweather-sans text-sm text-[var(--brand-ink)]/70 truncate">
                   {profile.email}
                 </p>
               </div>
@@ -144,11 +144,11 @@ export default function ProfilePage() {
             <div className="p-6 sm:p-8 space-y-5">
               {/* First Name */}
               <div>
-                <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+                <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                   First Name
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30" />
                   <input
                     type="text"
                     aria-label="First Name"
@@ -157,18 +157,18 @@ export default function ProfilePage() {
                       setProfile({ ...profile, firstName: e.target.value })
                     }
                     placeholder="Enter your first name"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
                   />
                 </div>
               </div>
 
               {/* Last Name */}
               <div>
-                <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+                <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                   Last Name
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30" />
                   <input
                     type="text"
                     aria-label="Last Name"
@@ -177,18 +177,18 @@ export default function ProfilePage() {
                       setProfile({ ...profile, lastName: e.target.value })
                     }
                     placeholder="Enter your last name"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
                   />
                 </div>
               </div>
 
               {/* Email — read-only */}
               <div>
-                <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+                <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                   Email
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30" />
                   <input
                     type="email"
                     aria-label="Email"
@@ -197,9 +197,9 @@ export default function ProfilePage() {
                     value={profile.email}
                     readOnly
                     disabled
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0]/60 dark:bg-[#2A2A2E]/60 text-sm text-[#1A1A1A]/50 dark:text-white/30 border-0 outline-none cursor-not-allowed font-merriweather-sans"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-[var(--surface-muted)]/60 dark:bg-[#2A2A2E]/60 text-sm text-foreground/50 border-0 outline-none cursor-not-allowed font-merriweather-sans"
                   />
-                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[10px] text-[#1A1A1A]/30 dark:text-white/15 uppercase tracking-wider font-merriweather-sans">
+                  <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[10px] text-foreground/30 uppercase tracking-wider font-merriweather-sans">
                     Read only
                   </span>
                 </div>
@@ -207,7 +207,7 @@ export default function ProfilePage() {
 
               {/* Username */}
               <div>
-                <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+                <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                   Username
                 </label>
                 <input
@@ -218,7 +218,7 @@ export default function ProfilePage() {
                     setProfile({ ...profile, username: e.target.value })
                   }
                   placeholder="Choose a username"
-                  className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                  className="w-full px-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
                 />
               </div>
 
@@ -226,7 +226,7 @@ export default function ProfilePage() {
               <button
                 onClick={handleSave}
                 disabled={isPending}
-                className="w-full py-3 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] disabled:opacity-50 text-white text-sm font-semibold font-raleway transition-colors cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] disabled:opacity-50 text-[var(--brand-ink)] text-sm font-semibold font-raleway transition-colors cursor-pointer flex items-center justify-center gap-2"
               >
                 {isPending ? (
                   <>

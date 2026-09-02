@@ -85,8 +85,8 @@ export default function ProgressPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212] flex items-center justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-[#FF5733]" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--brand-hover)]" />
       </div>
     );
   }
@@ -98,7 +98,7 @@ export default function ProgressPage() {
     : [];
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212]">
+    <div className="min-h-screen bg-background">
       <CoachHero icon={TrendingUp} title="Progress" maxWidthClassName="max-w-6xl" />
 
       <div className="max-w-6xl mx-auto px-6 pb-16 grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -136,7 +136,7 @@ export default function ProgressPage() {
         </div>
 
         <div className="lg:col-span-1 space-y-3">
-          <h2 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway px-1">
+          <h2 className="text-sm font-semibold text-foreground font-raleway px-1">
             Weigh-in history
           </h2>
           <WeightHistoryList history={history} onDelete={handleDeleteWeight} />

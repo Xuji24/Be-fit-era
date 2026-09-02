@@ -149,7 +149,7 @@ export default function CreatePostModal({ open, onClose, onPostCreated }: Create
           value={content}
           onChange={(e) => setContent(e.target.value)}
           maxLength={1010}
-          className="w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-transparent px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#FF5733] min-h-35 resize-none"
+          className="w-full rounded-lg border border-gray-300 dark:border-zinc-700 bg-transparent px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[var(--brand)] min-h-35 resize-none"
         />
         <div className={`text-xs text-right mt-1 ${isOverLimit ? "text-red-500" : "text-muted-foreground"}`}>
           {charCount}/1000
@@ -166,8 +166,8 @@ export default function CreatePostModal({ open, onClose, onPostCreated }: Create
                 onClick={() => setCategory(cat.value)}
                 className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors cursor-pointer border ${
                   category === cat.value
-                    ? "bg-[#FF5733] text-white border-[#FF5733]"
-                    : "bg-transparent text-muted-foreground border-gray-200 dark:border-zinc-700 hover:border-[#FF5733] hover:text-[#FF5733]"
+                    ? "bg-[var(--brand)] text-[var(--brand-ink)] border-[var(--brand)]"
+                    : "bg-transparent text-muted-foreground border-gray-200 dark:border-zinc-700 hover:border-[var(--brand)] hover:text-[var(--brand-hover)]"
                 }`}
               >
                 {cat.label}
@@ -217,7 +217,7 @@ export default function CreatePostModal({ open, onClose, onPostCreated }: Create
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-gray-300 dark:border-zinc-700 text-sm text-muted-foreground hover:border-[#FF5733] hover:text-[#FF5733] transition-colors w-full justify-center cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-gray-300 dark:border-zinc-700 text-sm text-muted-foreground hover:border-[var(--brand)] hover:text-[var(--brand-hover)] transition-colors w-full justify-center cursor-pointer"
             >
               <ImagePlus className="w-4 h-4" />
               {images.length === 0 ? "Add Images (up to 4)" : `Add more (${MAX_IMAGES - images.length} remaining)`}
@@ -231,7 +231,7 @@ export default function CreatePostModal({ open, onClose, onPostCreated }: Create
           <Button
             disabled={submitting || !content.trim() || isOverLimit}
             onClick={handleSubmit}
-            className="bg-[#FF5733] hover:bg-[#e04d2d] text-white"
+            className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-[var(--brand-ink)]"
           >
             <Send className="w-4 h-4 mr-1.5" />
             {submitting ? "Posting..." : "Post"}

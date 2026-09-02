@@ -25,10 +25,10 @@ export default function WeeklyActivityChart({ weeks }: WeeklyActivityChartProps)
 
   return (
     <div className={`bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-6 ${CHART_COLOR_SCHEME_CLASS}`}>
-      <h3 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway mb-4">Weekly consistency</h3>
+      <h3 className="text-sm font-semibold text-foreground font-raleway mb-4">Weekly consistency</h3>
 
       {!hasAnyActivity ? (
-        <p className="text-sm text-[#1A1A1A]/50 dark:text-white/50 font-merriweather-sans text-center py-10">
+        <p className="text-sm text-foreground/50 font-merriweather-sans text-center py-10">
           Log a meal or a workout to start building this view.
         </p>
       ) : (

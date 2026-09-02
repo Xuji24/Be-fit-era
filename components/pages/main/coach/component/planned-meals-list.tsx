@@ -17,7 +17,7 @@ export default function PlannedMealsList({ meals, loggedPlanItemIds, pendingId, 
   if (sorted.length === 0) {
     return (
       <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-6 text-center">
-        <p className="text-sm text-[#1A1A1A]/50 dark:text-white/50 font-merriweather-sans">No meals planned for today.</p>
+        <p className="text-sm text-foreground/50 font-merriweather-sans">No meals planned for today.</p>
       </div>
     );
   }
@@ -25,7 +25,7 @@ export default function PlannedMealsList({ meals, loggedPlanItemIds, pendingId, 
   return (
     <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b border-black/5 dark:border-white/5">
-        <h3 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway">Today&apos;s planned meals</h3>
+        <h3 className="text-sm font-semibold text-foreground font-raleway">Today&apos;s planned meals</h3>
       </div>
       <div className="divide-y divide-black/5 dark:divide-white/5">
         {sorted.map((meal) => {
@@ -34,23 +34,23 @@ export default function PlannedMealsList({ meals, loggedPlanItemIds, pendingId, 
 
           return (
             <div key={meal.id} className="px-6 py-4 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#1A1A1A]/5 dark:bg-white/10 flex items-center justify-center shrink-0">
-                <Utensils className="w-4 h-4 text-[#1A1A1A]/50 dark:text-white/50" />
+              <div className="w-8 h-8 rounded-lg bg-foreground/5 dark:bg-white/10 flex items-center justify-center shrink-0">
+                <Utensils className="w-4 h-4 text-foreground/50" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-semibold text-[#1A1A1A]/40 dark:text-white/40 uppercase tracking-wider font-raleway">
+                <p className="text-[10px] font-semibold text-foreground/40 uppercase tracking-wider font-raleway">
                   {SLOT_LABELS[meal.slot] ?? meal.slot}
                 </p>
-                <p className="text-sm text-[#1A1A1A] dark:text-white font-merriweather-sans truncate">{meal.title}</p>
-                <p className="text-xs text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans">{meal.kcal} kcal</p>
+                <p className="text-sm text-foreground font-merriweather-sans truncate">{meal.title}</p>
+                <p className="text-xs text-foreground/40 font-merriweather-sans">{meal.kcal} kcal</p>
               </div>
               <button
                 onClick={() => !logged && onLog(meal.id)}
                 disabled={logged || isPending}
                 className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer disabled:cursor-default ${
                   logged
-                    ? "bg-[#FF5733] text-white"
-                    : "border-2 border-[#1A1A1A]/15 dark:border-white/15 hover:border-[#FF5733] text-transparent hover:text-[#FF5733]/50"
+                    ? "bg-[var(--brand)] text-[var(--brand-ink)]"
+                    : "border-2 border-foreground/15 hover:border-[var(--brand)] text-transparent hover:text-[var(--brand)]/50"
                 }`}
                 aria-label={logged ? "Logged" : "Mark as eaten"}
               >

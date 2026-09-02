@@ -4,17 +4,17 @@ export default function NotFound() {
   return (
     <html lang="en">
       <body className="antialiased">
-        <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212] flex items-center justify-center px-4">
+        <div className="min-h-screen bg-background flex items-center justify-center px-4">
           <div className="text-center max-w-md">
             {/* 404 Number */}
             <div className="relative mb-6">
-              <span className="text-[120px] sm:text-[160px] font-raleway font-bold leading-none text-[#FF5733]/10 select-none">
+              <span className="text-[120px] sm:text-[160px] font-raleway font-bold leading-none text-[var(--brand)]/10 select-none">
                 404
               </span>
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-20 h-20 rounded-full bg-[#FF5733]/10 flex items-center justify-center">
+                <div className="w-20 h-20 rounded-full bg-[var(--brand)]/10 flex items-center justify-center">
                   <svg
-                    className="w-10 h-10 text-[#FF5733]"
+                    className="w-10 h-10 text-[var(--brand-hover)]"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -36,10 +36,10 @@ export default function NotFound() {
             </div>
 
             {/* Message */}
-            <h1 className="font-raleway font-bold text-2xl sm:text-3xl text-[#1A1A1A] dark:text-white mb-3">
+            <h1 className="font-raleway font-bold text-2xl sm:text-3xl text-foreground mb-3">
               Wrong Route, Runner!
             </h1>
-            <p className="font-merriweather-sans text-sm sm:text-base text-[#1A1A1A]/50 dark:text-white/40 mb-8 leading-relaxed">
+            <p className="font-merriweather-sans text-sm sm:text-base text-foreground/50 mb-8 leading-relaxed">
               Looks like you&apos;ve veered off course. The page you&apos;re
               looking for doesn&apos;t exist or has been moved.
             </p>
@@ -48,7 +48,7 @@ export default function NotFound() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] text-white text-sm font-semibold font-raleway transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-[var(--brand-ink)] text-sm font-semibold font-raleway transition-colors"
               >
                 <svg
                   className="w-4 h-4"
@@ -67,7 +67,7 @@ export default function NotFound() {
               </Link>
               <Link
                 href="/race"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-[#1A1A1A]/10 dark:border-white/10 hover:border-[#FF5733]/30 dark:hover:border-[#FF5733]/30 text-[#1A1A1A] dark:text-white text-sm font-semibold font-raleway transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-foreground/10 hover:border-[var(--brand)]/30 text-foreground text-sm font-semibold font-raleway transition-colors"
               >
                 <svg
                   className="w-4 h-4"
@@ -88,11 +88,11 @@ export default function NotFound() {
 
             {/* Decorative line */}
             <div className="mt-12 flex items-center justify-center gap-2">
-              <div className="h-px w-8 bg-[#FF5733]/20" />
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-[#1A1A1A]/20 dark:text-white/15 font-merriweather-sans">
+              <div className="h-px w-8 bg-[var(--brand)]/20" />
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-foreground/20 font-merriweather-sans">
                 Fitra
               </span>
-              <div className="h-px w-8 bg-[#FF5733]/20" />
+              <div className="h-px w-8 bg-[var(--brand)]/20" />
             </div>
           </div>
         </div>

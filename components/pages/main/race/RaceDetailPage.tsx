@@ -105,8 +105,8 @@ export default function RaceDetailPage({
           <div className="lg:col-span-2 space-y-8">
             {/* Info Cards */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="flex items-center gap-3 bg-[#F5F5F0] dark:bg-[#1C1C1E] rounded-xl p-4 border border-gray-100 dark:border-white/8">
-                <CalendarDays size={20} className="text-[#FF5733] shrink-0" />
+              <div className="flex items-center gap-3 bg-[var(--surface-muted)] dark:bg-[#1C1C1E] rounded-xl p-4 border border-gray-100 dark:border-white/8">
+                <CalendarDays size={20} className="text-[var(--brand-hover)] shrink-0" />
                 <div>
                   <p className="font-merriweather-sans text-xs text-gray-500 dark:text-gray-400">
                     Date & Time
@@ -116,8 +116,8 @@ export default function RaceDetailPage({
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 bg-[#F5F5F0] dark:bg-[#1C1C1E] rounded-xl p-4 border border-gray-100 dark:border-white/8">
-                <MapPin size={20} className="text-[#FF5733] shrink-0" />
+              <div className="flex items-center gap-3 bg-[var(--surface-muted)] dark:bg-[#1C1C1E] rounded-xl p-4 border border-gray-100 dark:border-white/8">
+                <MapPin size={20} className="text-[var(--brand-hover)] shrink-0" />
                 <div>
                   <p className="font-merriweather-sans text-xs text-gray-500 dark:text-gray-400">
                     Location
@@ -127,8 +127,8 @@ export default function RaceDetailPage({
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 bg-[#F5F5F0] dark:bg-[#1C1C1E] rounded-xl p-4 border border-gray-100 dark:border-white/8">
-                <Users size={20} className="text-[#FF5733] shrink-0" />
+              <div className="flex items-center gap-3 bg-[var(--surface-muted)] dark:bg-[#1C1C1E] rounded-xl p-4 border border-gray-100 dark:border-white/8">
+                <Users size={20} className="text-[var(--brand-hover)] shrink-0" />
                 <div>
                   <p className="font-merriweather-sans text-xs text-gray-500 dark:text-gray-400">
                     Participants
@@ -143,8 +143,8 @@ export default function RaceDetailPage({
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 bg-[#F5F5F0] dark:bg-[#1C1C1E] rounded-xl p-4 border border-gray-100 dark:border-white/8">
-                <Clock size={20} className="text-[#FF5733] shrink-0" />
+              <div className="flex items-center gap-3 bg-[var(--surface-muted)] dark:bg-[#1C1C1E] rounded-xl p-4 border border-gray-100 dark:border-white/8">
+                <Clock size={20} className="text-[var(--brand-hover)] shrink-0" />
                 <div>
                   <p className="font-merriweather-sans text-xs text-gray-500 dark:text-gray-400">
                     Registration Deadline
@@ -159,7 +159,7 @@ export default function RaceDetailPage({
             {/* About */}
             <div>
               <h2 className="font-raleway font-bold text-lg text-foreground mb-3 flex items-center gap-2">
-                <Trophy size={18} className="text-[#FF5733]" />
+                <Trophy size={18} className="text-[var(--brand-hover)]" />
                 About This Race
               </h2>
 
@@ -167,7 +167,7 @@ export default function RaceDetailPage({
               {race.gpxUrl && (
                 <div className="mt-8">
                   <h2 className="font-raleway font-bold text-lg text-foreground mb-3 flex items-center gap-2">
-                    <MapPin size={18} className="text-[#FF5733]" />
+                    <MapPin size={18} className="text-[var(--brand-hover)]" />
                     Race Route
                   </h2>
                   <GpxMap gpxUrl={race.gpxUrl} />
@@ -180,7 +180,7 @@ export default function RaceDetailPage({
               typeof race.longitude === "number" && (
                 <div>
                   <h2 className="font-raleway font-bold text-lg text-foreground mb-3 flex items-center gap-2">
-                    <MapPin size={18} className="text-[#FF5733]" />
+                    <MapPin size={18} className="text-[var(--brand-hover)]" />
                     Race Location
                   </h2>
                   <LocationMap
@@ -199,14 +199,14 @@ export default function RaceDetailPage({
               )}
 
             {/* E-Certificate */}
-            <div className="bg-linear-to-br from-[#FFF8F5] to-[#FFF1EB] dark:from-[#1C1C1E] dark:to-[#221A16] rounded-2xl p-6 border border-[#FF5733]/10 dark:border-[#FF5733]/20">
+            <div className="bg-linear-to-br from-[#FFF8F5] to-[#FFF1EB] dark:from-[#1C1C1E] dark:to-[#221A16] rounded-2xl p-6 border border-[var(--brand)]/15 dark:border-[var(--brand)]/25">
               <h2 className="font-raleway font-bold text-lg text-foreground mb-4 flex items-center gap-2">
-                <Award size={18} className="text-[#FF5733]" />
+                <Award size={18} className="text-[var(--brand-hover)]" />
                 E-Certificate
               </h2>
               <div className="flex flex-col sm:flex-row gap-5">
                 {/* Certificate Preview */}
-                <div className="shrink-0 w-full sm:w-56 bg-white dark:bg-[#2A2A2E] rounded-xl border border-[#FF5733]/15 dark:border-[#FF5733]/25 overflow-hidden">
+                <div className="shrink-0 w-full sm:w-56 bg-white dark:bg-[#2A2A2E] rounded-xl border border-[var(--brand)]/20 overflow-hidden">
                   <Image
                     src="/icons/ecert-template.svg"
                     alt="E-Certificate Template"
@@ -288,17 +288,17 @@ export default function RaceDetailPage({
             {race.rewards.prizes && race.rewards.prizes.length > 0 && (
               <div>
                 <h2 className="font-raleway font-bold text-lg text-foreground mb-3 flex items-center gap-2">
-                  <Gift size={18} className="text-[#FF5733]" />
+                  <Gift size={18} className="text-[var(--brand-hover)]" />
                   Prizes & Inclusions
                 </h2>
                 <ul className="space-y-2.5">
                   {race.rewards.prizes.map((prize, index) => (
                     <li
                       key={index}
-                      className="flex items-start gap-3 bg-[#F5F5F0] dark:bg-[#1C1C1E] rounded-lg p-3 border border-gray-100 dark:border-white/8"
+                      className="flex items-start gap-3 bg-[var(--surface-muted)] dark:bg-[#1C1C1E] rounded-lg p-3 border border-gray-100 dark:border-white/8"
                     >
-                      <div className="w-6 h-6 rounded-full bg-[#FF5733]/10 flex items-center justify-center shrink-0 mt-0.5">
-                        <span className="font-raleway font-bold text-xs text-[#FF5733]">
+                      <div className="w-6 h-6 rounded-full bg-[var(--brand)]/15 flex items-center justify-center shrink-0 mt-0.5">
+                        <span className="font-raleway font-bold text-xs text-[var(--brand-hover)]">
                           {index + 1}
                         </span>
                       </div>
@@ -334,7 +334,7 @@ export default function RaceDetailPage({
                       className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-raleway font-bold ${
                         race.registrationFee === 0
                           ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
-                          : "bg-[#FF5733]/10 text-[#FF5733]"
+                          : "bg-[var(--brand)]/15 text-[var(--brand-hover)]"
                       }`}
                     >
                       <Banknote size={11} />
@@ -353,12 +353,12 @@ export default function RaceDetailPage({
                   </div>
                   <div className="h-2 rounded-full bg-gray-100 dark:bg-white/10 overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-[#FF5733] transition-all duration-500"
+                      className="h-full rounded-full bg-[var(--brand)] transition-all duration-500"
                       style={{ width: `${Math.min(fillPercentage, 100)}%` }}
                     />
                   </div>
                   {spotsLeft > 0 && (
-                    <p className="text-xs font-merriweather-sans text-[#FF5733] mt-1.5 font-semibold">
+                    <p className="text-xs font-merriweather-sans text-[var(--brand-hover)] mt-1.5 font-semibold">
                       {spotsLeft} spots remaining
                     </p>
                   )}
@@ -366,7 +366,7 @@ export default function RaceDetailPage({
 
                 {/* Deadline */}
                 <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-3">
-                  <Clock size={14} className="text-[#FF5733] shrink-0" />
+                  <Clock size={14} className="text-[var(--brand-hover)] shrink-0" />
                   <span className="font-merriweather-sans">
                     Deadline:{" "}
                     <span className="font-semibold">
@@ -378,7 +378,7 @@ export default function RaceDetailPage({
                 {/* Cutoff time */}
                 {race.cutoffTimeMinutes !== undefined && (
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    <Timer size={14} className="text-[#FF5733] shrink-0" />
+                    <Timer size={14} className="text-[var(--brand-hover)] shrink-0" />
                     <span className="font-merriweather-sans">
                       Cutoff:{" "}
                       <span className="font-semibold">
@@ -394,7 +394,7 @@ export default function RaceDetailPage({
                 {/* Kit pickup */}
                 {race.kitPickupInfo && (
                   <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300 mb-3">
-                    <ShoppingBag size={14} className="text-[#FF5733] shrink-0 mt-0.5" />
+                    <ShoppingBag size={14} className="text-[var(--brand-hover)] shrink-0 mt-0.5" />
                     <span className="font-merriweather-sans">
                       <span className="font-semibold">Kit Pickup:</span>{" "}
                       {race.kitPickupInfo}
@@ -438,7 +438,7 @@ export default function RaceDetailPage({
                   className={`w-full py-4 rounded-xl font-raleway font-bold text-base transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 ${
                     isRegistered
                       ? "bg-emerald-600 text-white cursor-default"
-                      : "bg-[#FF5733] text-white hover:bg-[#E84E2E] hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+                      : "bg-[var(--brand)] text-[var(--brand-ink)] hover:bg-[var(--brand-hover)] hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
                   }`}
                 >
                   {isRegistered ? (
@@ -481,7 +481,7 @@ export default function RaceDetailPage({
                   Organizer
                 </h3>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#F5F5F0] dark:bg-[#2A2A2E] flex items-center justify-center overflow-hidden">
+                  <div className="w-10 h-10 rounded-full bg-[var(--surface-muted)] dark:bg-[#2A2A2E] flex items-center justify-center overflow-hidden">
                     <Image
                       src={race.organizerLogo}
                       alt={race.organizer}
@@ -503,7 +503,7 @@ export default function RaceDetailPage({
         <div className="mt-10 pt-6 border-t border-gray-100 dark:border-white/8">
           <Link
             href="/race"
-            className="inline-flex items-center gap-2 text-sm font-raleway font-semibold text-[#FF5733] hover:text-[#E84E2E] transition-colors"
+            className="inline-flex items-center gap-2 text-sm font-raleway font-semibold text-[var(--brand-hover)] hover:text-[var(--brand)] transition-colors"
           >
             <ArrowLeft size={16} />
             Back to All Races

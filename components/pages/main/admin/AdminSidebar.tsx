@@ -40,8 +40,8 @@ export default function AdminSidebar() {
               href={href}
               className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors whitespace-nowrap ${
                 active
-                  ? "bg-[#FF5733] text-white"
-                  : "text-[#1A1A1A]/60 dark:text-white/40 hover:bg-black/5 dark:hover:bg-white/5 hover:text-[#1A1A1A] dark:hover:text-white"
+                  ? "bg-[var(--brand)] text-[var(--brand-ink)]"
+                  : "text-foreground/60 hover:bg-black/5 dark:hover:bg-white/5 hover:text-foreground"
               }`}
             >
               <Icon className="w-4 h-4 shrink-0" />

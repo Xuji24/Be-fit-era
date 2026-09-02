@@ -53,23 +53,23 @@ export default function CustomSelect({
         type="button"
         onClick={() => !disabled && setOpen(!open)}
         disabled={disabled}
-        className={`flex items-center justify-between w-full rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-[#1A1A1A] dark:text-white font-merriweather-sans outline-none transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${sizeClasses} ${
+        className={`flex items-center justify-between w-full rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-foreground font-merriweather-sans outline-none transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${sizeClasses} ${
           open
-            ? "ring-2 ring-[#FF5733]"
-            : "hover:ring-1 hover:ring-[#FF5733]/30"
+            ? "ring-2 ring-[var(--brand)]"
+            : "hover:ring-1 hover:ring-[var(--brand)]/30"
         }`}
       >
         <span
           className={
             !selected && placeholder
-              ? "text-[#1A1A1A]/30 dark:text-white/20"
+              ? "text-foreground/30"
               : ""
           }
         >
           {selected?.label ?? placeholder ?? "Select..."}
         </span>
         <ChevronDown
-          className={`w-3.5 h-3.5 text-[#1A1A1A]/40 dark:text-white/40 transition-transform shrink-0 ${
+          className={`w-3.5 h-3.5 text-foreground/40 transition-transform shrink-0 ${
             open ? "rotate-180" : ""
           }`}
         />
@@ -88,13 +88,13 @@ export default function CustomSelect({
                 }}
                 className={`flex items-center justify-between w-full ${dropdownItemSize} font-merriweather-sans transition-colors cursor-pointer ${
                   option.value === value
-                    ? "text-[#FF5733] bg-[#FF5733]/5 font-semibold"
-                    : "text-[#1A1A1A] dark:text-white hover:bg-[#F5F5F0] dark:hover:bg-[#2A2A2E]"
+                    ? "text-[var(--brand-hover)] bg-[var(--brand)]/10 font-semibold"
+                    : "text-foreground hover:bg-[var(--surface-muted)] dark:hover:bg-[#2A2A2E]"
                 }`}
               >
                 <span>{option.label}</span>
                 {option.value === value && (
-                  <Check className="w-3.5 h-3.5 text-[#FF5733] shrink-0" />
+                  <Check className="w-3.5 h-3.5 text-[var(--brand-hover)] shrink-0" />
                 )}
               </button>
             ))}

@@ -15,7 +15,7 @@ const ExerciseModel3D = dynamic(() => import("./exercise-model-3d"), {
   ssr: false,
   loading: () => (
     <div className="h-56 flex items-center justify-center">
-      <Loader2 className="w-5 h-5 animate-spin text-[#FF5733]" />
+      <Loader2 className="w-5 h-5 animate-spin text-[var(--brand-hover)]" />
     </div>
   ),
 });
@@ -164,12 +164,12 @@ export default function ExerciseDemoModal({ exerciseName, onClose }: ExerciseDem
         className="relative w-full max-w-sm bg-white dark:bg-[#1C1C1E] rounded-2xl shadow-xl overflow-hidden"
       >
         <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-black/5 dark:border-white/5">
-          <h2 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway truncate">
+          <h2 className="text-sm font-semibold text-foreground font-raleway truncate">
             {demo?.name ?? exerciseName}
           </h2>
           <button
             onClick={onClose}
-            className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-[#1A1A1A]/40 dark:text-white/40 hover:text-[#FF5733] hover:bg-[#FF5733]/10 transition-colors cursor-pointer"
+            className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-foreground/40 hover:text-[var(--brand-hover)] hover:bg-[var(--brand)]/10 transition-colors cursor-pointer"
             aria-label="Close"
           >
             <X className="w-4 h-4" />
@@ -187,23 +187,23 @@ export default function ExerciseDemoModal({ exerciseName, onClose }: ExerciseDem
             <Model3DBoundary
               key={exerciseName}
               fallback={
-                <div className="flex items-center justify-center bg-[#F5F5F0] dark:bg-[#2A2A2E] py-4 text-[#FF5733]">
+                <div className="flex items-center justify-center bg-[var(--surface-muted)] dark:bg-[#2A2A2E] py-4 text-[var(--brand-hover)]">
                   <ExerciseRig animationId={animationId} className="h-48 w-auto" />
                   <span className="sr-only">Animated demonstration of {exerciseName}</span>
                 </div>
               }
             >
               {show3D ? (
-                <div className="relative bg-[#F5F5F0] dark:bg-[#2A2A2E]">
+                <div className="relative bg-[var(--surface-muted)] dark:bg-[#2A2A2E]">
                   <ExerciseModel3D animationId={animationId} className="h-56 w-full" />
-                  <span className="pointer-events-none absolute bottom-2 right-2.5 inline-flex items-center gap-1 text-[10px] text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans">
+                  <span className="pointer-events-none absolute bottom-2 right-2.5 inline-flex items-center gap-1 text-[10px] text-foreground/40 font-merriweather-sans">
                     <Rotate3d className="w-3 h-3" />
                     Drag to rotate
                   </span>
                   <span className="sr-only">Interactive 3D demonstration of {exerciseName}</span>
                 </div>
               ) : (
-                <div className="flex items-center justify-center bg-[#F5F5F0] dark:bg-[#2A2A2E] py-4 text-[#FF5733]">
+                <div className="flex items-center justify-center bg-[var(--surface-muted)] dark:bg-[#2A2A2E] py-4 text-[var(--brand-hover)]">
                   <ExerciseRig animationId={animationId} className="h-48 w-auto" />
                   <span className="sr-only">Animated demonstration of {exerciseName}</span>
                 </div>
@@ -213,7 +213,7 @@ export default function ExerciseDemoModal({ exerciseName, onClose }: ExerciseDem
 
           {loading && !animationId && (
             <div className="flex items-center justify-center py-16">
-              <Loader2 className="w-6 h-6 animate-spin text-[#FF5733]" />
+              <Loader2 className="w-6 h-6 animate-spin text-[var(--brand-hover)]" />
             </div>
           )}
 
@@ -221,8 +221,8 @@ export default function ExerciseDemoModal({ exerciseName, onClose }: ExerciseDem
               beats an empty panel, and the copy says plainly why. */}
           {notFound && !animationId && (
             <div className="px-5 py-8 flex flex-col items-center gap-3">
-              <ExerciseRig className="h-32 w-auto text-[#1A1A1A]/15 dark:text-white/15" />
-              <p className="text-center text-sm text-[#1A1A1A]/50 dark:text-white/50 font-merriweather-sans">
+              <ExerciseRig className="h-32 w-auto text-foreground/15" />
+              <p className="text-center text-sm text-foreground/50 font-merriweather-sans">
                 No demonstration for this one yet — check your plan&apos;s notes, or ask the coach how to do it.
               </p>
             </div>
@@ -235,7 +235,7 @@ export default function ExerciseDemoModal({ exerciseName, onClose }: ExerciseDem
             // wger-hosted images are external and user-agnostic reference
             // photos, not something worth Next/Image optimizing for.
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={demo.imageUrl} alt={demo.name} className="w-full bg-[#F5F5F0] dark:bg-[#2A2A2E]" />
+            <img src={demo.imageUrl} alt={demo.name} className="w-full bg-[var(--surface-muted)] dark:bg-[#2A2A2E]" />
           )}
 
           {/* Our own steps win over wger's: they cover every exercise we can
@@ -244,7 +244,7 @@ export default function ExerciseDemoModal({ exerciseName, onClose }: ExerciseDem
           {steps.length > 0 && (
             <ol className="px-5 pt-4 space-y-2.5 list-decimal list-inside">
               {steps.map((step, i) => (
-                <li key={i} className="text-sm text-[#1A1A1A] dark:text-white font-merriweather-sans">
+                <li key={i} className="text-sm text-foreground font-merriweather-sans">
                   {step}
                 </li>
               ))}
@@ -253,16 +253,16 @@ export default function ExerciseDemoModal({ exerciseName, onClose }: ExerciseDem
 
           {guide && guide.cues.length > 0 && (
             <div className="px-5 pt-4 pb-4">
-              <p className="text-[10px] font-semibold text-[#1A1A1A]/40 dark:text-white/40 uppercase tracking-wider font-raleway mb-1.5">
+              <p className="text-[10px] font-semibold text-foreground/40 uppercase tracking-wider font-raleway mb-1.5">
                 Watch out for
               </p>
               <ul className="space-y-1.5">
                 {guide.cues.map((cue, i) => (
                   <li
                     key={i}
-                    className="flex gap-2 text-xs text-[#1A1A1A]/60 dark:text-white/60 font-merriweather-sans"
+                    className="flex gap-2 text-xs text-foreground/60 font-merriweather-sans"
                   >
-                    <span className="text-[#FF5733] shrink-0">·</span>
+                    <span className="text-[var(--brand-hover)] shrink-0">·</span>
                     {cue}
                   </li>
                 ))}
@@ -272,7 +272,7 @@ export default function ExerciseDemoModal({ exerciseName, onClose }: ExerciseDem
 
           {/* Only reachable for an exercise in neither table. */}
           {steps.length === 0 && !loading && animationId && (
-            <p className="px-5 py-4 text-center text-xs text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans">
+            <p className="px-5 py-4 text-center text-xs text-foreground/40 font-merriweather-sans">
               Written steps aren&apos;t available for this exercise yet.
             </p>
           )}

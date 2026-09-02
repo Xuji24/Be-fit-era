@@ -25,12 +25,12 @@ const roleBadge: Record<
   },
   organizer: {
     label: "Organizer",
-    class: "bg-[#FFB800]/10 text-[#FFB800]",
+    class: "bg-amber-500/10 text-amber-500",
     icon: Shield,
   },
   admin: {
     label: "Admin",
-    class: "bg-[#FF5733]/10 text-[#FF5733]",
+    class: "bg-[var(--brand)]/15 text-[var(--brand-hover)]",
     icon: ShieldCheck,
   },
 };
@@ -72,7 +72,7 @@ export default function AdminUsersPage({
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">
+        <h2 className="text-lg font-bold text-foreground font-raleway">
           Users ({total})
         </h2>
         <div className="flex gap-2">
@@ -81,7 +81,7 @@ export default function AdminUsersPage({
             placeholder="Search users..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="px-4 py-2.5 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans w-48"
+            className="px-4 py-2.5 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans w-48"
           />
           <CustomSelect
             value={roleFilter}
@@ -103,16 +103,16 @@ export default function AdminUsersPage({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-black/5 dark:border-white/5">
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]/50 dark:text-white/40">
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-foreground/50">
                   User
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]/50 dark:text-white/40">
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-foreground/50">
                   Role
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]/50 dark:text-white/40">
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-foreground/50">
                   Joined
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]/50 dark:text-white/40">
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-foreground/50">
                   Actions
                 </th>
               </tr>
@@ -128,16 +128,16 @@ export default function AdminUsersPage({
                   >
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-[#FF5733] flex items-center justify-center text-white text-xs font-bold shrink-0">
+                        <div className="w-8 h-8 rounded-full bg-[var(--brand)] flex items-center justify-center text-[var(--brand-ink)] text-xs font-bold shrink-0">
                           {(user.full_name || user.username || "U")
                             .charAt(0)
                             .toUpperCase()}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-semibold text-[#1A1A1A] dark:text-white truncate">
+                          <p className="font-semibold text-foreground truncate">
                             {user.full_name || user.username || "No name"}
                           </p>
-                          <p className="text-[10px] text-[#1A1A1A]/40 dark:text-white/30 truncate font-mono">
+                          <p className="text-[10px] text-foreground/40 truncate font-mono">
                             {user.id.slice(0, 8)}...
                           </p>
                         </div>
@@ -151,7 +151,7 @@ export default function AdminUsersPage({
                         {badge.label}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 text-[#1A1A1A]/60 dark:text-white/40">
+                    <td className="px-5 py-3.5 text-foreground/60">
                       {new Date(user.created_at).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
@@ -179,7 +179,7 @@ export default function AdminUsersPage({
                 <tr>
                   <td
                     colSpan={4}
-                    className="px-5 py-10 text-center text-[#1A1A1A]/40 dark:text-white/30"
+                    className="px-5 py-10 text-center text-foreground/40"
                   >
                     No users found.
                   </td>

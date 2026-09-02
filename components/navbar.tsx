@@ -78,45 +78,45 @@ export default function Navbar() {
       <div className="hidden lg:flex items-center space-x-6 lg:space-x-10 flex-1 justify-end">
         <Link
           href="/"
-          className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[#FF5733] transition-colors"
+          className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[var(--brand)] transition-colors"
         >
           Home
         </Link>
         <Link
           href="/race"
-          className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[#FF5733] transition-colors"
+          className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[var(--brand)] transition-colors"
         >
           Race
         </Link>
         <Link
           href="/activities"
-          className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[#FF5733] transition-colors"
+          className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[var(--brand)] transition-colors"
         >
           Activities
         </Link>
         <Link
           href="/leaderboard"
-          className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[#FF5733] transition-colors"
+          className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[var(--brand)] transition-colors"
         >
           Leaderboard
         </Link>
         <Link
           href="/community"
-          className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[#FF5733] transition-colors"
+          className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[var(--brand)] transition-colors"
         >
           Community
         </Link>
         {user && (
           <Link
             href="/coach"
-            className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[#FF5733] transition-colors"
+            className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[var(--brand)] transition-colors"
           >
             AI Coach
           </Link>
         )}
         <Link
           href="/contact"
-          className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[#FF5733] transition-colors"
+          className="font-raleway font-bold text-sm lg:text-base text-foreground hover:text-[var(--brand)] transition-colors"
         >
           Contact
         </Link>
@@ -125,7 +125,7 @@ export default function Navbar() {
         {(userRole === "organizer" || userRole === "admin") && (
           <Link
             href="/organizer"
-            className="font-raleway font-bold text-sm lg:text-base text-[#FFB800] hover:text-[#FF5733] transition-colors"
+            className="font-raleway font-bold text-sm lg:text-base text-[var(--brand-hover)] hover:text-[var(--brand)] transition-colors"
           >
             Organizer
           </Link>
@@ -137,13 +137,13 @@ export default function Navbar() {
         {/* Desktop Auth — Profile Dropdown or Sign In */}
         <div className="hidden lg:block shrink-0">
           {loading ? (
-            <div className="w-20 h-10 rounded-full bg-[#F5F5F0] dark:bg-[#2A2A2E] animate-pulse" />
+            <div className="w-20 h-10 rounded-full bg-[var(--surface-muted)] dark:bg-[#2A2A2E] animate-pulse" />
           ) : user ? (
             <ProfileDropdown user={user} />
           ) : (
             <Link
               href="/login"
-              className="font-raleway font-bold text-sm sm:text-base bg-[#FF5733] text-white hover:bg-[#E84E2E] transition-colors px-6 sm:px-8 py-2 sm:py-3 rounded-full cursor-pointer"
+              className="font-raleway font-bold text-sm sm:text-base bg-[var(--brand)] text-[var(--brand-ink)] hover:bg-[var(--brand-hover)] transition-colors px-6 sm:px-8 py-2 sm:py-3 rounded-full cursor-pointer"
             >
               Sign In
             </Link>
@@ -154,7 +154,7 @@ export default function Navbar() {
       {/* Mobile Hamburger Menu */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden text-foreground hover:text-[#FF5733] transition-colors ml-auto"
+        className="lg:hidden text-foreground hover:text-[var(--brand)] transition-colors ml-auto"
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
@@ -163,47 +163,15 @@ export default function Navbar() {
           page (the coach chat) the document can't scroll, so a dropdown taller
           than the remaining viewport would have unreachable links. */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 max-h-[calc(100dvh-100%)] overflow-y-auto overscroll-contain custom-scrollbar bg-[#1A1A1A]/85 dark:bg-[#0D0D0D]/85 backdrop-blur-xl lg:hidden flex flex-col px-4 py-4 space-y-3 border-t border-[#FF5733]/20 shadow-2xl z-50">
-          <Link
-            href="/"
-            onClick={closeMobileMenu}
-            className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
-          >
-            Home
-          </Link>
-          <Link
-            href="/race"
-            onClick={closeMobileMenu}
-            className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
-          >
-            Race
-          </Link>
-          <Link
-            href="/activities"
-            onClick={closeMobileMenu}
-            className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
-          >
-            Activities
-          </Link>
-          <Link
-            href="/leaderboard"
-            onClick={closeMobileMenu}
-            className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
-          >
-            Leaderboard
-          </Link>
-          <Link
-            href="/community"
-            onClick={closeMobileMenu}
-            className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
-          >
-            Community
-          </Link>
+        <div className="absolute top-full left-0 right-0 max-h-[calc(100dvh-100%)] overflow-y-auto overscroll-contain custom-scrollbar bg-[#1A1A1A]/85 dark:bg-[#0D0D0D]/85 backdrop-blur-xl lg:hidden flex flex-col px-4 py-4 space-y-3 border-t border-[var(--brand)]/20 shadow-2xl z-50">
+          {/* Home/Race/Activities/Leaderboard/Community live in the mobile
+              bottom nav (components/mobile-bottom-nav.tsx) — kept out of here
+              so the two don't duplicate the same five destinations. */}
           {user && (
             <Link
               href="/coach"
               onClick={closeMobileMenu}
-              className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
+              className="font-raleway font-bold text-sm text-white hover:text-[var(--brand)] transition-colors py-2"
             >
               AI Coach
             </Link>
@@ -211,7 +179,7 @@ export default function Navbar() {
           <Link
             href="/contact"
             onClick={closeMobileMenu}
-            className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
+            className="font-raleway font-bold text-sm text-white hover:text-[var(--brand)] transition-colors py-2"
           >
             Contact
           </Link>
@@ -220,7 +188,7 @@ export default function Navbar() {
             <Link
               href="/organizer"
               onClick={closeMobileMenu}
-              className="font-raleway font-bold text-sm text-[#FFB800] hover:text-[#FF5733] transition-colors py-2"
+              className="font-raleway font-bold text-sm text-[var(--brand-hover)] hover:text-[var(--brand)] transition-colors py-2"
             >
               Organizer
             </Link>
@@ -233,9 +201,9 @@ export default function Navbar() {
           </div>
           {user ? (
             <>
-              <div className="border-t border-[#FF5733]/20 pt-3 mt-1">
+              <div className="border-t border-[var(--brand)]/20 pt-3 mt-1">
                 <div className="flex items-center gap-3 py-2 mb-1">
-                  <div className="w-8 h-8 rounded-full bg-[#FF5733] flex items-center justify-center text-white text-sm font-bold font-raleway">
+                  <div className="w-8 h-8 rounded-full bg-[var(--brand)] flex items-center justify-center text-[var(--brand-ink)] text-sm font-bold font-raleway">
                     {(
                       user.user_metadata?.full_name ||
                       user.user_metadata?.name ||
@@ -259,14 +227,14 @@ export default function Navbar() {
                 <Link
                   href="/profile"
                   onClick={closeMobileMenu}
-                  className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2 block"
+                  className="font-raleway font-bold text-sm text-white hover:text-[var(--brand)] transition-colors py-2 block"
                 >
                   Profile
                 </Link>
                 <Link
                   href="/settings"
                   onClick={closeMobileMenu}
-                  className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2 block"
+                  className="font-raleway font-bold text-sm text-white hover:text-[var(--brand)] transition-colors py-2 block"
                 >
                   Settings
                 </Link>
@@ -287,7 +255,7 @@ export default function Navbar() {
             <Link
               href="/login"
               onClick={closeMobileMenu}
-              className="font-raleway font-bold text-sm text-white hover:text-[#FF5733] transition-colors py-2"
+              className="font-raleway font-bold text-sm text-white hover:text-[var(--brand)] transition-colors py-2"
             >
               Sign In
             </Link>

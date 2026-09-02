@@ -134,15 +134,15 @@ export default function DayCard({
   const spine = allDone
     ? "bg-emerald-500"
     : isRestDay
-      ? "bg-[#1A1A1A]/15 dark:bg-white/15"
+      ? "bg-foreground/15"
       : isEmpty
-        ? "bg-[#1A1A1A]/8 dark:bg-white/8"
-        : "bg-[#FF5733]";
+        ? "bg-foreground/8"
+        : "bg-[var(--brand)]";
 
   return (
     <article
       className={`relative overflow-hidden rounded-xl bg-white dark:bg-[#1C1C1E] transition-shadow ${
-        isToday ? "ring-1 ring-[#FF5733]/30" : ""
+        isToday ? "ring-1 ring-[var(--brand)]/30" : ""
       }`}
     >
       {/* Left spine replaces the generic border+shadow card outline. It encodes
@@ -161,12 +161,12 @@ export default function DayCard({
         <div className="min-w-0">
           {/* Weekday leads. "Day 3" is an index into the plan; "Wednesday" is
               how someone actually finds the day they're standing in. */}
-          <h3 className="text-base font-semibold text-[#1A1A1A] dark:text-white font-raleway truncate leading-tight">
+          <h3 className="text-base font-semibold text-foreground font-raleway truncate leading-tight">
             {weekday}
           </h3>
-          <p className="text-[11px] text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans mt-0.5">
+          <p className="text-[11px] text-foreground/40 font-merriweather-sans mt-0.5">
             {dateLabel} · Day {dayIndex + 1}
-            {isToday && <span className="ml-1.5 font-semibold text-[#FF5733]">Today</span>}
+            {isToday && <span className="ml-1.5 font-semibold text-[var(--brand-hover)]">Today</span>}
           </p>
         </div>
 
@@ -183,25 +183,25 @@ export default function DayCard({
                 <span
                   key={w.id}
                   className={`w-1.5 h-1.5 rounded-full ${
-                    completedItemIds.has(w.id) ? "bg-emerald-500" : "bg-[#FF5733]/30"
+                    completedItemIds.has(w.id) ? "bg-emerald-500" : "bg-[var(--brand)]/40"
                   }`}
                 />
               ))}
             </span>
           )}
           {isRestDay && (
-            <span className="inline-flex items-center gap-1 text-[11px] text-[#1A1A1A]/45 dark:text-white/45 font-merriweather-sans">
+            <span className="inline-flex items-center gap-1 text-[11px] text-foreground/45 font-merriweather-sans">
               <Moon className="w-3 h-3" />
               Rest
             </span>
           )}
           {isEmpty && (
-            <span className="text-[11px] text-[#1A1A1A]/35 dark:text-white/35 font-merriweather-sans">
+            <span className="text-[11px] text-foreground/35 font-merriweather-sans">
               Empty
             </span>
           )}
           <ChevronDown
-            className={`w-4 h-4 text-[#1A1A1A]/30 dark:text-white/30 transition-transform ${expanded ? "rotate-180" : ""}`}
+            className={`w-4 h-4 text-foreground/30 transition-transform ${expanded ? "rotate-180" : ""}`}
           />
         </div>
       </button>
@@ -220,15 +220,15 @@ export default function DayCard({
               whether the generator skipped a day. */}
           {isRestDay && (
             <div className="flex items-start gap-3 pt-4">
-              <div className="w-7 h-7 rounded-lg bg-[#1A1A1A]/5 dark:bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
-                <Moon className="w-3.5 h-3.5 text-[#1A1A1A]/50 dark:text-white/50" />
+              <div className="w-7 h-7 rounded-lg bg-foreground/5 dark:bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                <Moon className="w-3.5 h-3.5 text-foreground/50" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-[10px] font-semibold text-[#1A1A1A]/40 dark:text-white/40 uppercase tracking-wider font-raleway">
+                <p className="text-[10px] font-semibold text-foreground/40 uppercase tracking-wider font-raleway">
                   Recovery
                 </p>
-                <p className="text-sm text-[#1A1A1A] dark:text-white font-merriweather-sans">Rest day</p>
-                <p className="mt-0.5 text-xs text-[#1A1A1A]/50 dark:text-white/50 font-merriweather-sans">
+                <p className="text-sm text-foreground font-merriweather-sans">Rest day</p>
+                <p className="mt-0.5 text-xs text-foreground/50 font-merriweather-sans">
                   No workout scheduled — this is when your body rebuilds. Keep eating to plan.
                 </p>
               </div>
@@ -244,22 +244,22 @@ export default function DayCard({
               <div key={w.id} className="flex items-start gap-3 pt-4">
                 <div
                   className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${
-                    done ? "bg-[#FF5733]" : "bg-[#FF5733]/10"
+                    done ? "bg-[var(--brand)]" : "bg-[var(--brand)]/12"
                   } ${bouncingId === w.id ? "animate-bounce-confirm" : ""}`}
                 >
                   {done ? (
-                    <Check className="w-3.5 h-3.5 text-white" />
+                    <Check className="w-3.5 h-3.5 text-[var(--brand-ink)]" />
                   ) : (
-                    <Dumbbell className="w-3.5 h-3.5 text-[#FF5733]" />
+                    <Dumbbell className="w-3.5 h-3.5 text-[var(--brand-hover)]" />
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[10px] font-semibold text-[#1A1A1A]/40 dark:text-white/40 uppercase tracking-wider font-raleway">
+                  <p className="text-[10px] font-semibold text-foreground/40 uppercase tracking-wider font-raleway">
                     {SLOT_LABELS[w.slot] ?? w.slot}
                   </p>
                   <p
                     className={`text-sm font-merriweather-sans ${
-                      done ? "text-[#1A1A1A]/40 dark:text-white/40 line-through" : "text-[#1A1A1A] dark:text-white"
+                      done ? "text-foreground/40 line-through" : "text-foreground"
                     }`}
                   >
                     {w.title}
@@ -267,7 +267,7 @@ export default function DayCard({
 
                   {exercises.length > 0 && (
                     <>
-                      <div className="mt-2 flex items-center gap-1 text-[10px] font-semibold text-[#1A1A1A]/35 dark:text-white/35 uppercase tracking-wider font-raleway">
+                      <div className="mt-2 flex items-center gap-1 text-[10px] font-semibold text-foreground/35 uppercase tracking-wider font-raleway">
                         <span>Sets × reps</span>
                         <GlossaryHint term="sets" />
                         <GlossaryHint term="reps" />
@@ -281,16 +281,16 @@ export default function DayCard({
                           <button
                             key={i}
                             onClick={() => setActiveExercise(ex.name)}
-                            className="px-2.5 py-1.5 rounded-lg text-left bg-[#F5F5F0] dark:bg-[#2A2A2E] hover:bg-[#FF5733]/10 transition-colors cursor-pointer group"
+                            className="px-2.5 py-1.5 rounded-lg text-left bg-[var(--surface-muted)] dark:bg-[#2A2A2E] hover:bg-[var(--brand)]/12 transition-colors cursor-pointer group"
                           >
-                            <span className="block text-xs font-merriweather-sans text-[#1A1A1A]/80 dark:text-white/80 group-hover:text-[#FF5733]">
+                            <span className="block text-xs font-merriweather-sans text-foreground/80 group-hover:text-[var(--brand-hover)]">
                               {ex.name}
                             </span>
                             {ex.display && (
-                              <span className="block text-[11px] font-semibold font-raleway text-[#1A1A1A]/50 dark:text-white/50 tabular-nums">
+                              <span className="block text-[11px] font-semibold font-raleway text-foreground/50 tabular-nums">
                                 {ex.display}
                                 {ex.rest && (
-                                  <span className="font-normal text-[#1A1A1A]/35 dark:text-white/35"> · {ex.rest}</span>
+                                  <span className="font-normal text-foreground/35"> · {ex.rest}</span>
                                 )}
                               </span>
                             )}
@@ -311,8 +311,8 @@ export default function DayCard({
                     disabled={pending}
                     className={`mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold font-raleway transition-colors cursor-pointer disabled:opacity-50 ${
                       done
-                        ? "bg-[#F5F5F0] dark:bg-[#2A2A2E] text-[#1A1A1A]/60 dark:text-white/60"
-                        : "bg-[#FF5733]/10 text-[#FF5733] hover:bg-[#FF5733]/20"
+                        ? "bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-foreground/60"
+                        : "bg-[var(--brand)]/12 text-[var(--brand-hover)] hover:bg-[var(--brand)]/20"
                     }`}
                   >
                     {pending ? (
@@ -336,22 +336,22 @@ export default function DayCard({
 
             return (
               <div key={m.id} className="flex items-start gap-3 pt-4">
-                <div className="w-7 h-7 rounded-lg bg-[#1A1A1A]/5 dark:bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
-                  <Utensils className="w-3.5 h-3.5 text-[#1A1A1A]/50 dark:text-white/50" />
+                <div className="w-7 h-7 rounded-lg bg-foreground/5 dark:bg-white/10 flex items-center justify-center shrink-0 mt-0.5">
+                  <Utensils className="w-3.5 h-3.5 text-foreground/50" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-2">
-                    <p className="text-[10px] font-semibold text-[#1A1A1A]/40 dark:text-white/40 uppercase tracking-wider font-raleway">
+                    <p className="text-[10px] font-semibold text-foreground/40 uppercase tracking-wider font-raleway">
                       {SLOT_LABELS[m.slot] ?? m.slot}
                     </p>
                     <span className="flex items-center gap-1 shrink-0">
-                      <span className="text-[10px] text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans tabular-nums">
+                      <span className="text-[10px] text-foreground/40 font-merriweather-sans tabular-nums">
                         {m.kcal} kcal
                       </span>
                       <GlossaryHint term="kcal" />
                     </span>
                   </div>
-                  <p className="text-sm text-[#1A1A1A] dark:text-white font-merriweather-sans">{m.title}</p>
+                  <p className="text-sm text-foreground font-merriweather-sans">{m.title}</p>
 
                   {/* Ingredient grams have always been generated and stored —
                       this is the first place they're actually shown. */}
@@ -360,7 +360,7 @@ export default function DayCard({
                       {ingredients.map((ing, i) => (
                         <li
                           key={i}
-                          className="flex items-baseline justify-between gap-3 text-xs font-merriweather-sans text-[#1A1A1A]/55 dark:text-white/55"
+                          className="flex items-baseline justify-between gap-3 text-xs font-merriweather-sans text-foreground/55"
                         >
                           <span className="min-w-0 truncate">{ing.name}</span>
                           <span className="shrink-0 tabular-nums">{ing.grams} g</span>
@@ -374,7 +374,7 @@ export default function DayCard({
           })}
 
           {isEmpty && (
-            <p className="pt-4 text-sm text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans">
+            <p className="pt-4 text-sm text-foreground/40 font-merriweather-sans">
               Nothing scheduled.
             </p>
           )}

@@ -97,8 +97,8 @@ export default function RaceModal({ race, onClose }: RaceModalProps) {
 
           {/* Info Grid */}
           <div className="grid grid-cols-2 gap-3 mb-6">
-            <div className="flex items-center gap-2.5 bg-[#F5F5F0] dark:bg-[#2A2A2E] rounded-lg p-3">
-              <CalendarDays size={18} className="text-[#FF5733] shrink-0" />
+            <div className="flex items-center gap-2.5 bg-[var(--surface-muted)] dark:bg-[#2A2A2E] rounded-lg p-3">
+              <CalendarDays size={18} className="text-[var(--brand-hover)] shrink-0" />
               <div>
                 <p className="font-merriweather-sans text-xs text-gray-500 dark:text-gray-400">
                   Date & Time
@@ -108,8 +108,8 @@ export default function RaceModal({ race, onClose }: RaceModalProps) {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2.5 bg-[#F5F5F0] dark:bg-[#2A2A2E] rounded-lg p-3">
-              <MapPin size={18} className="text-[#FF5733] shrink-0" />
+            <div className="flex items-center gap-2.5 bg-[var(--surface-muted)] dark:bg-[#2A2A2E] rounded-lg p-3">
+              <MapPin size={18} className="text-[var(--brand-hover)] shrink-0" />
               <div>
                 <p className="font-merriweather-sans text-xs text-gray-500 dark:text-gray-400">
                   Location
@@ -119,8 +119,8 @@ export default function RaceModal({ race, onClose }: RaceModalProps) {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2.5 bg-[#F5F5F0] dark:bg-[#2A2A2E] rounded-lg p-3">
-              <Users size={18} className="text-[#FF5733] shrink-0" />
+            <div className="flex items-center gap-2.5 bg-[var(--surface-muted)] dark:bg-[#2A2A2E] rounded-lg p-3">
+              <Users size={18} className="text-[var(--brand-hover)] shrink-0" />
               <div>
                 <p className="font-merriweather-sans text-xs text-gray-500 dark:text-gray-400">
                   Participants
@@ -136,8 +136,8 @@ export default function RaceModal({ race, onClose }: RaceModalProps) {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2.5 bg-[#F5F5F0] dark:bg-[#2A2A2E] rounded-lg p-3">
-              <Clock size={18} className="text-[#FF5733] shrink-0" />
+            <div className="flex items-center gap-2.5 bg-[var(--surface-muted)] dark:bg-[#2A2A2E] rounded-lg p-3">
+              <Clock size={18} className="text-[var(--brand-hover)] shrink-0" />
               <div>
                 <p className="font-merriweather-sans text-xs text-gray-500 dark:text-gray-400">
                   Registration Deadline
@@ -150,8 +150,8 @@ export default function RaceModal({ race, onClose }: RaceModalProps) {
           </div>
 
           {/* Registration Fee */}
-          <div className="flex items-center gap-2.5 bg-[#F5F5F0] dark:bg-[#2A2A2E] rounded-lg p-3 mb-6">
-            <Ticket size={18} className="text-[#FF5733] shrink-0" />
+          <div className="flex items-center gap-2.5 bg-[var(--surface-muted)] dark:bg-[#2A2A2E] rounded-lg p-3 mb-6">
+            <Ticket size={18} className="text-[var(--brand-hover)] shrink-0" />
             <div>
               <p className="font-merriweather-sans text-xs text-gray-500 dark:text-gray-400">
                 Registration Fee
@@ -169,7 +169,7 @@ export default function RaceModal({ race, onClose }: RaceModalProps) {
             typeof race.longitude === "number" && (
               <div className="mb-6">
                 <h3 className="font-raleway font-bold text-base text-foreground mb-2 flex items-center gap-2">
-                  <MapPin size={16} className="text-[#FF5733]" />
+                  <MapPin size={16} className="text-[var(--brand-hover)]" />
                   {race.approximateLocation ? "Race Area" : "Where It Starts"}
                 </h3>
                 <LocationMap
@@ -184,7 +184,7 @@ export default function RaceModal({ race, onClose }: RaceModalProps) {
           {/* Description */}
           <div className="mb-6">
             <h3 className="font-raleway font-bold text-base text-foreground mb-2 flex items-center gap-2">
-              <Trophy size={16} className="text-[#FF5733]" />
+              <Trophy size={16} className="text-[var(--brand-hover)]" />
               About This Race
             </h3>
             <p className="font-merriweather-sans text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
@@ -195,7 +195,7 @@ export default function RaceModal({ race, onClose }: RaceModalProps) {
           {/* Action Button */}
           <Button
             disabled={isFull || isPastDeadline || !race.registrationOpen}
-            className="w-full py-4 rounded-lg bg-[#FF5733] text-white font-raleway font-bold text-base hover:bg-[#E84E2E] hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            className="w-full py-4 rounded-lg bg-[var(--brand)] text-[var(--brand-ink)] font-raleway font-bold text-base hover:bg-[var(--brand-hover)] hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             {isFull
               ? "Race is Full"

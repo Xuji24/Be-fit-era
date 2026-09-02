@@ -81,10 +81,10 @@ const SESSION_OPTIONS = [
 const MAX_LIMITATIONS_CHARS = 500;
 
 const inputClass =
-  "w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans";
+  "w-full px-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans";
 
 const labelClass =
-  "block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/60 mb-1.5 font-merriweather-sans";
+  "block text-xs font-semibold text-foreground/60 mb-1.5 font-merriweather-sans";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -170,8 +170,8 @@ export default function OnboardingPage() {
                   variant="outline"
                   className={cn(
                     inputClass,
-                    "flex items-center justify-between font-normal font-merriweather-sans hover:bg-[#F5F5F0] dark:hover:bg-[#2A2A2E]",
-                    !birthDate && "text-[#1A1A1A]/30 dark:text-white/20"
+                    "flex items-center justify-between font-normal font-merriweather-sans hover:bg-[var(--surface-muted)] dark:hover:bg-[#2A2A2E]",
+                    !birthDate && "text-foreground/30"
                   )}
                 >
                   {birthDate ? format(new Date(birthDate + "T00:00:00"), "MMMM d, yyyy") : "Select your birth date"}
@@ -233,9 +233,9 @@ export default function OnboardingPage() {
           </div>
 
           {bmi !== null && (
-            <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-[#FF5733]/5 border border-[#FF5733]/10">
-              <span className="text-sm text-[#1A1A1A]/70 dark:text-white/70 font-merriweather-sans">Your BMI</span>
-              <span className="text-sm font-semibold text-[#FF5733] font-raleway capitalize">
+            <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-[var(--brand)]/8 border border-[var(--brand)]/20">
+              <span className="text-sm text-foreground/70 font-merriweather-sans">Your BMI</span>
+              <span className="text-sm font-semibold text-[var(--brand-hover)] font-raleway capitalize">
                 {bmi} · {category}
               </span>
             </div>
@@ -411,7 +411,7 @@ export default function OnboardingPage() {
               rows={3}
               className={`${inputClass} resize-none`}
             />
-            <p className="mt-1 text-xs text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans">
+            <p className="mt-1 text-xs text-foreground/40 font-merriweather-sans">
               {limitations.length}/{MAX_LIMITATIONS_CHARS}
             </p>
           </div>
@@ -480,8 +480,8 @@ export default function OnboardingPage() {
 
   if (checkingAuth) {
     return (
-      <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212] flex items-center justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-[#FF5733]" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--brand-hover)]" />
       </div>
     );
   }
@@ -513,7 +513,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212]">
+    <div className="min-h-screen bg-background">
       <CoachHero icon={Dumbbell} title="Build your plan" backHref={backHref} maxWidthClassName="max-w-5xl" />
 
       <div className="max-w-5xl mx-auto px-6 pb-16 grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -535,24 +535,24 @@ export default function OnboardingPage() {
 
         <div className="lg:col-span-1">
           <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-5 lg:sticky lg:top-6 space-y-3">
-            <h2 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway">
+            <h2 className="text-sm font-semibold text-foreground font-raleway">
               Building your profile
             </h2>
             {summaryRows.length === 0 ? (
-              <p className="text-sm text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans">
+              <p className="text-sm text-foreground/40 font-merriweather-sans">
                 Your answers will show up here as you go.
               </p>
             ) : (
               <dl className="space-y-2">
                 {summaryRows.map((row) => (
                   <div key={row.label} className="flex items-center justify-between gap-3 text-sm font-merriweather-sans">
-                    <dt className="text-[#1A1A1A]/50 dark:text-white/50">{row.label}</dt>
-                    <dd className="text-[#1A1A1A] dark:text-white font-semibold capitalize text-right">{row.value}</dd>
+                    <dt className="text-foreground/50">{row.label}</dt>
+                    <dd className="text-foreground font-semibold capitalize text-right">{row.value}</dd>
                   </div>
                 ))}
               </dl>
             )}
-            <p className="text-xs text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans pt-2 border-t border-black/5 dark:border-white/5">
+            <p className="text-xs text-foreground/40 font-merriweather-sans pt-2 border-t border-black/5 dark:border-white/5">
               Your coach uses all of this to build a plan that fits your equipment, schedule, and budget.
             </p>
           </div>

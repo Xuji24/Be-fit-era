@@ -123,8 +123,8 @@ export default function TrackerPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212] flex items-center justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-[#FF5733]" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-6 h-6 animate-spin text-[var(--brand-hover)]" />
       </div>
     );
   }
@@ -136,12 +136,12 @@ export default function TrackerPage() {
   const todaysMeals = plan?.items.filter((i) => i.itemType === "meal" && i.dayIndex === todayDayIndex) ?? [];
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#121212]">
+    <div className="min-h-screen bg-background">
       <CoachHero icon={ClipboardList} title="Calorie Tracker" maxWidthClassName="max-w-6xl" />
 
       <div className="max-w-6xl mx-auto px-6 pb-16 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <p className="text-sm text-[#1A1A1A]/60 dark:text-white/60 font-merriweather-sans">
+          <p className="text-sm text-foreground/60 font-merriweather-sans">
             {new Date(date).toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })}
           </p>
 
@@ -156,9 +156,9 @@ export default function TrackerPage() {
             />
           ) : (
             <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-6 text-center">
-              <p className="text-sm text-[#1A1A1A]/50 dark:text-white/50 font-merriweather-sans">
+              <p className="text-sm text-foreground/50 font-merriweather-sans">
                 No active plan covers today.{" "}
-                <button onClick={() => router.push("/coach")} className="text-[#FF5733] font-semibold cursor-pointer">
+                <button onClick={() => router.push("/coach")} className="text-[var(--brand-hover)] font-semibold cursor-pointer">
                   Generate one
                 </button>
                 .
@@ -171,7 +171,7 @@ export default function TrackerPage() {
         </div>
 
         <div className="lg:col-span-1 space-y-3">
-          <h2 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway px-1">Past days</h2>
+          <h2 className="text-sm font-semibold text-foreground font-raleway px-1">Past days</h2>
           <FoodHistoryList days={pastDays} todayIso={date} />
         </div>
       </div>

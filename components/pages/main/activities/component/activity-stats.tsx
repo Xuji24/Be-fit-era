@@ -101,8 +101,8 @@ const ActivityStats = ({ stats }: { stats: QuickStats }) => {
   function accentClasses(accent?: string) {
     if (accent === "emerald")
       return { icon: "bg-emerald-500/10 text-emerald-500" };
-    if (accent === "gold") return { icon: "bg-[#FFB800]/10 text-[#FFB800]" };
-    return { icon: "bg-[#FF5733]/10 text-[#FF5733]" };
+    if (accent === "gold") return { icon: "bg-[var(--brand-hover)]/15 text-[var(--brand-hover)]" };
+    return { icon: "bg-[var(--brand)]/15 text-[var(--brand-hover)]" };
   }
 
   return (
@@ -112,17 +112,17 @@ const ActivityStats = ({ stats }: { stats: QuickStats }) => {
         return (
           <div
             key={card.label}
-            className="bg-white dark:bg-[#1C1C1E] rounded-2xl p-5 border border-black/5 dark:border-white/5 hover:border-[#FF5733]/20 dark:hover:border-[#FF5733]/20 transition-all"
+            className="bg-white dark:bg-[#1C1C1E] rounded-2xl p-5 border border-black/5 dark:border-white/5 hover:border-[var(--brand)]/20 transition-all"
           >
             <div
               className={`w-9 h-9 rounded-xl ${ac.icon} flex items-center justify-center mb-3`}
             >
               {card.icon}
             </div>
-            <p className="text-2xl font-bold text-[#1A1A1A] dark:text-white font-raleway">
+            <p className="text-2xl font-bold text-foreground font-raleway">
               {card.value}
             </p>
-            <p className="text-sm text-[#1A1A1A]/50 dark:text-white/40 mt-1">
+            <p className="text-sm text-foreground/50 mt-1">
               {card.label}
             </p>
           </div>

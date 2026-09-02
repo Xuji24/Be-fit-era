@@ -8,7 +8,7 @@ export default function PlanHistoryList({ plans }: PlanHistoryListProps) {
   const archived = plans.filter((p) => p.status === "archived");
   if (archived.length === 0) {
     return (
-      <p className="text-sm text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans text-center py-8">
+      <p className="text-sm text-foreground/40 font-merriweather-sans text-center py-8">
         No past plans yet.
       </p>
     );
@@ -20,14 +20,14 @@ export default function PlanHistoryList({ plans }: PlanHistoryListProps) {
         {archived.map((plan) => (
           <div key={plan.id} className="px-5 py-3 flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-sm text-[#1A1A1A] dark:text-white font-merriweather-sans">
+              <p className="text-sm text-foreground font-merriweather-sans">
                 Version {plan.version} · {new Date(plan.startsOn).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
               </p>
               {plan.summary && (
-                <p className="text-xs text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans truncate">{plan.summary}</p>
+                <p className="text-xs text-foreground/40 font-merriweather-sans truncate">{plan.summary}</p>
               )}
             </div>
-            <p className="text-xs text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans shrink-0">{plan.itemCount} items</p>
+            <p className="text-xs text-foreground/40 font-merriweather-sans shrink-0">{plan.itemCount} items</p>
           </div>
         ))}
       </div>

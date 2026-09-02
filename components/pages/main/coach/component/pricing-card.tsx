@@ -38,36 +38,36 @@ export default function PricingCard({
     <div
       className={`relative bg-white dark:bg-[#1C1C1E] rounded-2xl border shadow-sm p-6 flex flex-col ${
         featured
-          ? "border-[#FF5733] shadow-md md:-translate-y-2"
+          ? "border-[var(--brand)] shadow-md md:-translate-y-2"
           : "border-black/5 dark:border-white/5"
       }`}
     >
       {featured && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#FF5733] text-white text-[11px] font-semibold font-raleway whitespace-nowrap">
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[var(--brand)] text-[var(--brand-ink)] text-[11px] font-semibold font-raleway whitespace-nowrap">
           Most popular
         </span>
       )}
 
       <div className="text-center space-y-1">
-        <h3 className="text-base font-semibold text-[#1A1A1A] dark:text-white font-raleway">{tier.name}</h3>
+        <h3 className="text-base font-semibold text-foreground font-raleway">{tier.name}</h3>
         <div className="flex items-baseline justify-center gap-1 h-10">
-          <span className="text-3xl font-bold text-[#1A1A1A] dark:text-white font-raleway">
+          <span className="text-3xl font-bold text-foreground font-raleway">
             {isFree ? "Free" : `₱${tier.pricePhp}`}
           </span>
           {!isFree && (
-            <span className="text-sm text-[#1A1A1A]/50 dark:text-white/50 font-merriweather-sans">/mo</span>
+            <span className="text-sm text-foreground/50 font-merriweather-sans">/mo</span>
           )}
         </div>
         {/* Fixed height keeps the feature lists aligned across cards whether a
             tagline wraps to one line or two. */}
-        <p className="text-xs text-[#1A1A1A]/60 dark:text-white/60 font-merriweather-sans min-h-8">{tier.tagline}</p>
+        <p className="text-xs text-foreground/60 font-merriweather-sans min-h-8">{tier.tagline}</p>
       </div>
 
       <ul className="mt-6 space-y-2.5 flex-1">
         {tier.features.map((feature) => (
           <li key={feature} className="flex items-start gap-2">
-            <Check className="w-4 h-4 text-[#FF5733] shrink-0 mt-0.5" />
-            <span className="text-sm text-[#1A1A1A]/80 dark:text-white/80 font-merriweather-sans">{feature}</span>
+            <Check className="w-4 h-4 text-[var(--brand-hover)] shrink-0 mt-0.5" />
+            <span className="text-sm text-foreground/80 font-merriweather-sans">{feature}</span>
           </li>
         ))}
       </ul>
@@ -80,8 +80,8 @@ export default function PricingCard({
         // against the dark card.
         className={`mt-6 w-full px-6 py-3 rounded-xl text-sm font-semibold font-raleway transition-colors inline-flex items-center justify-center gap-2 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer ${
           featured
-            ? "bg-[#FF5733] hover:bg-[#E84E2E] text-white"
-            : "bg-[#1A1A1A] hover:bg-[#1A1A1A]/90 text-white dark:bg-white dark:hover:bg-white/90 dark:text-[#1A1A1A]"
+            ? "bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-[var(--brand-ink)]"
+            : "bg-foreground text-background hover:bg-foreground/90"
         }`}
       >
         {pending && <Loader2 className="w-4 h-4 animate-spin" />}
@@ -99,8 +99,8 @@ export default function PricingCard({
       </button>
 
       {tier.planModel && (
-        <p className="mt-3 text-[11px] text-center text-[#1A1A1A]/45 dark:text-white/45 font-merriweather-sans inline-flex items-center justify-center gap-1">
-          <Sparkles className="w-3 h-3 text-[#FF5733]" />
+        <p className="mt-3 text-[11px] text-center text-foreground/45 font-merriweather-sans inline-flex items-center justify-center gap-1">
+          <Sparkles className="w-3 h-3 text-[var(--brand-hover)]" />
           Premium model for plan generation
         </p>
       )}

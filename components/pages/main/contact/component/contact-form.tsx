@@ -76,7 +76,7 @@ export default function ContactForm() {
               onChange={handleChange}
               required
               placeholder="John Doe"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-foreground text-sm font-merriweather-sans placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-[#FF5733] focus:border-transparent transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-foreground text-sm font-merriweather-sans placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-[var(--brand)] focus:border-transparent transition-all"
             />
           </div>
           <div>
@@ -94,7 +94,7 @@ export default function ContactForm() {
               onChange={handleChange}
               required
               placeholder="john@example.com"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-foreground text-sm font-merriweather-sans placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-[#FF5733] focus:border-transparent transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-foreground text-sm font-merriweather-sans placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-[var(--brand)] focus:border-transparent transition-all"
             />
           </div>
         </div>
@@ -139,7 +139,7 @@ export default function ContactForm() {
             required
             rows={5}
             placeholder="Tell us what's on your mind..."
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-foreground text-sm font-merriweather-sans placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-[#FF5733] focus:border-transparent transition-all resize-none"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-[#1C1C1E] text-foreground text-sm font-merriweather-sans placeholder:text-foreground/30 focus:outline-none focus:ring-2 focus:ring-[var(--brand)] focus:border-transparent transition-all resize-none"
           />
         </div>
 
@@ -147,7 +147,7 @@ export default function ContactForm() {
         <Button
           type="submit"
           disabled={isPending}
-          className="font-raleway font-bold text-base bg-[#FF5733] text-white hover:bg-[#E84E2E] transition-all px-8 py-3 rounded-full cursor-pointer shadow-md shadow-[#FF5733]/20 hover:shadow-lg hover:shadow-[#FF5733]/30 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center gap-2"
+          className="font-raleway font-bold text-base bg-[var(--brand)] text-[var(--brand-ink)] hover:bg-[var(--brand-hover)] transition-all px-8 py-3 rounded-full cursor-pointer shadow-md shadow-[var(--brand)]/20 hover:shadow-lg hover:shadow-[var(--brand)]/30 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center gap-2"
         >
           {isPending ? (
             <>

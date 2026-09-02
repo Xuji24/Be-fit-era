@@ -33,9 +33,9 @@ export default function WizardShell({
 
   return (
     <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm overflow-hidden">
-      <div className="h-1 bg-[#F5F5F0] dark:bg-[#2A2A2E]">
+      <div className="h-1 bg-[var(--surface-muted)] dark:bg-[#2A2A2E]">
         <div
-          className="h-full bg-[#FF5733] transition-[width] duration-300"
+          className="h-full bg-[var(--brand)] transition-[width] duration-300"
           style={{ width: `${progress}%` }}
           role="progressbar"
           aria-valuenow={stepIndex + 1}
@@ -47,12 +47,12 @@ export default function WizardShell({
 
       <div className="p-6 sm:p-8 space-y-5">
         <div>
-          <p className="text-xs font-semibold text-[#FF5733] uppercase tracking-wider font-raleway">
+          <p className="text-xs font-semibold text-[var(--brand-hover)] uppercase tracking-wider font-raleway">
             Step {stepIndex + 1} of {stepCount}
           </p>
-          <h2 className="mt-1 text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">{title}</h2>
+          <h2 className="mt-1 text-lg font-bold text-foreground font-raleway">{title}</h2>
           {hint && (
-            <p className="mt-1 text-sm text-[#1A1A1A]/50 dark:text-white/50 font-merriweather-sans">{hint}</p>
+            <p className="mt-1 text-sm text-foreground/50 font-merriweather-sans">{hint}</p>
           )}
         </div>
 
@@ -63,7 +63,7 @@ export default function WizardShell({
             type="button"
             onClick={onBack}
             disabled={stepIndex === 0 || isSubmitting}
-            className="px-4 py-2.5 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer inline-flex items-center gap-1.5"
+            className="px-4 py-2.5 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm font-semibold text-foreground font-raleway disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer inline-flex items-center gap-1.5"
           >
             <ArrowLeft className="w-4 h-4" />
             Back
@@ -73,7 +73,7 @@ export default function WizardShell({
             type="button"
             onClick={onNext}
             disabled={!canAdvance || isSubmitting}
-            className="flex-1 px-6 py-2.5 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold font-raleway transition-colors cursor-pointer inline-flex items-center justify-center gap-2"
+            className="flex-1 px-6 py-2.5 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] disabled:opacity-50 disabled:cursor-not-allowed text-[var(--brand-ink)] text-sm font-semibold font-raleway transition-colors cursor-pointer inline-flex items-center justify-center gap-2"
           >
             {isSubmitting ? (
               <Loader2 className="w-4 h-4 animate-spin" />

@@ -10,7 +10,9 @@ import {
 } from "@/lib/strava-share";
 
 const CARD_SIZE = 600;
-const ROUTE_COLOR = "#FF5733";
+// Canvas 2D and MapLibre's paint spec both need a literal color, not a CSS
+// var() — kept in sync with --brand in app/globals.css by hand.
+const ROUTE_COLOR = "#FFB366";
 
 // Carto's OSM-derived basemaps — same styles the shared <Map> uses, no API key.
 const CARD_STYLE = "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json";

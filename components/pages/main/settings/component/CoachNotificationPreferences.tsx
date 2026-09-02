@@ -54,7 +54,7 @@ export default function CoachNotificationPreferences() {
   return (
     <div className="glass-panel rounded-2xl p-6">
       <h3 className="font-raleway font-bold text-base text-foreground flex items-center gap-2">
-        <Sparkles className="w-4 h-4 text-[#FF5733]" />
+        <Sparkles className="w-4 h-4 text-[var(--brand-hover)]" />
         Coach notifications
       </h3>
       <p className="text-sm text-muted-foreground mt-1 font-merriweather-sans">
@@ -75,7 +75,7 @@ export default function CoachNotificationPreferences() {
               aria-checked={prefs[row.key]}
               aria-label={row.label}
               className={`relative w-11 h-6 rounded-full shrink-0 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
-                prefs[row.key] ? "bg-[#FF5733]" : "bg-gray-200 dark:bg-zinc-700"
+                prefs[row.key] ? "bg-[var(--brand)]" : "bg-gray-200 dark:bg-zinc-700"
               }`}
             >
               {savingKey === row.key ? (

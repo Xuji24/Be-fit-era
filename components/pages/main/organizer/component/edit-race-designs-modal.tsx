@@ -192,17 +192,17 @@ export default function EditRaceDesignsModal({ race, onClose, onUpdated }: Props
         <div className="p-5 border-b border-black/5 dark:border-white/5 sticky top-0 bg-white dark:bg-[#1C1C1E] z-10">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">
+              <h2 className="text-lg font-bold text-foreground font-raleway">
                 Race Designs
               </h2>
-              <p className="text-xs text-[#1A1A1A]/50 dark:text-white/40 font-merriweather-sans mt-0.5">
+              <p className="text-xs text-foreground/50 font-merriweather-sans mt-0.5">
                 {race.title}
               </p>
             </div>
             <button
               title="Close"
               onClick={onClose}
-              className="w-8 h-8 rounded-full flex items-center justify-center text-[#1A1A1A]/40 dark:text-white/40 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-foreground/40 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -213,14 +213,14 @@ export default function EditRaceDesignsModal({ race, onClose, onUpdated }: Props
         <div className="p-5 space-y-5">
           {DESIGN_CONFIG.map(({ key, label, icon: Icon }) => (
             <div key={key}>
-              <label className="flex items-center gap-2 text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-2 uppercase tracking-wider font-merriweather-sans">
+              <label className="flex items-center gap-2 text-xs font-semibold text-foreground/60 mb-2 uppercase tracking-wider font-merriweather-sans">
                 <Icon className="w-3.5 h-3.5" />
                 {label}
               </label>
 
               {previews[key] ? (
                 <div className="relative group rounded-xl overflow-hidden border border-black/5 dark:border-white/5">
-                  <div className="relative w-full h-40 bg-[#F5F5F0] dark:bg-[#2A2A2E]">
+                  <div className="relative w-full h-40 bg-[var(--surface-muted)] dark:bg-[#2A2A2E]">
                     <Image
                       src={previews[key]!}
                       alt={label}
@@ -233,7 +233,7 @@ export default function EditRaceDesignsModal({ race, onClose, onUpdated }: Props
                     <button
                       type="button"
                       onClick={() => fileInputRefs.current[key]?.click()}
-                      className="px-3 py-1.5 rounded-lg bg-white/90 text-[#1A1A1A] text-xs font-semibold hover:bg-white transition-colors cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg bg-white/90 text-black text-xs font-semibold hover:bg-white transition-colors cursor-pointer"
                     >
                       Replace
                     </button>
@@ -251,13 +251,13 @@ export default function EditRaceDesignsModal({ race, onClose, onUpdated }: Props
                 <button
                   type="button"
                   onClick={() => fileInputRefs.current[key]?.click()}
-                  className="w-full h-32 rounded-xl border-2 border-dashed border-[#1A1A1A]/10 dark:border-white/10 hover:border-[#FF5733]/30 dark:hover:border-[#FF5733]/30 transition-colors flex flex-col items-center justify-center gap-2 cursor-pointer group"
+                  className="w-full h-32 rounded-xl border-2 border-dashed border-foreground/10 hover:border-[var(--brand)]/30 transition-colors flex flex-col items-center justify-center gap-2 cursor-pointer group"
                 >
-                  <Upload className="w-5 h-5 text-[#1A1A1A]/30 dark:text-white/20 group-hover:text-[#FF5733]/60 transition-colors" />
-                  <span className="text-xs text-[#1A1A1A]/40 dark:text-white/30 group-hover:text-[#FF5733]/60 transition-colors font-merriweather-sans">
+                  <Upload className="w-5 h-5 text-foreground/30 group-hover:text-[var(--brand-hover)]/60 transition-colors" />
+                  <span className="text-xs text-foreground/40 group-hover:text-[var(--brand-hover)]/60 transition-colors font-merriweather-sans">
                     Click to upload
                   </span>
-                  <span className="text-[10px] text-[#1A1A1A]/25 dark:text-white/15 font-merriweather-sans">
+                  <span className="text-[10px] text-foreground/25 font-merriweather-sans">
                     PNG, JPEG, WebP, SVG — Max 5MB
                   </span>
                 </button>
@@ -278,7 +278,7 @@ export default function EditRaceDesignsModal({ race, onClose, onUpdated }: Props
           <button
             onClick={handleSave}
             disabled={isPending || !hasChanges()}
-            className="w-full py-3 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] disabled:opacity-50 text-white text-sm font-semibold font-raleway transition-colors cursor-pointer flex items-center justify-center gap-2"
+            className="w-full py-3 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] disabled:opacity-50 text-[var(--brand-ink)] text-sm font-semibold font-raleway transition-colors cursor-pointer flex items-center justify-center gap-2"
           >
             {isPending ? (
               <>

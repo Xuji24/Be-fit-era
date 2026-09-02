@@ -5,7 +5,7 @@ import Logo from "@/components/logo";
 
 export default function ResetPasswordPage() {
   return (
-    <div className="flex h-screen w-full bg-[#FAFAF8] dark:bg-[#121212]">
+    <div className="flex h-screen w-full bg-background">
       {/* Left Side - Reset Password Form */}
       <div className="flex flex-col w-full lg:w-1/2 h-screen">
         {/* Logo */}
@@ -17,10 +17,10 @@ export default function ResetPasswordPage() {
         <div className="flex-1 flex items-center justify-center px-6 sm:px-10 md:px-16 lg:px-12 xl:px-20">
           <div className="w-full max-w-sm">
             {/* Heading */}
-            <h1 className="font-raleway font-bold text-3xl sm:text-4xl text-[#1A1A1A] dark:text-white mb-2 animate-slide-in-left">
+            <h1 className="font-raleway font-bold text-3xl sm:text-4xl text-foreground mb-2 animate-slide-in-left">
               Reset Password
             </h1>
-            <p className="font-merriweather-sans text-sm sm:text-base text-[#1A1A1A]/50 dark:text-white/40 mb-6 animate-slide-in-left animation-delay-100">
+            <p className="font-merriweather-sans text-sm sm:text-base text-foreground/50 dark:text-foreground/40 mb-6 animate-slide-in-left animation-delay-100">
               Enter your new password and keep it in a safe place
             </p>
 

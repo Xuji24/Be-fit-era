@@ -20,8 +20,8 @@ export default function AdherenceDonut({ completed, missed, remaining }: Adheren
   if (total === 0) {
     return (
       <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-6 text-center">
-        <h3 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway mb-2">Workout adherence</h3>
-        <p className="text-sm text-[#1A1A1A]/50 dark:text-white/50 font-merriweather-sans">
+        <h3 className="text-sm font-semibold text-foreground font-raleway mb-2">Workout adherence</h3>
+        <p className="text-sm text-foreground/50 font-merriweather-sans">
           Generate a plan to start tracking adherence.
         </p>
       </div>
@@ -38,7 +38,7 @@ export default function AdherenceDonut({ completed, missed, remaining }: Adheren
 
   return (
     <div className={`bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-6 ${CHART_COLOR_SCHEME_CLASS}`}>
-      <h3 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway mb-4">Workout adherence</h3>
+      <h3 className="text-sm font-semibold text-foreground font-raleway mb-4">Workout adherence</h3>
 
       <div className="relative h-44">
         <ResponsiveContainer width="100%" height="100%">
@@ -56,8 +56,8 @@ export default function AdherenceDonut({ completed, missed, remaining }: Adheren
           </PieChart>
         </ResponsiveContainer>
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <span className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway tabular-nums">{pct}%</span>
-          <span className="text-[10px] text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans uppercase tracking-wider">
+          <span className="text-lg font-bold text-foreground font-raleway tabular-nums">{pct}%</span>
+          <span className="text-[10px] text-foreground/40 font-merriweather-sans uppercase tracking-wider">
             done
           </span>
         </div>
@@ -65,7 +65,7 @@ export default function AdherenceDonut({ completed, missed, remaining }: Adheren
 
       <div className="flex justify-center gap-4 mt-2 flex-wrap">
         {data.map((slice) => (
-          <span key={slice.key} className="flex items-center gap-1.5 text-xs font-merriweather-sans text-[#1A1A1A]/60 dark:text-white/60">
+          <span key={slice.key} className="flex items-center gap-1.5 text-xs font-merriweather-sans text-foreground/60">
             <span className="w-2 h-2 rounded-sm shrink-0" style={{ backgroundColor: slice.color }} />
             {slice.label} {slice.value}
           </span>

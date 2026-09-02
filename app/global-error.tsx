@@ -28,8 +28,8 @@ export default function GlobalError({
             padding: "1rem",
             fontFamily: "system-ui, sans-serif",
             textAlign: "center",
-            background: "#FAFAF8",
-            color: "#1A1A1A",
+            background: "#FFF6F0",
+            color: "#1E1E1E",
           }}
         >
           <div style={{ maxWidth: "28rem" }}>
@@ -44,8 +44,8 @@ export default function GlobalError({
               style={{
                 padding: "0.75rem 1.5rem",
                 borderRadius: "0.75rem",
-                background: "#FF5733",
-                color: "#fff",
+                background: "#FFB366",
+                color: "#1E1E1E",
                 border: "none",
                 fontWeight: 600,
                 cursor: "pointer",

@@ -12,14 +12,37 @@ installed only for Radix primitives (popover, select).
 
 ## Tokens (already in `app/globals.css`)
 
+The Be-Fit-Era_UI_Redesign_Prompt.md redesign is complete: every component
+reads the `--brand`/`--brand-hover`/`--brand-ink` tokens below via
+`var(--brand)` etc. — the old `#FF5733` / `#FFB800` brand literals are gone
+project-wide. Three deliberate exceptions remain, and should stay hardcoded:
+gold/silver/bronze medal-rank colors (`leaderboard-podium.tsx`,
+`leaderboard-table.tsx`, the Finisher's Medal card in `RaceDetailPage.tsx`,
+`reward-preview-carousel.tsx`'s `theme="orange"`) are universal reward
+semantics, not brand color; third-party brand colors (Strava, Facebook,
+Messenger, Instagram, TikTok in `log-activity-panel.tsx` and
+`share-race-popover.tsx`) are that platform's own mark, never Fitra's; and
+contexts that can't read CSS vars — Three.js material colors
+(`exercise-model-3d.tsx`), MapLibre DOM markers now use `var(--brand)` fine,
+but the OG image route (`app/api/og/race/route.tsx`, satori/edge) and the
+canvas dot-grid background (`dot-grid-background.tsx`) keep the token's hex
+duplicated as a literal (`#FFB366`) — update those two by hand if the token
+ever changes.
+
 | Token | Light | Dark |
 |---|---|---|
-| Brand | `#FF5733` | same |
-| Brand hover | `#E84E2E` | same |
-| Gold accent | `#FFB800` | same |
-| Background | `#FAFAF8` | `#121212` |
+| Brand (primary orange) | `#FFB366` | same |
+| Brand soft (light orange) | `#FFD9B3` | same |
+| Brand hover | `#FFA64D` | same |
+| Brand ink (text on brand fills) | `#1E1E1E` | same |
+| Background | `#FFF6F0` | `#121212` |
 | Surface | `#FFFFFF` | `#1C1C1E` |
-| Surface 2 | `#F5F5F0` | `#2A2A2E` |
+| Surface muted | `#F2F2F2` | `#2A2A2E` |
+
+`--brand-ink` flipped from white to dark text: the new primary orange is much
+lighter than the old `#FF5733`, and white text on it fails contrast (~1.8:1).
+`#1E1E1E` on `#FFB366` clears ~9:1. Any new brand-filled surface (buttons,
+avatar chips, badges) should pair with `var(--brand-ink)`, not `text-white`.
 
 Fonts: `font-raleway` (headings, buttons, labels — bold/geometric) and
 `font-merriweather-sans` (body copy). Never introduce a third family.

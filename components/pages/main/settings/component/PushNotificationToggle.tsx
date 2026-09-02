@@ -13,7 +13,7 @@ export default function PushNotificationToggle() {
       <div className="flex items-center justify-between gap-4">
         <div>
           <h3 className="font-raleway font-bold text-base text-foreground flex items-center gap-2">
-            <Bell className="w-4 h-4 text-[#FF5733]" />
+            <Bell className="w-4 h-4 text-[var(--brand-hover)]" />
             Push Notifications
           </h3>
           <p className="text-sm text-muted-foreground mt-1 font-merriweather-sans">
@@ -31,7 +31,7 @@ export default function PushNotificationToggle() {
           title={subscribed ? "Disable push notifications" : "Enable push notifications"}
           className={`relative flex items-center gap-2 px-4 py-2 rounded-full text-sm font-raleway font-semibold transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
             subscribed
-              ? "bg-[#FF5733] text-white hover:bg-[#e04d2d]"
+              ? "bg-[var(--brand)] text-[var(--brand-ink)] hover:bg-[var(--brand-hover)]"
               : "bg-gray-100 dark:bg-zinc-800 text-muted-foreground hover:bg-gray-200 dark:hover:bg-zinc-700"
           }`}
         >

@@ -240,15 +240,15 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
         <div className="p-5 border-b border-black/5 dark:border-white/5 sticky top-0 bg-white dark:bg-[#1C1C1E] z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <Trophy className="w-5 h-5 text-[#FF5733]" />
-              <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">
+              <Trophy className="w-5 h-5 text-[var(--brand-hover)]" />
+              <h2 className="text-lg font-bold text-foreground font-raleway">
                 Create New Race
               </h2>
             </div>
             <button
               title="Close"
               onClick={onClose}
-              className="w-8 h-8 rounded-full flex items-center justify-center text-[#1A1A1A]/40 dark:text-white/40 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-foreground/40 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -259,7 +259,7 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
         <div className="p-5 space-y-4">
           {/* Title */}
           <div>
-            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+            <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
               Race Title *
             </label>
             <input
@@ -268,14 +268,14 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Manila Sunrise Marathon 2026"
               maxLength={200}
-              className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+              className="w-full px-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
             />
           </div>
 
           {/* Category + Distance */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+              <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                 Category *
               </label>
               <CustomSelect
@@ -285,7 +285,7 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+              <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                 Distance (km) *
               </label>
               <input
@@ -295,7 +295,7 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
                 placeholder="42.195"
                 min="0.1"
                 step="0.01"
-                className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                className="w-full px-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
               />
             </div>
           </div>
@@ -303,7 +303,7 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
           {/* Event Date + Deadline */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+              <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                 Event Date *
               </label>
               <input
@@ -311,11 +311,11 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
                 aria-label="Event Date"
                 value={eventDate}
                 onChange={(e) => setEventDate(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                className="w-full px-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+              <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                 Registration Deadline
               </label>
               <input
@@ -323,7 +323,7 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
                 aria-label="Registration Deadline"
                 value={registrationDeadline}
                 onChange={(e) => setRegistrationDeadline(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                className="w-full px-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
               />
             </div>
           </div>
@@ -338,7 +338,7 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
 
           {/* Max Participants */}
           <div>
-            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+            <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
               Max Participants
             </label>
             <input
@@ -347,13 +347,13 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
               onChange={(e) => setMaxParticipants(e.target.value)}
               placeholder="500"
               min="1"
-              className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+              className="w-full px-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+            <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
               Description
             </label>
             <textarea
@@ -362,14 +362,14 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
               placeholder="Describe your race..."
               rows={3}
               maxLength={2000}
-              className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans resize-none"
+              className="w-full px-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans resize-none"
             />
           </div>
 
           {/* Gun Start Time + Registration Fee */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+              <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                 Gun Start Time
               </label>
               <input
@@ -377,11 +377,11 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
                 aria-label="Gun Start Time"
                 value={eventTime}
                 onChange={(e) => setEventTime(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                className="w-full px-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+              <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
                 Registration Fee (₱)
               </label>
               <input
@@ -391,14 +391,14 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
                 placeholder="0 = FREE"
                 min="0"
                 step="50"
-                className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                className="w-full px-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
               />
             </div>
           </div>
 
           {/* Cutoff Time */}
           <div>
-            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+            <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
               Cutoff Time (optional)
             </label>
             <div className="grid grid-cols-2 gap-3">
@@ -409,7 +409,7 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
                 placeholder="Hours (e.g. 6)"
                 min="0"
                 max="24"
-                className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                className="w-full px-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
               />
               <input
                 type="number"
@@ -418,14 +418,14 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
                 placeholder="Minutes (e.g. 30)"
                 min="0"
                 max="59"
-                className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                className="w-full px-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
               />
             </div>
           </div>
 
           {/* Kit Pickup Info */}
           <div>
-            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+            <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
               Kit Pickup Info (optional)
             </label>
             <input
@@ -434,13 +434,13 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
               onChange={(e) => setKitPickupInfo(e.target.value)}
               placeholder="e.g. June 19–20 at Rizal Park Entrance, 8AM–5PM"
               maxLength={300}
-              className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+              className="w-full px-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
             />
           </div>
 
           {/* Inclusions */}
           <div>
-            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-2 uppercase tracking-wider font-merriweather-sans">
+            <label className="block text-xs font-semibold text-foreground/60 mb-2 uppercase tracking-wider font-merriweather-sans">
               What&apos;s Included (optional)
             </label>
             <div className="flex flex-wrap gap-2">
@@ -458,7 +458,7 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
                   className={`px-3 py-1.5 rounded-full text-xs font-merriweather-sans font-semibold border transition-all cursor-pointer ${
                     inclusions.includes(item)
                       ? "bg-emerald-500 text-white border-emerald-500"
-                      : "bg-[#F5F5F0] dark:bg-[#2A2A2E] text-[#1A1A1A]/60 dark:text-white/40 border-transparent hover:border-emerald-300"
+                      : "bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-foreground/60 border-transparent hover:border-emerald-300"
                   }`}
                 >
                   {inclusions.includes(item) ? "✓ " : ""}{item}
@@ -470,11 +470,11 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
           {/* GPX Route (Optional) */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 uppercase tracking-wider font-merriweather-sans flex items-center gap-1.5">
+              <label className="text-xs font-semibold text-foreground/60 uppercase tracking-wider font-merriweather-sans flex items-center gap-1.5">
                 <Route className="w-3.5 h-3.5" />
                 GPX Route File
               </label>
-              <span className="text-[10px] text-[#1A1A1A]/30 dark:text-white/20 font-merriweather-sans">Optional</span>
+              <span className="text-[10px] text-foreground/30 font-merriweather-sans">Optional</span>
             </div>
             {gpxFile ? (
               <div className="flex items-center justify-between px-4 py-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20">
@@ -484,7 +484,7 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
                 <button
                   type="button"
                   onClick={() => { setGpxFile(null); if (gpxRef.current) gpxRef.current.value = ""; }}
-                  className="ml-3 text-[#1A1A1A]/40 dark:text-white/30 hover:text-red-500 transition-colors cursor-pointer shrink-0"
+                  className="ml-3 text-foreground/40 hover:text-red-500 transition-colors cursor-pointer shrink-0"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -493,10 +493,10 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
               <button
                 type="button"
                 onClick={() => gpxRef.current?.click()}
-                className="w-full py-3 rounded-xl border-2 border-dashed border-[#1A1A1A]/10 dark:border-white/10 hover:border-[#FF5733]/30 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-3 rounded-xl border-2 border-dashed border-foreground/10 hover:border-[var(--brand)]/30 transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Upload className="w-4 h-4 text-[#1A1A1A]/20 dark:text-white/15" />
-                <span className="text-xs text-[#1A1A1A]/30 dark:text-white/20 font-merriweather-sans">Upload .gpx file</span>
+                <Upload className="w-4 h-4 text-foreground/20" />
+                <span className="text-xs text-foreground/30 font-merriweather-sans">Upload .gpx file</span>
               </button>
             )}
             <input
@@ -519,23 +519,23 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
           {/* Design Uploads (Optional) */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 uppercase tracking-wider font-merriweather-sans">
+              <span className="text-xs font-semibold text-foreground/60 uppercase tracking-wider font-merriweather-sans">
                 Race Designs
               </span>
-              <span className="text-[10px] text-[#1A1A1A]/30 dark:text-white/20 font-merriweather-sans">
+              <span className="text-[10px] text-foreground/30 font-merriweather-sans">
                 Optional — you can add these later
               </span>
             </div>
             <div className="grid grid-cols-3 gap-3">
               {DESIGN_CONFIGS.map(({ key, label, icon: Icon }) => (
                 <div key={key}>
-                  <label className="flex items-center gap-1 text-[10px] font-semibold text-[#1A1A1A]/50 dark:text-white/30 mb-1.5 font-merriweather-sans">
+                  <label className="flex items-center gap-1 text-[10px] font-semibold text-foreground/50 mb-1.5 font-merriweather-sans">
                     <Icon className="w-3 h-3" />
                     {label}
                   </label>
                   {designPreviews[key] ? (
                     <div className="relative group rounded-lg overflow-hidden border border-black/5 dark:border-white/5">
-                      <div className="relative w-full h-20 bg-[#F5F5F0] dark:bg-[#2A2A2E]">
+                      <div className="relative w-full h-20 bg-[var(--surface-muted)] dark:bg-[#2A2A2E]">
                         <Image
                           src={designPreviews[key]!}
                           alt={label}
@@ -557,10 +557,10 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
                     <button
                       type="button"
                       onClick={() => designRefs.current[key]?.click()}
-                      className="w-full h-20 rounded-lg border-2 border-dashed border-[#1A1A1A]/10 dark:border-white/10 hover:border-[#FF5733]/30 transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer"
+                      className="w-full h-20 rounded-lg border-2 border-dashed border-foreground/10 hover:border-[var(--brand)]/30 transition-colors flex flex-col items-center justify-center gap-1 cursor-pointer"
                     >
-                      <Upload className="w-3.5 h-3.5 text-[#1A1A1A]/20 dark:text-white/15" />
-                      <span className="text-[9px] text-[#1A1A1A]/30 dark:text-white/20 font-merriweather-sans">
+                      <Upload className="w-3.5 h-3.5 text-foreground/20" />
+                      <span className="text-[9px] text-foreground/30 font-merriweather-sans">
                         Upload
                       </span>
                     </button>
@@ -582,7 +582,7 @@ export default function CreateRaceModal({ open, onClose, onCreated }: Props) {
           <button
             onClick={handleSubmit}
             disabled={isPending}
-            className="w-full py-3 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] disabled:opacity-50 text-white text-sm font-semibold font-raleway transition-colors cursor-pointer flex items-center justify-center gap-2"
+            className="w-full py-3 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] disabled:opacity-50 text-[var(--brand-ink)] text-sm font-semibold font-raleway transition-colors cursor-pointer flex items-center justify-center gap-2"
           >
             {isPending ? (
               <>

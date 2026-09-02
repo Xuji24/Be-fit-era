@@ -42,19 +42,19 @@ export default function OptionCards({
               aria-label={opt.hint ? `${opt.label} — ${opt.hint}` : opt.label}
               className={`text-left px-4 py-3 rounded-xl transition-colors cursor-pointer ${
                 selected
-                  ? "bg-[#FF5733]/10 ring-2 ring-[#FF5733]"
-                  : "bg-[#F5F5F0] dark:bg-[#2A2A2E] ring-1 ring-transparent hover:ring-[#FF5733]/30"
+                  ? "bg-[var(--brand)]/15 ring-2 ring-[var(--brand)]"
+                  : "bg-[var(--surface-muted)] dark:bg-[#2A2A2E] ring-1 ring-transparent hover:ring-[var(--brand)]/30"
               }`}
             >
               <span
                 className={`block text-sm font-semibold font-raleway ${
-                  selected ? "text-[#FF5733]" : "text-[#1A1A1A] dark:text-white"
+                  selected ? "text-[var(--brand-hover)]" : "text-foreground"
                 }`}
               >
                 {opt.label}
               </span>
               {opt.hint && (
-                <span className="block mt-0.5 text-xs text-[#1A1A1A]/50 dark:text-white/50 font-merriweather-sans">
+                <span className="block mt-0.5 text-xs text-foreground/50 font-merriweather-sans">
                   {opt.hint}
                 </span>
               )}
@@ -63,7 +63,7 @@ export default function OptionCards({
         })}
       </div>
       {multi && (
-        <p className="mt-2 text-xs text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans">
+        <p className="mt-2 text-xs text-foreground/40 font-merriweather-sans">
           Select all that apply.
         </p>
       )}

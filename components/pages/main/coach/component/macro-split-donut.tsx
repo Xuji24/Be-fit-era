@@ -9,9 +9,9 @@ interface MacroSplitDonutProps {
 }
 
 const SLICES = [
-  { key: "protein" as const, label: "Protein", color: "#FF5733" },
+  { key: "protein" as const, label: "Protein", color: "#FFB366" },
   { key: "carbs" as const, label: "Carbs", color: "#3B82F6" },
-  { key: "fat" as const, label: "Fat", color: "#FFB800" },
+  { key: "fat" as const, label: "Fat", color: "#FFA64D" },
 ];
 
 /**
@@ -26,8 +26,8 @@ export default function MacroSplitDonut({ totals }: MacroSplitDonutProps) {
   if (!split) {
     return (
       <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-6 text-center">
-        <h3 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway mb-2">This week&apos;s macro split</h3>
-        <p className="text-sm text-[#1A1A1A]/50 dark:text-white/50 font-merriweather-sans">
+        <h3 className="text-sm font-semibold text-foreground font-raleway mb-2">This week&apos;s macro split</h3>
+        <p className="text-sm text-foreground/50 font-merriweather-sans">
           Log some food this week to see where your calories are coming from.
         </p>
       </div>
@@ -39,7 +39,7 @@ export default function MacroSplitDonut({ totals }: MacroSplitDonutProps) {
 
   return (
     <div className={`bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-6 ${CHART_COLOR_SCHEME_CLASS}`}>
-      <h3 className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway mb-4">This week&apos;s macro split</h3>
+      <h3 className="text-sm font-semibold text-foreground font-raleway mb-4">This week&apos;s macro split</h3>
 
       <div className="relative h-44">
         <ResponsiveContainer width="100%" height="100%">
@@ -67,10 +67,10 @@ export default function MacroSplitDonut({ totals }: MacroSplitDonutProps) {
         {/* Centre label is absolutely-positioned HTML, not SVG text — the
             established pattern in this codebase (race-progress-overview.tsx). */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <span className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway tabular-nums">
+          <span className="text-lg font-bold text-foreground font-raleway tabular-nums">
             {Math.round(totalKcal)}
           </span>
-          <span className="text-[10px] text-[#1A1A1A]/40 dark:text-white/40 font-merriweather-sans uppercase tracking-wider">
+          <span className="text-[10px] text-foreground/40 font-merriweather-sans uppercase tracking-wider">
             kcal
           </span>
         </div>
@@ -78,7 +78,7 @@ export default function MacroSplitDonut({ totals }: MacroSplitDonutProps) {
 
       <div className="flex justify-center gap-4 mt-2">
         {data.map((slice) => (
-          <span key={slice.key} className="flex items-center gap-1.5 text-xs font-merriweather-sans text-[#1A1A1A]/60 dark:text-white/60">
+          <span key={slice.key} className="flex items-center gap-1.5 text-xs font-merriweather-sans text-foreground/60">
             <span className="w-2 h-2 rounded-sm shrink-0" style={{ backgroundColor: slice.color }} />
             {slice.label} {slice.value}%
           </span>

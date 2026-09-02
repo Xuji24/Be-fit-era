@@ -16,13 +16,13 @@ export default function ChatMessageBubble({ role, content, sources }: ChatMessag
       <div
         className={`max-w-[80%] px-3.5 py-2 rounded-2xl text-sm font-merriweather-sans leading-snug ${
           isUser
-            ? "bg-[#FF5733] text-white rounded-br-md"
-            : "bg-[#F5F5F0] dark:bg-[#2A2A2E] text-[#1A1A1A] dark:text-white rounded-bl-md"
+            ? "bg-[var(--brand)] text-[var(--brand-ink)] rounded-br-md"
+            : "bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-foreground rounded-bl-md"
         }`}
       >
         {content}
         {!isUser && sources && sources.length > 0 && (
-          <div className="mt-1.5 pt-1.5 border-t border-black/5 dark:border-white/10 text-[11px] text-[#1A1A1A]/40 dark:text-white/40">
+          <div className="mt-1.5 pt-1.5 border-t border-black/5 dark:border-white/10 text-[11px] text-foreground/40">
             Sources: {sources.map((s) => s.title).join(", ")}
           </div>
         )}

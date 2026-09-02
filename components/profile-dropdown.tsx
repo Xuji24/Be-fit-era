@@ -71,17 +71,17 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
       {/* Trigger button */}
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#F5F5F0] dark:bg-[#2A2A2E] hover:bg-[#FF5733]/10 dark:hover:bg-[#FF5733]/10 transition-colors cursor-pointer border border-black/5 dark:border-white/5"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--surface-muted)] dark:bg-[#2A2A2E] hover:bg-[var(--brand)]/15 dark:hover:bg-[var(--brand)]/10 transition-colors cursor-pointer border border-black/5 dark:border-white/5"
       >
         {/* Avatar circle */}
-        <div className="w-8 h-8 rounded-full bg-[#FF5733] flex items-center justify-center text-white text-sm font-bold font-raleway">
+        <div className="w-8 h-8 rounded-full bg-[var(--brand)] flex items-center justify-center text-[var(--brand-ink)] text-sm font-bold font-raleway">
           {initial}
         </div>
-        <span className="hidden xl:block font-raleway font-semibold text-sm text-[#1A1A1A] dark:text-white max-w-24 truncate">
+        <span className="hidden xl:block font-raleway font-semibold text-sm text-[var(--foreground)] dark:text-white max-w-24 truncate">
           {displayName}
         </span>
         <ChevronDown
-          className={`w-4 h-4 text-[#1A1A1A]/40 dark:text-white/40 transition-transform ${
+          className={`w-4 h-4 text-[var(--foreground)]/40 dark:text-white/40 transition-transform ${
             open ? "rotate-180" : ""
           }`}
         />
@@ -92,10 +92,10 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
         <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-[#1C1C1E] rounded-xl border border-black/5 dark:border-white/10 shadow-xl overflow-hidden z-50">
           {/* User info header */}
           <div className="px-4 py-3 border-b border-black/5 dark:border-white/5">
-            <p className="font-raleway font-semibold text-sm text-[#1A1A1A] dark:text-white truncate">
+            <p className="font-raleway font-semibold text-sm text-[var(--foreground)] dark:text-white truncate">
               {displayName}
             </p>
-            <p className="font-merriweather-sans text-xs text-[#1A1A1A]/40 dark:text-white/30 truncate mt-0.5">
+            <p className="font-merriweather-sans text-xs text-[var(--foreground)]/40 dark:text-white/30 truncate mt-0.5">
               {user.email}
             </p>
           </div>
@@ -107,9 +107,9 @@ export default function ProfileDropdown({ user }: ProfileDropdownProps) {
                 key={item.label}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-3 px-4 py-2.5 text-sm font-merriweather-sans text-[#1A1A1A] dark:text-white hover:bg-[#FF5733]/5 dark:hover:bg-[#FF5733]/10 transition-colors"
+                className="flex items-center gap-3 px-4 py-2.5 text-sm font-merriweather-sans text-[var(--foreground)] dark:text-white hover:bg-[var(--brand)]/10 dark:hover:bg-[var(--brand)]/10 transition-colors"
               >
-                <item.icon className="w-4 h-4 text-[#1A1A1A]/40 dark:text-white/40" />
+                <item.icon className="w-4 h-4 text-[var(--foreground)]/40 dark:text-white/40" />
                 {item.label}
               </Link>
             ))}

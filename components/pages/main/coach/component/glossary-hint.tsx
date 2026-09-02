@@ -28,7 +28,7 @@ export default function GlossaryHint({ term, className = "" }: GlossaryHintProps
         <button
           type="button"
           aria-label={`What does ${entry.label} mean?`}
-          className={`inline-flex items-center justify-center shrink-0 text-[#1A1A1A]/30 dark:text-white/30 hover:text-[#FF5733] transition-colors cursor-pointer align-middle ${className}`}
+          className={`inline-flex items-center justify-center shrink-0 text-foreground/30 hover:text-[var(--brand-hover)] transition-colors cursor-pointer align-middle ${className}`}
         >
           <HelpCircle className="w-3.5 h-3.5" />
         </button>
@@ -37,10 +37,10 @@ export default function GlossaryHint({ term, className = "" }: GlossaryHintProps
         align="start"
         className="w-64 bg-white dark:bg-[#1C1C1E] border-black/5 dark:border-white/10 rounded-xl p-4"
       >
-        <p className="text-sm font-semibold text-[#1A1A1A] dark:text-white font-raleway mb-1">
+        <p className="text-sm font-semibold text-foreground font-raleway mb-1">
           {entry.label}
         </p>
-        <p className="text-xs leading-relaxed text-[#1A1A1A]/70 dark:text-white/70 font-merriweather-sans">
+        <p className="text-xs leading-relaxed text-foreground/70 font-merriweather-sans">
           {entry.definition}
         </p>
       </PopoverContent>

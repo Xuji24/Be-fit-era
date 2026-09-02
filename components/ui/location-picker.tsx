@@ -69,7 +69,7 @@ export default function LocationPicker({
             <MarkerContent>
               <MapPin
                 size={30}
-                className="text-[#FF5733] fill-[#FF5733]/25 drop-shadow-sm"
+                className="text-[var(--brand-hover)] fill-[var(--brand)]/25 drop-shadow-sm"
               />
             </MarkerContent>
           </MapMarker>

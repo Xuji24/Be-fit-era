@@ -42,8 +42,8 @@ export default function ContactInfo() {
               key={index}
               className="flex items-start gap-4 p-4 bg-white dark:bg-[#1C1C1E] rounded-xl border border-gray-100 dark:border-white/8"
             >
-              <div className="w-10 h-10 shrink-0 bg-[#FF5733]/10 dark:bg-[#FF5733]/15 rounded-lg flex items-center justify-center">
-                <Icon size={18} className="text-[#FF5733]" />
+              <div className="w-10 h-10 shrink-0 bg-[var(--brand)]/15 dark:bg-[var(--brand)]/20 rounded-lg flex items-center justify-center">
+                <Icon size={18} className="text-[var(--brand-hover)]" />
               </div>
               <div className="min-w-0">
                 <p className="font-raleway font-bold text-sm text-foreground">
@@ -62,7 +62,7 @@ export default function ContactInfo() {
       </div>
 
       {/* FAQ Link */}
-      <div className="mt-8 p-5 bg-[#F2F2EF] dark:bg-[#1C1C1E] rounded-xl border border-gray-100 dark:border-white/8">
+      <div className="mt-8 p-5 bg-[var(--surface-muted)] dark:bg-[#1C1C1E] rounded-xl border border-gray-100 dark:border-white/8">
         <h3 className="font-raleway font-bold text-base text-foreground mb-2">
           Frequently Asked Questions
         </h3>
@@ -71,7 +71,7 @@ export default function ContactInfo() {
         </p>
         <a
           href="#"
-          className="font-raleway font-bold text-sm text-[#FF5733] hover:text-[#E84E2E] transition-colors underline underline-offset-4 decoration-[#FF5733]/30 hover:decoration-[#FF5733]"
+          className="font-raleway font-bold text-sm text-[var(--brand-hover)] hover:text-[var(--brand)] transition-colors underline underline-offset-4 decoration-[var(--brand-hover)]/30 hover:decoration-[var(--brand)]"
         >
           View FAQ →
         </a>

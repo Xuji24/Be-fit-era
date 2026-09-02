@@ -29,14 +29,14 @@ function getStrengthLabel(score: number): string {
 
 function getStrengthColor(score: number): string {
   if (score <= 2) return "bg-red-500";
-  if (score <= 3) return "bg-[#FFB800]";
+  if (score <= 3) return "bg-amber-500";
   if (score <= 4) return "bg-emerald-400";
   return "bg-emerald-500";
 }
 
 function getLabelColor(score: number): string {
   if (score <= 2) return "text-red-500";
-  if (score <= 3) return "text-[#FFB800]";
+  if (score <= 3) return "text-amber-500";
   if (score <= 4) return "text-emerald-400";
   return "text-emerald-500";
 }

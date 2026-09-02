@@ -82,13 +82,13 @@ export default function PostComments({ postId, onCommentAdded, onCommentDeleted 
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSubmit(); } }}
           maxLength={500}
-          className="flex-1 rounded-lg bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF5733] font-merriweather-sans placeholder:text-muted-foreground"
+          className="flex-1 rounded-lg bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--brand)] font-merriweather-sans placeholder:text-muted-foreground"
         />
         <button
           onClick={handleSubmit}
           disabled={submitting || !input.trim()}
           title="Post comment"
-          className="p-2 rounded-lg bg-[#FF5733] text-white hover:bg-[#e04d2d] transition-colors disabled:opacity-40 cursor-pointer"
+          className="p-2 rounded-lg bg-[var(--brand)] text-[var(--brand-ink)] hover:bg-[var(--brand-hover)] transition-colors disabled:opacity-40 cursor-pointer"
         >
           {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
         </button>
@@ -113,7 +113,7 @@ export default function PostComments({ postId, onCommentAdded, onCommentDeleted 
         <div className="space-y-3">
           {comments.map((comment) => (
             <div key={comment.id} className="flex gap-2 group">
-              <div className="w-7 h-7 rounded-full bg-linear-to-br from-[#FF5733] to-[#FFB800] flex items-center justify-center shrink-0 overflow-hidden text-white text-xs font-bold">
+              <div className="w-7 h-7 rounded-full bg-linear-to-br from-[var(--brand)] to-[var(--brand-hover)] flex items-center justify-center shrink-0 overflow-hidden text-[var(--brand-ink)] text-xs font-bold">
                 {comment.authorAvatar ? (
                   <Image src={comment.authorAvatar} alt={comment.authorName} width={28} height={28} className="w-full h-full object-cover" />
                 ) : (
@@ -147,7 +147,7 @@ export default function PostComments({ postId, onCommentAdded, onCommentDeleted 
             <button
               onClick={handleLoadMore}
               disabled={loadingMore}
-              className="w-full text-xs text-[#FF5733] hover:underline py-1 disabled:opacity-50 cursor-pointer"
+              className="w-full text-xs text-[var(--brand-hover)] hover:underline py-1 disabled:opacity-50 cursor-pointer"
             >
               {loadingMore ? "Loading..." : `Load more (${total - comments.length} remaining)`}
             </button>

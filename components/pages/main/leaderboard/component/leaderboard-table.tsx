@@ -61,9 +61,9 @@ function LeaderboardRow({
 
   return (
     <div
-      className={`flex items-center gap-4 px-4 sm:px-6 py-4 rounded-xl transition-colors hover:bg-gray-100 dark:hover:bg-[#2A2A2E] ${
+      className={`flex items-center gap-4 px-4 m-2 sm:px-6 py-4 rounded-xl transition-colors hover:bg-gray-100 dark:hover:bg-[#2A2A2E] ${
         isTopThree
-          ? `bg-[#FF5733]/5 dark:bg-[#FF5733]/5 ${rankBorderColor[entry.rank] ?? ""}`
+          ? `bg-[var(--brand)]/8 ${rankBorderColor[entry.rank] ?? ""}`
           : ""
       }`}
     >
@@ -85,11 +85,11 @@ function LeaderboardRow({
       </div>
 
       {/* Name & Username */}
-      <div className="min-w-24 sm:min-w-32">
-        <p className="font-raleway font-bold text-sm text-foreground leading-tight">
+      <div className="min-w-0 flex-1 sm:flex-none sm:min-w-32 sm:max-w-32">
+        <p className="font-raleway font-bold text-sm text-foreground leading-tight truncate">
           {entry.user}
         </p>
-        <p className="font-merriweather-sans text-xs text-gray-500 dark:text-gray-400">
+        <p className="font-merriweather-sans text-xs text-gray-500 dark:text-gray-400 truncate">
           {entry.username}
         </p>
       </div>
@@ -105,8 +105,8 @@ function LeaderboardRow({
           <div
             className={`h-full rounded-full ${
               isTopThree
-                ? "bg-linear-to-r from-[#FF5733] to-[#FFB800]"
-                : "bg-linear-to-r from-[#FF5733]/60 to-[#FF5733]/30"
+                ? "bg-linear-to-r from-[var(--brand)] to-[var(--brand-hover)]"
+                : "bg-linear-to-r from-[var(--brand)]/60 to-[var(--brand)]/30"
             }`}
             style={{ width: `${pct}%` }}
           />

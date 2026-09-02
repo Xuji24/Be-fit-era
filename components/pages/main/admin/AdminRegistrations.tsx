@@ -14,7 +14,7 @@ interface Props {
 
 const statusColors: Record<string, string> = {
   upcoming: "bg-blue-500/10 text-blue-600 dark:text-blue-400",
-  "in-progress": "bg-[#FFB800]/10 text-[#FFB800]",
+  "in-progress": "bg-amber-500/10 text-amber-500",
   completed: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
 };
 
@@ -41,7 +41,7 @@ export default function AdminRegistrationsPage({
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-        <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway">
+        <h2 className="text-lg font-bold text-foreground font-raleway">
           Registrations ({total})
         </h2>
         <div className="flex gap-2">
@@ -50,7 +50,7 @@ export default function AdminRegistrationsPage({
             placeholder="Search..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="px-4 py-2.5 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans w-40"
+            className="px-4 py-2.5 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans w-40"
           />
           <CustomSelect
             value={statusFilter}
@@ -71,22 +71,22 @@ export default function AdminRegistrationsPage({
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-black/5 dark:border-white/5">
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]/50 dark:text-white/40">
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-foreground/50">
                   Participant
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]/50 dark:text-white/40">
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-foreground/50">
                   Race
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]/50 dark:text-white/40">
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-foreground/50">
                   Status
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]/50 dark:text-white/40">
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-foreground/50">
                   Distance
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]/50 dark:text-white/40">
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-foreground/50">
                   Details
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[#1A1A1A]/50 dark:text-white/40">
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-foreground/50">
                   Registered
                 </th>
               </tr>
@@ -98,14 +98,14 @@ export default function AdminRegistrationsPage({
                   className="hover:bg-black/2 dark:hover:bg-white/2"
                 >
                   <td className="px-5 py-3.5">
-                    <p className="font-semibold text-[#1A1A1A] dark:text-white">
+                    <p className="font-semibold text-foreground">
                       {reg.full_name || reg.user_display_name}
                     </p>
-                    <p className="text-[10px] text-[#1A1A1A]/40 dark:text-white/30">
+                    <p className="text-[10px] text-foreground/40">
                       {reg.email || "—"}
                     </p>
                   </td>
-                  <td className="px-5 py-3.5 text-[#1A1A1A]/70 dark:text-white/60">
+                  <td className="px-5 py-3.5 text-foreground/70">
                     {reg.race_title}
                   </td>
                   <td className="px-5 py-3.5">
@@ -115,10 +115,10 @@ export default function AdminRegistrationsPage({
                       {reg.status}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-[#1A1A1A]/70 dark:text-white/60">
+                  <td className="px-5 py-3.5 text-foreground/70">
                     {reg.logged_distance} km
                   </td>
-                  <td className="px-5 py-3.5 text-[10px] text-[#1A1A1A]/50 dark:text-white/30">
+                  <td className="px-5 py-3.5 text-[10px] text-foreground/50">
                     {reg.shirt_size && (
                       <span className="mr-2">Size: {reg.shirt_size}</span>
                     )}
@@ -126,7 +126,7 @@ export default function AdminRegistrationsPage({
                       <span>Pay: {reg.payment_method}</span>
                     )}
                   </td>
-                  <td className="px-5 py-3.5 text-[#1A1A1A]/60 dark:text-white/40">
+                  <td className="px-5 py-3.5 text-foreground/60">
                     {new Date(reg.registered_at).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
@@ -139,7 +139,7 @@ export default function AdminRegistrationsPage({
                 <tr>
                   <td
                     colSpan={6}
-                    className="px-5 py-10 text-center text-[#1A1A1A]/40 dark:text-white/30"
+                    className="px-5 py-10 text-center text-foreground/40"
                   >
                     <ClipboardList className="w-8 h-8 mx-auto mb-2 opacity-30" />
                     No registrations found.

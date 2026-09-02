@@ -94,7 +94,7 @@ const Footer = () => {
                   key={link.label}
                   href={link.href}
                   aria-label={link.label}
-                  className="w-8 h-8 flex justify-center items-center text-white/70 dark:text-white/50 hover:text-[#FF5733] dark:hover:text-[#FF5733] transition-colors"
+                  className="w-8 h-8 flex justify-center items-center text-white/70 dark:text-white/50 hover:text-[var(--brand)] dark:hover:text-[var(--brand)] transition-colors"
                 >
                   {socialIconMap[link.icon]}
                 </a>
@@ -115,7 +115,7 @@ const Footer = () => {
                     <li key={index}>
                       <a
                         href={link.href}
-                        className="text-white/60 dark:text-white/40 text-sm hover:text-[#FF5733] transition-colors"
+                        className="text-white/60 dark:text-white/40 text-sm hover:text-[var(--brand)] transition-colors"
                       >
                         {link.name}
                       </a>
@@ -135,7 +135,7 @@ const Footer = () => {
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-white/60 dark:text-white/40 text-sm hover:text-[#FF5733] transition-colors"
+                      className="text-white/60 dark:text-white/40 text-sm hover:text-[var(--brand)] transition-colors"
                     >
                       {link.label}
                     </a>
@@ -165,7 +165,7 @@ const Footer = () => {
                 <a
                   key={link.name}
                   href={link.href}
-                  className="text-white/50 dark:text-white/30 text-sm hover:text-[#FF5733] transition-colors"
+                  className="text-white/50 dark:text-white/30 text-sm hover:text-[var(--brand)] transition-colors"
                 >
                   {link.name}
                 </a>

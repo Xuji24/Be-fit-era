@@ -50,17 +50,22 @@
 }
 
 :root {
-  /* Fitra orange. Introduced as a token because the literal #FF5733 is
-     hardcoded in ~15 components; new code reads the token so the eventual
-     sweep has somewhere to land. Not a sweep in itself — that's a separate,
-     reviewable change. */
-  --brand: #ff5733;
-  --brand-hover: #e84e2e;
-  --brand-ink: #ffffff;
+  /* Be-Fit-Era UI redesign palette (see docs/../Be-Fit-Era_UI_Redesign_Prompt.md
+     §6). --brand is lighter than the old #FF5733, so its ink flips to dark
+     text instead of white — #1E1E1E clears 9:1 contrast on --brand, white
+     would clear barely 1.8:1. Only the shared/global chrome (navbar,
+     page-header, profile-dropdown, scroll-to-top, footer) has been wired to
+     these tokens so far; the ~100 page-specific files that still hardcode
+     the old hex are swept page-by-page as each page's redesign phase lands. */
+  --brand: #ffb366;
+  --brand-soft: #ffd9b3;
+  --brand-hover: #ffa64d;
+  --brand-ink: #1e1e1e;
 
   --radius: 0.625rem;
-  --background: #FAFAF8;
-  --foreground: #1A1A1A;
+  --background: #FFF6F0;
+  --foreground: #1E1E1E;
+  --surface-muted: #F2F2F2;
   --card: #ffffff;
   --card-foreground: #1A1A1A;
   --popover: oklch(1 0 0);
@@ -380,8 +385,8 @@ html:has([data-app-shell="locked"]) > body > footer {
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 14px 28px -16px rgb(255 87 51 / 0.25);
-    border-color: rgb(255 87 51 / 0.3);
+    box-shadow: 0 14px 28px -16px rgb(255 179 102 / 0.35);
+    border-color: rgb(255 179 102 / 0.45);
   }
 }
 

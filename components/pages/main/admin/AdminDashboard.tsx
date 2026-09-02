@@ -41,8 +41,8 @@ const statCards = [
     label: "Total Races",
     icon: Trophy,
     href: "/admin/races",
-    color: "text-[#FF5733]",
-    bg: "bg-[#FF5733]/10",
+    color: "text-[var(--brand-hover)]",
+    bg: "bg-[var(--brand)]/15",
   },
   {
     key: "totalRegistrations" as const,
@@ -65,8 +65,8 @@ const statCards = [
     label: "Pending Applications",
     icon: FileCheck,
     href: "/admin/applications",
-    color: "text-[#FFB800]",
-    bg: "bg-[#FFB800]/10",
+    color: "text-amber-500",
+    bg: "bg-amber-500/10",
   },
   {
     key: "totalSponsors" as const,
@@ -79,7 +79,7 @@ const statCards = [
 ];
 
 const paymentStatusColors: Record<string, string> = {
-  pending: "#FFB800",
+  pending: "#F59E0B",
   paid: "#10B981",
   refunded: "#6B7280",
   failed: "#EF4444",
@@ -88,7 +88,7 @@ const paymentStatusColors: Record<string, string> = {
 export default function AdminDashboard({ stats }: Props) {
   return (
     <div>
-      <h2 className="text-lg font-bold text-[#1A1A1A] dark:text-white font-raleway mb-6">
+      <h2 className="text-lg font-bold text-foreground font-raleway mb-6">
         Platform Overview
       </h2>
 
@@ -97,7 +97,7 @@ export default function AdminDashboard({ stats }: Props) {
           <Link
             key={key}
             href={href}
-            className="group bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 p-5 hover:border-[#FF5733]/20 dark:hover:border-[#FF5733]/20 transition-all"
+            className="group bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 p-5 hover:border-[var(--brand)]/20 transition-all"
           >
             <div className="flex items-center gap-4">
               <div
@@ -106,10 +106,10 @@ export default function AdminDashboard({ stats }: Props) {
                 <Icon className={`w-5 h-5 ${color}`} />
               </div>
               <div>
-                <p className="text-2xl font-bold text-[#1A1A1A] dark:text-white font-raleway">
+                <p className="text-2xl font-bold text-foreground font-raleway">
                   {stats[key]}
                 </p>
-                <p className="text-xs text-[#1A1A1A]/50 dark:text-white/40 font-medium">
+                <p className="text-xs text-foreground/50 font-medium">
                   {label}
                 </p>
               </div>
@@ -120,7 +120,7 @@ export default function AdminDashboard({ stats }: Props) {
 
       {/* Registrations Chart */}
       <div className="mt-10 bg-white dark:bg-[#1C1C1E] border border-black/5 dark:border-white/5 rounded-2xl p-6">
-        <h3 className="text-sm font-bold text-[#1A1A1A] dark:text-white font-raleway mb-6 uppercase tracking-wider">
+        <h3 className="text-sm font-bold text-foreground font-raleway mb-6 uppercase tracking-wider">
           Registrations Overview
         </h3>
         <div className="h-[300px] w-full">
@@ -171,19 +171,19 @@ export default function AdminDashboard({ stats }: Props) {
       {/* Revenue & Payment Status */}
       <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="bg-white dark:bg-[#1C1C1E] border border-black/5 dark:border-white/5 rounded-2xl p-6 flex flex-col justify-center">
-          <p className="text-xs font-bold text-[#1A1A1A]/50 dark:text-white/40 uppercase tracking-wider mb-2">
+          <p className="text-xs font-bold text-foreground/50 uppercase tracking-wider mb-2">
             Total Revenue
           </p>
-          <p className="text-3xl font-bold text-[#1A1A1A] dark:text-white font-raleway">
+          <p className="text-3xl font-bold text-foreground font-raleway">
             ₱{stats.totalRevenue.toLocaleString()}
           </p>
-          <p className="text-xs text-[#1A1A1A]/50 dark:text-white/40 mt-1">
+          <p className="text-xs text-foreground/50 mt-1">
             From paid registrations
           </p>
         </div>
 
         <div className="lg:col-span-2 bg-white dark:bg-[#1C1C1E] border border-black/5 dark:border-white/5 rounded-2xl p-6">
-          <h3 className="text-sm font-bold text-[#1A1A1A] dark:text-white font-raleway mb-6 uppercase tracking-wider">
+          <h3 className="text-sm font-bold text-foreground font-raleway mb-6 uppercase tracking-wider">
             Payment Status
           </h3>
           <div className="h-[200px] w-full">
@@ -236,7 +236,7 @@ export default function AdminDashboard({ stats }: Props) {
       {/* User Growth */}
       <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 bg-white dark:bg-[#1C1C1E] border border-black/5 dark:border-white/5 rounded-2xl p-6">
-          <h3 className="text-sm font-bold text-[#1A1A1A] dark:text-white font-raleway mb-6 uppercase tracking-wider">
+          <h3 className="text-sm font-bold text-foreground font-raleway mb-6 uppercase tracking-wider">
             New Users
           </h3>
           <div className="h-[200px] w-full">
@@ -286,7 +286,7 @@ export default function AdminDashboard({ stats }: Props) {
         </div>
 
         <div className="bg-white dark:bg-[#1C1C1E] border border-black/5 dark:border-white/5 rounded-2xl p-6">
-          <h3 className="text-sm font-bold text-[#1A1A1A] dark:text-white font-raleway mb-6 uppercase tracking-wider">
+          <h3 className="text-sm font-bold text-foreground font-raleway mb-6 uppercase tracking-wider">
             Users by Role
           </h3>
           <div className="h-[200px] w-full">
@@ -326,7 +326,7 @@ export default function AdminDashboard({ stats }: Props) {
                   }}
                   itemStyle={{ color: "#1A1A1A", fontWeight: "bold" }}
                 />
-                <Bar dataKey="count" radius={[0, 8, 8, 0]} fill="#FF5733" />
+                <Bar dataKey="count" radius={[0, 8, 8, 0]} fill="#FFB366" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -335,7 +335,7 @@ export default function AdminDashboard({ stats }: Props) {
 
       {/* Race & Engagement Health */}
       <div className="mt-10 bg-white dark:bg-[#1C1C1E] border border-black/5 dark:border-white/5 rounded-2xl p-6">
-        <h3 className="text-sm font-bold text-[#1A1A1A] dark:text-white font-raleway mb-6 uppercase tracking-wider">
+        <h3 className="text-sm font-bold text-foreground font-raleway mb-6 uppercase tracking-wider">
           Race Participation by Category
         </h3>
         <div className="h-[220px] w-full">
@@ -379,7 +379,7 @@ export default function AdminDashboard({ stats }: Props) {
 
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="bg-white dark:bg-[#1C1C1E] border border-black/5 dark:border-white/5 rounded-2xl p-6">
-          <h3 className="text-sm font-bold text-[#1A1A1A] dark:text-white font-raleway mb-6 uppercase tracking-wider">
+          <h3 className="text-sm font-bold text-foreground font-raleway mb-6 uppercase tracking-wider">
             Disputes Over Time
           </h3>
           <div className="h-[180px] w-full">
@@ -429,7 +429,7 @@ export default function AdminDashboard({ stats }: Props) {
         </div>
 
         <div className="bg-white dark:bg-[#1C1C1E] border border-black/5 dark:border-white/5 rounded-2xl p-6">
-          <h3 className="text-sm font-bold text-[#1A1A1A] dark:text-white font-raleway mb-6 uppercase tracking-wider">
+          <h3 className="text-sm font-bold text-foreground font-raleway mb-6 uppercase tracking-wider">
             Community Posts
           </h3>
           <div className="h-[180px] w-full">
@@ -481,22 +481,22 @@ export default function AdminDashboard({ stats }: Props) {
 
       {/* Quick Actions */}
       <div className="mt-10">
-        <h3 className="text-sm font-bold text-[#1A1A1A] dark:text-white font-raleway mb-4 uppercase tracking-wider">
+        <h3 className="text-sm font-bold text-foreground font-raleway mb-4 uppercase tracking-wider">
           Quick Actions
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {stats.pendingApplications > 0 && (
             <Link
               href="/admin/applications"
-              className="flex items-center gap-3 p-4 rounded-xl bg-[#FFB800]/10 border border-[#FFB800]/20 hover:bg-[#FFB800]/20 transition-colors"
+              className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 transition-colors"
             >
-              <FileCheck className="w-5 h-5 text-[#FFB800]" />
+              <FileCheck className="w-5 h-5 text-amber-500" />
               <div>
-                <p className="text-sm font-semibold text-[#1A1A1A] dark:text-white">
+                <p className="text-sm font-semibold text-foreground">
                   {stats.pendingApplications} pending application
                   {stats.pendingApplications !== 1 ? "s" : ""}
                 </p>
-                <p className="text-xs text-[#1A1A1A]/50 dark:text-white/40">
+                <p className="text-xs text-foreground/50">
                   Review organizer applications
                 </p>
               </div>
@@ -508,11 +508,11 @@ export default function AdminDashboard({ stats }: Props) {
           >
             <Mail className="w-5 h-5 text-purple-500" />
             <div>
-              <p className="text-sm font-semibold text-[#1A1A1A] dark:text-white">
+              <p className="text-sm font-semibold text-foreground">
                 {stats.totalContacts} contact message
                 {stats.totalContacts !== 1 ? "s" : ""}
               </p>
-              <p className="text-xs text-[#1A1A1A]/50 dark:text-white/40">
+              <p className="text-xs text-foreground/50">
                 View contact submissions
               </p>
             </div>

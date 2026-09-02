@@ -2,45 +2,36 @@ import Image from "next/image";
 
 export default function LoginHero() {
   return (
-    <div className="hidden lg:flex relative w-full lg:w-1/2 min-h-screen overflow-hidden items-center justify-center">
-      {/* Background running image */}
+    <div className="hidden lg:flex relative w-full lg:w-1/2 min-h-screen overflow-hidden items-center bg-background">
+      {/* Reference-provided photo — already carries its own arc/dot/wave
+          decoration, so no extra CSS overlay or accent stripes on top of it
+          (stacking more effects on a busy image just muddies it). Background
+          is light, so copy runs in the site's normal dark ink, not white. */}
       <Image
-        src="/fitra.png"
-        alt="Runner in action"
+        src="/be-fit-era-auth-pages.png"
+        alt=""
         fill
         priority
         sizes="50vw"
+        className="object-cover object-[70%_center]"
       />
 
-      {/* Dark overlay for text readability */}
-      <div className="absolute inset-0 bg-black/60" />
-
-      {/* Gradient overlays for depth */}
-      <div className="absolute inset-0 bg-linear-to-b from-black/40 via-transparent to-black/70" />
-      <div className="absolute inset-0 bg-linear-to-r from-black/50 via-transparent to-transparent" />
-
-      {/* Diagonal accent stripes — subtle over image */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-20 -right-20 w-150 h-50 bg-[#FF5733]/8 rotate-[-35deg] origin-center" />
-        <div className="absolute bottom-1/4 -right-16 w-500 h-25 bg-[#FFB800]/6 rotate-[-35deg] origin-center" />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 px-10 lg:px-14 xl:px-20 text-center max-w-md">
-        {/* Tagline */}
-        <h2 className="font-raleway font-bold text-3xl lg:text-4xl xl:text-[2.75rem] text-white leading-tight mb-4 drop-shadow-lg">
+      {/* Content — kept as our own copy, not the wording from the reference
+          mockup. */}
+      <div className="relative z-10 px-10 lg:px-14 xl:px-20 text-left max-w-md">
+        <h2 className="font-raleway font-bold text-3xl lg:text-4xl xl:text-[2.75rem] text-foreground leading-tight mb-4">
           Bold Race
-          <span className="block bg-linear-to-r from-[#FF5733] to-[#FFB800] bg-clip-text text-transparent">
+          <span className="block bg-linear-to-r from-[var(--brand)] to-[var(--brand-hover)] bg-clip-text text-transparent">
             Energy
           </span>
         </h2>
-        <p className="font-merriweather-sans text-sm lg:text-base text-white/70 leading-relaxed drop-shadow-md">
+        <p className="font-merriweather-sans text-sm lg:text-base text-foreground/70 leading-relaxed max-w-xs">
           Every stride brings you closer to the finish line. Track your runs,
           join races, and unleash your potential.
         </p>
 
         {/* Accent line */}
-        <div className="mt-8 mx-auto w-16 h-1 rounded-full bg-linear-to-r from-[#FF5733] to-[#FFB800]" />
+        <div className="mt-8 w-16 h-1 rounded-full bg-linear-to-r from-[var(--brand)] to-[var(--brand-hover)]" />
       </div>
     </div>
   );

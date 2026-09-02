@@ -134,7 +134,7 @@ export default function ResetPasswordForm() {
         <Button
           type="submit"
           disabled={isPending}
-          className="w-full py-5 rounded-xl bg-[#FF5733] text-white font-raleway font-bold text-base hover:bg-[#E84E2E] hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-5 rounded-xl bg-[var(--brand)] text-[var(--brand-ink)] font-raleway font-bold text-base hover:bg-[var(--brand-hover)] hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isPending ? (
             <Loader2 className="w-5 h-5 animate-spin" />
@@ -145,11 +145,11 @@ export default function ResetPasswordForm() {
       </div>
 
       {/* Login Link */}
-      <p className="text-center text-sm text-[#1A1A1A]/50 dark:text-white/40 font-merriweather-sans animate-fade-in animation-delay-400">
+      <p className="text-center text-sm text-foreground/50 dark:text-foreground/40 font-merriweather-sans animate-fade-in animation-delay-400">
         Remember Your Password?{" "}
         <Link
           href="/login"
-          className="font-raleway font-semibold text-[#FF5733] hover:text-[#FFB800] transition-colors"
+          className="font-raleway font-semibold text-[var(--brand)] hover:text-[var(--brand-hover)] transition-colors"
         >
           Login Here.
         </Link>

@@ -180,7 +180,7 @@ export default function OrganizerApplication() {
   if (status === null || role === null) {
     return (
       <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm p-8 text-center">
-        <Loader2 className="w-5 h-5 animate-spin text-[#FF5733] mx-auto" />
+        <Loader2 className="w-5 h-5 animate-spin text-[var(--brand-hover)] mx-auto" />
       </div>
     );
   }
@@ -195,7 +195,7 @@ export default function OrganizerApplication() {
               <CheckCircle2 className="w-5 h-5 text-emerald-500" />
             </div>
             <div>
-              <h2 className="font-raleway font-bold text-base text-[#1A1A1A] dark:text-white">
+              <h2 className="font-raleway font-bold text-base text-foreground">
                 Organizer Status
               </h2>
               <p className="font-merriweather-sans text-xs text-emerald-500 font-medium">
@@ -205,11 +205,11 @@ export default function OrganizerApplication() {
           </div>
         </div>
         <div className="p-6 sm:p-8">
-          <p className="text-sm text-[#1A1A1A]/60 dark:text-white/40 font-merriweather-sans">
+          <p className="text-sm text-foreground/60 font-merriweather-sans">
             You can create and manage races from the{" "}
             <a
               href="/organizer"
-              className="text-[#FF5733] hover:underline font-medium"
+              className="text-[var(--brand-hover)] hover:underline font-medium"
             >
               Organizer Dashboard
             </a>
@@ -226,21 +226,21 @@ export default function OrganizerApplication() {
       <div className="bg-white dark:bg-[#1C1C1E] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm overflow-hidden">
         <div className="p-6 sm:p-8 border-b border-black/5 dark:border-white/5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#FFB800]/10 flex items-center justify-center">
-              <Clock className="w-5 h-5 text-[#FFB800]" />
+            <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
+              <Clock className="w-5 h-5 text-amber-500" />
             </div>
             <div>
-              <h2 className="font-raleway font-bold text-base text-[#1A1A1A] dark:text-white">
+              <h2 className="font-raleway font-bold text-base text-foreground">
                 Application Under Review
               </h2>
-              <p className="font-merriweather-sans text-xs text-[#FFB800] font-medium">
+              <p className="font-merriweather-sans text-xs text-amber-500 font-medium">
                 We&apos;re reviewing your organizer application
               </p>
             </div>
           </div>
         </div>
         <div className="p-6 sm:p-8">
-          <p className="text-sm text-[#1A1A1A]/60 dark:text-white/40 font-merriweather-sans">
+          <p className="text-sm text-foreground/60 font-merriweather-sans">
             Your application is currently being reviewed by our team. We&apos;ll
             notify you once a decision has been made. This usually takes 1–3
             business days.
@@ -258,14 +258,14 @@ export default function OrganizerApplication() {
       {/* Header */}
       <div className="p-6 sm:p-8 border-b border-black/5 dark:border-white/5">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#FF5733]/10 flex items-center justify-center">
-            <Building2 className="w-5 h-5 text-[#FF5733]" />
+          <div className="w-10 h-10 rounded-xl bg-[var(--brand)]/15 flex items-center justify-center">
+            <Building2 className="w-5 h-5 text-[var(--brand-hover)]" />
           </div>
           <div>
-            <h2 className="font-raleway font-bold text-base text-[#1A1A1A] dark:text-white">
+            <h2 className="font-raleway font-bold text-base text-foreground">
               Become an Organizer
             </h2>
-            <p className="font-merriweather-sans text-xs text-[#1A1A1A]/40 dark:text-white/30">
+            <p className="font-merriweather-sans text-xs text-foreground/40">
               Apply to host virtual races on the platform
             </p>
           </div>
@@ -296,46 +296,46 @@ export default function OrganizerApplication() {
 
           {/* Organization Name */}
           <div className="md:col-span-2">
-            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+            <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
               Organization Name *
             </label>
             <div className="relative">
-              <Building2 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
+              <Building2 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30" />
               <input
                 type="text"
                 value={orgName}
                 onChange={(e) => setOrgName(e.target.value)}
                 placeholder="e.g. Manila Runners Club"
                 maxLength={200}
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
               />
             </div>
           </div>
 
           {/* Contact Email */}
           <div>
-            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+            <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
               Contact Email *
             </label>
             <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30" />
               <input
                 type="email"
                 value={contactEmail}
                 onChange={(e) => setContactEmail(e.target.value)}
                 placeholder="org@example.com"
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
               />
             </div>
           </div>
 
           {/* Contact Phone */}
           <div>
-            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+            <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
               Contact Phone
             </label>
             <div className="relative">
-              <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#1A1A1A]/30 dark:text-white/20" />
+              <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/30" />
               <input
                 type="tel"
                 value={contactPhone}
@@ -348,14 +348,14 @@ export default function OrganizerApplication() {
                 }
                 maxLength={16}
                 placeholder="0917 123 4567"
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans"
               />
             </div>
           </div>
 
           {/* Description */}
           <div className="md:col-span-2">
-            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+            <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
               What races do you plan to host?
             </label>
             <textarea
@@ -364,13 +364,13 @@ export default function OrganizerApplication() {
               placeholder="Describe the type of races you'd like to organize..."
               rows={3}
               maxLength={1000}
-              className="w-full px-4 py-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E] text-sm text-[#1A1A1A] dark:text-white placeholder:text-[#1A1A1A]/30 dark:placeholder:text-white/20 border-0 focus:ring-2 focus:ring-[#FF5733] outline-none transition-all font-merriweather-sans resize-none"
+              className="w-full px-4 py-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E] text-sm text-foreground placeholder:text-foreground/30 border-0 focus:ring-2 focus:ring-[var(--brand)] outline-none transition-all font-merriweather-sans resize-none"
             />
           </div>
 
           {/* Document Upload */}
           <div className="md:col-span-2">
-            <label className="block text-xs font-semibold text-[#1A1A1A]/60 dark:text-white/40 mb-1.5 uppercase tracking-wider font-merriweather-sans">
+            <label className="block text-xs font-semibold text-foreground/60 mb-1.5 uppercase tracking-wider font-merriweather-sans">
               Proof Documents *{" "}
               <span className="normal-case tracking-normal font-normal">
                 (Business permit, DTI, SEC, etc.)
@@ -383,20 +383,20 @@ export default function OrganizerApplication() {
                 {files.map((file, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-3 p-3 rounded-xl bg-[#F5F5F0] dark:bg-[#2A2A2E]"
+                    className="flex items-center gap-3 p-3 rounded-xl bg-[var(--surface-muted)] dark:bg-[#2A2A2E]"
                   >
-                    <FileText className="w-4 h-4 text-[#FF5733] shrink-0" />
-                    <span className="text-sm text-[#1A1A1A] dark:text-white truncate flex-1 font-merriweather-sans">
+                    <FileText className="w-4 h-4 text-[var(--brand-hover)] shrink-0" />
+                    <span className="text-sm text-foreground truncate flex-1 font-merriweather-sans">
                       {file.name}
                     </span>
-                    <span className="text-[10px] text-[#1A1A1A]/40 dark:text-white/30 shrink-0">
+                    <span className="text-[10px] text-foreground/40 shrink-0">
                       {(file.size / 1024 / 1024).toFixed(1)} MB
                     </span>
                     <button
                       type="button"
                       title="Remove file"
                       onClick={() => removeFile(idx)}
-                      className="text-[#1A1A1A]/30 dark:text-white/30 hover:text-red-500 transition-colors cursor-pointer"
+                      className="text-foreground/30 hover:text-red-500 transition-colors cursor-pointer"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -407,9 +407,9 @@ export default function OrganizerApplication() {
 
             {/* Upload button */}
             {files.length < MAX_FILES && (
-              <label className="flex items-center justify-center gap-2 p-4 rounded-xl border-2 border-dashed border-[#1A1A1A]/10 dark:border-white/10 hover:border-[#FF5733]/30 dark:hover:border-[#FF5733]/30 transition-colors cursor-pointer">
-                <Upload className="w-4 h-4 text-[#1A1A1A]/40 dark:text-white/30" />
-                <span className="text-sm text-[#1A1A1A]/50 dark:text-white/40 font-merriweather-sans">
+              <label className="flex items-center justify-center gap-2 p-4 rounded-xl border-2 border-dashed border-foreground/10 hover:border-[var(--brand)]/30 transition-colors cursor-pointer">
+                <Upload className="w-4 h-4 text-foreground/40" />
+                <span className="text-sm text-foreground/50 font-merriweather-sans">
                   Click to upload (PDF, JPG, PNG — max 5 MB each)
                 </span>
                 <input
@@ -428,7 +428,7 @@ export default function OrganizerApplication() {
             <button
               onClick={handleSubmit}
               disabled={isPending || uploading}
-              className="w-full sm:w-auto px-8 py-3 rounded-xl bg-[#FF5733] hover:bg-[#E84E2E] disabled:opacity-50 text-white text-sm font-semibold font-raleway transition-colors cursor-pointer flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-3 rounded-xl bg-[var(--brand)] hover:bg-[var(--brand-hover)] disabled:opacity-50 text-[var(--brand-ink)] text-sm font-semibold font-raleway transition-colors cursor-pointer flex items-center justify-center gap-2"
             >
               {isPending || uploading ? (
                 <>

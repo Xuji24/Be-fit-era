@@ -228,7 +228,7 @@ export default function CommunityFeedPage() {
         <div className="flex items-center justify-between mb-5">
           <Button
             onClick={() => setShowCreate(true)}
-            className="bg-[#FF5733] hover:bg-[#e04d2d] text-white shadow-lg"
+            className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-[var(--brand-ink)] shadow-lg"
           >
             <Plus className="w-4 h-4 mr-1.5" /> New Post
           </Button>
@@ -247,7 +247,7 @@ export default function CommunityFeedPage() {
             placeholder="Search posts..."
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
-            className="w-full pl-9 pr-9 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#FF5733] font-merriweather-sans"
+            className="w-full pl-9 pr-9 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[var(--brand)] font-merriweather-sans"
           />
           {search && (
             <button
@@ -269,8 +269,8 @@ export default function CommunityFeedPage() {
               onClick={() => handleCategoryChange(cat.value)}
               className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors cursor-pointer border font-raleway ${
                 activeCategory === cat.value
-                  ? "bg-[#FF5733] text-white border-[#FF5733]"
-                  : "bg-white dark:bg-zinc-900 text-muted-foreground border-gray-200 dark:border-zinc-700 hover:border-[#FF5733] hover:text-[#FF5733]"
+                  ? "bg-[var(--brand)] text-[var(--brand-ink)] border-[var(--brand)]"
+                  : "bg-white dark:bg-zinc-900 text-muted-foreground border-gray-200 dark:border-zinc-700 hover:border-[var(--brand)] hover:text-[var(--brand-hover)]"
               }`}
             >
               {cat.label}
@@ -307,7 +307,7 @@ export default function CommunityFeedPage() {
                 : "Be the first to share something with the community!"}
             </p>
             {!search && activeCategory === "all" && (
-              <Button onClick={() => setShowCreate(true)} className="bg-[#FF5733] hover:bg-[#e04d2d] text-white">
+              <Button onClick={() => setShowCreate(true)} className="bg-[var(--brand)] hover:bg-[var(--brand-hover)] text-[var(--brand-ink)]">
                 <Plus className="w-4 h-4 mr-1.5" /> Create First Post
               </Button>
             )}

@@ -11,6 +11,7 @@ import {
   FileCheck,
   Handshake,
   AlertTriangle,
+  FileText,
   Settings,
 } from "lucide-react";
 
@@ -23,6 +24,7 @@ const navItems = [
   { href: "/admin/contacts", label: "Contacts", icon: Mail },
   { href: "/admin/applications", label: "Applications", icon: FileCheck },
   { href: "/admin/sponsors", label: "Sponsors", icon: Handshake },
+  { href: "/admin/legal", label: "Legal", icon: FileText },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
@@ -33,7 +35,7 @@ export default function AdminSidebar() {
     <aside className="lg:w-56 shrink-0">
       <nav className="flex lg:flex-col gap-1 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0">
         {navItems.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href;
+          const active = href === "/admin" ? pathname === href : pathname.startsWith(href);
           return (
             <Link
               key={href}

@@ -13,7 +13,9 @@ export const quickLinksData: NavLink[] = [
 
 export const supportLinksData: NavLink[] = [
   { name: "Contact", href: "/contact" },
-  { name: "FAQ's", href: "#" }
+  { name: "FAQ's", href: "#" },
+  { name: "Privacy Policy", href: "/privacy-policy" },
+  { name: "Terms of Service", href: "/terms-of-service" },
 ];
 
 export interface SocialLink {

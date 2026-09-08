@@ -63,10 +63,19 @@ const socialIconMap: Record<string, ReactNode> = {
   ),
 };
 
-/* ── Footer section configuration ── */
+/* ── Footer section configuration ──
+   Privacy Policy / Terms of Service live in supportLinksData too (so the
+   bottom-bar filter below can find them), but they get their own legal-only
+   spot in the bottom bar — listing them again in the Support column would
+   just duplicate the same two links twice on one footer. */
 const footerSections = [
   { title: "Quick Links", links: quickLinksData },
-  { title: "Support", links: supportLinksData },
+  {
+    title: "Support",
+    links: supportLinksData.filter(
+      (link) => link.name !== "Privacy Policy" && link.name !== "Terms of Service",
+    ),
+  },
 ];
 
 const Footer = () => {

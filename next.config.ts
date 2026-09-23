@@ -14,7 +14,7 @@ const CSP_DIRECTIVES = [
   "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.cartocdn.com https://*.hcaptcha.com",
   "frame-src 'self' https://*.hcaptcha.com",
   "worker-src 'self' blob:",
-  "frame-ancestors 'none'",
+  "frame-ancestors 'self' https://principio-a-portfolio.vercel.app https://pa-whiskers.vercel.app",
   "base-uri 'self'",
   "form-action 'self'",
 ].join("; ");

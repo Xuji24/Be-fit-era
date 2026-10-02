@@ -75,18 +75,14 @@ export default function CoachNotificationPreferences() {
               aria-checked={prefs[row.key]}
               aria-label={row.label}
               className={`relative w-11 h-6 rounded-full shrink-0 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
-                prefs[row.key] ? "bg-[var(--brand)]" : "bg-gray-200 dark:bg-zinc-700"
+                prefs[row.key] ? "bg-(--brand)" : "bg-gray-200 dark:bg-zinc-700"
               }`}
             >
-              {savingKey === row.key ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin text-white absolute top-[5px] left-[5px]" />
-              ) : (
-                <span
-                  className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${
-                    prefs[row.key] ? "translate-x-6" : "translate-x-1"
-                  }`}
-                />
-              )}
+              <span
+                className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform ${
+                  prefs[row.key] ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
             </button>
           </div>
         ))}
